@@ -1,7 +1,7 @@
 import 'package:zoo_console/zoo_console.dart';
 
 Future<void> main(List<String> args) async {
-  final runner = ZooCommandRunner('app', 'My app', cliPackageVersion: '0.0.1')..addCommand(TestCommand());
+  final runner = ZooRunner('app', 'My app', cliPackageVersion: '0.0.1')..addCommand(TestCommand());
   await runner.run(args);
 }
 

@@ -39,7 +39,7 @@ abstract class ZooCommand<T> extends Command<T> {
   @override
   Future<T> run();
 
-  ZooConsole get console => ZooCommandRunner.console;
+  ZooConsole get console => ZooRunner.console;
 
   @override
   String get invocation {

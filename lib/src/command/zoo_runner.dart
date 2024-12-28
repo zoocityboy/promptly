@@ -5,8 +5,8 @@ import 'package:args/command_runner.dart';
 import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/zoo_console.dart';
 
-class ZooCommandRunner extends CommandRunner<int> {
-  ZooCommandRunner(
+class ZooRunner extends CommandRunner<dynamic> {
+  ZooRunner(
     String executableName,
     String description, {
     required this.cliPackageVersion,
@@ -29,7 +29,7 @@ class ZooCommandRunner extends CommandRunner<int> {
   }
 
   @override
-  Future<int?> run(Iterable<String> args) {
+  Future<dynamic> run(Iterable<String> args) {
     final p = parse(args);
     // p.flag('debug') ? console.level = LogLevel.verbose : console.level = LogLevel.info;
     return super.run(args);

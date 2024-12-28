@@ -3,7 +3,7 @@ export 'package:args/src/utils.dart';
 export 'package:tint/tint.dart' show Tint;
 
 export 'src/command/zoo_command.dart';
-export 'src/command/zoo_command_runner.dart';
+export 'src/command/zoo_runner.dart';
 export 'src/console.dart';
 export 'src/utils/string_buffer.dart';
 export 'src/utils/tint_colors.dart';
