@@ -1,0 +1,18 @@
+name: zoo_console
+description: A collection of customizable interactive command-line components.
+version: 1.0.0
+repository: https://github.com/zoocityboy/zoo_console
+# resolution: workspace
+publish_to: none
+environment:
+  sdk: ">=3.6.0"
+
+dependencies:
+  args: ^2.6.0
+  dart_console: ^4.1.0
+  meta: ^1.15.0
+  tint: ^2.0.0
+
+dev_dependencies:
+  lint: ^2.0.1
+  test: ^1.25.14
