@@ -1,6 +1,6 @@
 import 'dart:io' show stdout;
 
-import 'package:zoo_console/zoo_console.dart' show Select;
+import 'package:zoo_console/src/components/components.dart';
 
 void main() {
   final languages = ['Rust', 'Dart', 'TypeScript'];

@@ -4,7 +4,7 @@
 // it's too much.
 // But I did use expressive names, so it should be good.
 
-import 'package:tint/tint.dart';
+import 'package:zoo_console/zoo_console.dart';
 
 /// [Function] takes a [String] and returns a [String].
 ///
@@ -46,6 +46,7 @@ class Theme {
     required this.leadingProgressStyle,
     required this.spinners,
     required this.spinningInterval,
+    required this.linePrefixStyle,
   });
   final int spacing;
   final String inputPrefix;
@@ -85,6 +86,8 @@ class Theme {
   final List<String> spinners;
   final int spinningInterval;
 
+  final StyleFunction linePrefixStyle;
+
   /// Copy current theme with new properties and create a
   /// new [Theme] from it.
   Theme copyWith({
@@ -119,6 +122,7 @@ class Theme {
     StyleFunction? leadingProgressStyle,
     List<String>? spinners,
     int? spinningInterval,
+    StyleFunction? linePrefixStyle,
   }) {
     return Theme(
       spacing: spacing ?? this.spacing,
@@ -152,6 +156,7 @@ class Theme {
       leadingProgressStyle: leadingProgressStyle ?? this.leadingProgressStyle,
       spinners: spinners ?? this.spinners,
       spinningInterval: spinningInterval ?? this.spinningInterval,
+      linePrefixStyle: linePrefixStyle ?? this.linePrefixStyle,
     );
   }
 
@@ -190,6 +195,7 @@ class Theme {
     leadingProgressStyle: (x) => x,
     spinners: '⠁⠂⠄⡀⢀⠠⠐⠈'.split(''),
     spinningInterval: 80,
+    linePrefixStyle: (x) => x,
   );
 
   /// A very colorful theme.
@@ -225,9 +231,11 @@ class Theme {
     leadingProgressStyle: (x) => x,
     spinners: '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'.split(''),
     spinningInterval: 80,
+    linePrefixStyle: (x) => x.gray(),
   );
 
   static final zooTheme = colorfulTheme.copyWith(
+    spacing: 3,
     successPrefix: '◆'.padRight(3).green(),
     successSuffix: '✔'.padRight(3).green(),
     errorPrefix: '■'.padRight(3).red(),
@@ -240,7 +248,7 @@ class Theme {
     activeItemStyle: (m) => m.brightGreen(),
     inactiveItemStyle: (m) => m.grey(),
     valueStyle: (x) => x.green(),
-    defaultStyle: (x) => x.cyan(),
+    defaultStyle: (x) => x.white(),
     hintStyle: (m) => m.gray(),
     spinners: [
       '⬖',
@@ -253,7 +261,8 @@ class Theme {
       '⬙',
       '⬖',
       '⬘',
-    ].map((e) => e.padRight(3).cyan()).toList(),
+    ].map((e) => e.padRight(3).green()).toList(),
     spinningInterval: 80,
+    linePrefixStyle: (p0) => p0.padRight(3).darkGray(),
   );
 }

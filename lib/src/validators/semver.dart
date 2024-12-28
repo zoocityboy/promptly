@@ -1,11 +1,9 @@
 import 'package:zoo_console/src/validators/validator.dart';
 
-class SemverValidator implements Validator<String> {
+class SemverValidator extends Validator<String> {
+  SemverValidator() : super('Invalid semantic version', pattern: RegExp(r'^\d+\.\d+\.\d+$'));
   @override
   bool call(String value) {
-    return isValid(value);
+    return pattern!.hasMatch(value);
   }
-
-  @override
-  RegExp? get pattern => null;
 }

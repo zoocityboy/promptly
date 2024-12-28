@@ -1,6 +1,6 @@
 import 'dart:io' show stdout;
 
-import 'package:zoo_console/zoo_console.dart' show MultiSelect;
+import 'package:zoo_console/src/components/multi_select.dart';
 
 void main() {
   final musicals = ['Hamilton', 'Dear Evan Hansen', 'Wicked'];

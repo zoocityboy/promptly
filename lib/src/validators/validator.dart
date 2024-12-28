@@ -12,3 +12,9 @@ class EmailValidator extends Validator<String> {
   @override
   bool call(String value) => pattern!.hasMatch(value);
 }
+
+class IsNotEmptyValidator extends Validator<String> {
+  IsNotEmptyValidator() : super('Value cannot be empty');
+  @override
+  bool call(String value) => value.isNotEmpty;
+}

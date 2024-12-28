@@ -1,4 +1,5 @@
-import 'package:zoo_console/zoo_console.dart' show Spinner, Theme;
+import 'package:zoo_console/src/components/spinner.dart';
+import 'package:zoo_console/src/theme/theme.dart';
 
 Future<void> main() async {
   final theme = Theme.zooTheme;

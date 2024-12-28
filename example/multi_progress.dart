@@ -1,3 +1,5 @@
+import 'package:zoo_console/src/components/components.dart';
+import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/zoo_console.dart' show MultiProgress, Progress, Theme, Tint;
 
 Future<void> main() async {

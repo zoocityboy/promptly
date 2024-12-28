@@ -2,37 +2,34 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:args/command_runner.dart';
-// ignore: implementation_imports
-import 'package:args/src/utils.dart';
+import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/zoo_console.dart';
 
-abstract class ZooCommandRunner<T> extends CommandRunner<T> {
+class ZooCommandRunner extends CommandRunner<int> {
   ZooCommandRunner(
-    this.cliName,
-    super.executableName,
-    super.description, {
-    this.cliClaime = 'Manage your tasks',
+    String executableName,
+    String description, {
     required this.cliPackageVersion,
-  });
-  final String cliName;
-  final String cliClaime;
+  }) : super(executableName, appDescription(executableName, cliPackageVersion, description)) {
+    ZooConsole();
+  }
   final String cliPackageVersion;
 
-  static ZooConsole get console => ZooConsole();
-  String get appDescription {
+  static ZooConsole get console => ZooConsole.instance;
+  static String appDescription(String executableName, String cliPackageVersion, String description) {
     final StringBuffer buffer = StringBuffer();
     buffer.write(console.prefixStartStyled);
     buffer.write(' $executableName '.onGreen().white());
     buffer.write(' ');
     buffer.write('v$cliPackageVersion'.green().bold());
-    buffer.write(' • ');
-    buffer.write('ׂEmbedit Flutter project manager');
+    buffer.write(console.theme.hintStyle(' • '));
+    buffer.write(console.theme.hintStyle(description));
     buffer.write('\n${console.prefixVerticalStyled}');
     return buffer.toString();
   }
 
   @override
-  Future<T?> run(Iterable<String> args) {
+  Future<int?> run(Iterable<String> args) {
     final p = parse(args);
     // p.flag('debug') ? console.level = LogLevel.verbose : console.level = LogLevel.info;
     return super.run(args);
@@ -40,8 +37,6 @@ abstract class ZooCommandRunner<T> extends CommandRunner<T> {
 
   @override
   String get usage => usagex;
-  // @override
-  // String get usageFooter => 'Made with ❤️ by the EIT team';
 
   @override
   void printUsage() => console.write(usage);
@@ -52,12 +47,12 @@ abstract class ZooCommandRunner<T> extends CommandRunner<T> {
 }
 
 extension CommandRunnerX on CommandRunner {
-  static ZooConsole get console => ZooConsole();
+  static ZooConsole get console => ZooConsole.instance;
   String _wrap(String text, {int? hangingIndent}) =>
       wrapText(text, length: argParser.usageLineLength, hangingIndent: hangingIndent);
 
   String get usageWithoutDescription {
-    const usagePrefix = 'Usage:';
+    final usagePrefix = console.theme.hintStyle('Usage:');
     final buffer = StringBuffer();
 
     buffer.writeLine(
@@ -70,7 +65,7 @@ extension CommandRunnerX on CommandRunner {
     argParser.usage.split('\n').forEach((line) {
       buffer.write(console.prefixVerticalStyled);
       buffer.write(' ');
-      buffer.writeln(line.gray());
+      buffer.writeln(console.theme.hintStyle(line));
     });
     buffer.write("${console.prefixVerticalStyled} \n");
 
@@ -82,7 +77,7 @@ extension CommandRunnerX on CommandRunner {
         'command.';
     buffer.writeLine(console.prefixVerticalStyled);
     buffer.write(console.prefixVerticalStyled);
-    buffer.write(_wrap(runMessage.gray()));
+    buffer.write(_wrap(console.theme.hintStyle(runMessage)));
     if (usageFooter != null) {
       buffer.writeLine(console.prefixVerticalStyled);
       buffer.write(_wrap(usageFooter ?? ''.gray()));
@@ -105,16 +100,15 @@ extension CommandX on Command {
 
   String get descriptionStyled {
     final sb = StringBuffer();
-    sb.write(theme.hintStyle('┌'));
-    sb.write(' ' * (spacing - 1));
+    sb.write(theme.linePrefixStyle('┌'));
     sb.write(' $name '.onGreen().white());
     sb.write(' ');
-    sb.writeLine(theme.hintStyle(description));
+    sb.write(theme.hintStyle(description));
 
     return _wrap(sb.toString());
   }
 
-  String get usagex => _wrap(descriptionStyled) + usageWithoutDescriptionStyled;
+  String get usageStyled => _wrap(descriptionStyled) + usageWithoutDescriptionStyled;
 
   String get usageWithoutDescriptionStyled {
     final length = argParser.usageLineLength;

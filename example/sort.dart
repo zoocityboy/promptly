@@ -1,6 +1,6 @@
 import 'dart:io' show stdout;
 
-import 'package:zoo_console/zoo_console.dart' show Sort;
+import 'package:zoo_console/src/components/sort.dart';
 
 void main() {
   final models = ['S', '3', 'X', 'Y'].map((x) => 'Model $x').toList();

@@ -1,4 +1,5 @@
-import 'package:zoo_console/zoo_console.dart' show Progress, Theme;
+import 'package:zoo_console/src/components/progress.dart';
+import 'package:zoo_console/src/theme/theme.dart';
 
 Future<void> main() async {
   const length = 1000;

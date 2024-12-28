@@ -1,7 +1,8 @@
 import 'dart:convert' show JsonEncoder;
 import 'dart:io' show exit, stderr, stdout;
 
-import 'package:zoo_console/zoo_console.dart';
+import 'package:zoo_console/src/components/components.dart';
+import 'package:zoo_console/src/theme/theme.dart';
 
 void main() {
   final theme = Theme.basicTheme;

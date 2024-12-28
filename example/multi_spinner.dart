@@ -1,4 +1,5 @@
-import 'package:zoo_console/zoo_console.dart' show MultiSpinner, Spinner, SpinnerStateType;
+import 'package:zoo_console/src/components/multi_spinner.dart';
+import 'package:zoo_console/src/components/spinner.dart';
 
 Future<void> main() async {
   final spinners = MultiSpinner();

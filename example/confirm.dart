@@ -1,6 +1,6 @@
 import 'dart:io' show stdout;
 
-import 'package:zoo_console/zoo_console.dart' show Confirm;
+import 'package:zoo_console/src/components/confirm.dart';
 
 void main() {
   final x = Confirm(prompt: 'Does it work?').interact();

@@ -40,4 +40,33 @@ abstract class ZooCommand<T> extends Command<T> {
   Future<T> run();
 
   ZooConsole get console => ZooCommandRunner.console;
+
+  @override
+  String get invocation {
+    final parents = [name];
+    for (var command = parent; command != null; command = command.parent) {
+      parents.add(command.name);
+    }
+    parents.add(runner!.executableName);
+
+    final invocation = parents.reversed.join(' ');
+    return subcommands.isNotEmpty
+        ? '${invocation.magenta()} <subcommand> [arguments]'
+        : '${invocation.magenta()} [arguments]';
+  }
+
+  String _wrap(String text, {int? hangingIndent}) {
+    return wrapText(text, length: argParser.usageLineLength, hangingIndent: hangingIndent);
+  }
+
+  @override
+  String get usage => _wrap('$descriptionStyled\n\n') + usageWithoutDescriptionStyled;
+
+  @override
+  void printUsage() {
+    console.write(usage);
+  }
+
+  @override
+  Never usageException(String message) => throw UsageException(_wrap(message), usageWithoutDescriptionStyled);
 }

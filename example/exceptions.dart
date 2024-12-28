@@ -1,3 +1,4 @@
+import 'package:zoo_console/src/components/spinner.dart';
 import 'package:zoo_console/zoo_console.dart' show Spinner, reset;
 
 Future<void> main() async {

@@ -1,13 +1,13 @@
-import 'dart:io' show stdout;
-
-import 'package:zoo_console/zoo_console.dart' show Input, ValidationError;
+import 'package:zoo_console/src/components/input.dart';
+import 'package:zoo_console/zoo_console.dart' show Input, Theme, ValidationError, ZooConsole, prompt;
 
 void main() {
-  final name = Input(prompt: 'Your name').interact();
-  stdout.writeln(name);
+  final console = ZooConsole();
+  final name = console.prompt('Your name');
+  console.writeln(name);
 
-  final email = Input(
-    prompt: 'Your email',
+  final email = prompt(
+    'Your email',
     validator: (String x) {
       if (x.contains('@')) {
         return true;
@@ -15,18 +15,22 @@ void main() {
         throw ValidationError('Not a valid email');
       }
     },
-  ).interact();
-  stdout.writeln(email);
+  );
 
-  final planet = Input(
-    prompt: 'Your planet',
+  console.writeln(email);
+  console.verticalLine();
+
+  final planet = prompt(
+    'Your planet',
     defaultValue: 'Earth',
-  ).interact();
-  stdout.writeln(planet);
+  );
+  console.writeln(planet);
+  console.verticalLine();
 
-  final galaxy = Input(
-    prompt: 'Your galaxy',
+  final galaxy = prompt(
+    'Your galaxy',
     initialText: 'Andromeda',
-  ).interact();
-  stdout.writeln(galaxy);
+  );
+  console.writeln(galaxy);
+  console.verticalLine();
 }
