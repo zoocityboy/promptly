@@ -1,4 +1,4 @@
-![alt text](https://raw.githubusercontent.com/zoocityboy/zoo_console/main/assets/zoo_console.webp "Resoure")
+![alt text](https://raw.githubusercontent.com/zoocityboy/zoo_console/main/assets/zoo_console.png "Resoure")
 
 Developed by 🦏 [zoocityboy][zoocityboy_link]
 # Zoo Console
