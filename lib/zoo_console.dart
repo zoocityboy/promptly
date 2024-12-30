@@ -1,10 +1,14 @@
-import 'package:zoo_console/src/framework/framework.dart' show Context;
+import 'package:zoo_console/src/framework/framework.dart' show Context, Theme;
+
 export 'package:args/src/utils.dart';
 export 'package:tint/tint.dart' show Tint;
 
 export 'src/command/zoo_command.dart';
 export 'src/command/zoo_runner.dart';
+export 'src/components/components.dart'
+    show Confirm, Prompt, Loader, MultiSelect, MultiSpinner, Password, Select, Table, TableRow;
 export 'src/console.dart';
+export 'src/framework/framework.dart' show Context, Theme;
 export 'src/utils/string_buffer.dart';
 export 'src/utils/tint_colors.dart';
 export 'src/validators/semver.dart';

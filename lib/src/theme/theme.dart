@@ -247,7 +247,7 @@ class Theme {
     messageStyle: (m) => m.white(),
     activeItemStyle: (m) => m.brightGreen(),
     inactiveItemStyle: (m) => m.grey(),
-    valueStyle: (x) => x.green(),
+    valueStyle: (x) => x.white().bold(),
     defaultStyle: (x) => x.white(),
     hintStyle: (m) => m.gray(),
     spinners: [
@@ -264,5 +264,14 @@ class Theme {
     ].map((e) => e.padRight(3).green()).toList(),
     spinningInterval: 80,
     linePrefixStyle: (p0) => p0.padRight(3).darkGray(),
+    showActiveCursor: false,
+    progressPrefix: '['.darkGray(),
+    progressSuffix: ']'.darkGray(),
+    emptyProgress: '─',
+    filledProgress: '─'.bold(),
+    leadingProgress: '─'.bold(),
+    emptyProgressStyle: (x) => x.darkGray(),
+    filledProgressStyle: (x) => x.brightGreen(),
+    leadingProgressStyle: (x) => x.green(),
   );
 }

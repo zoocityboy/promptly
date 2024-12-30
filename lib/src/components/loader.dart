@@ -5,14 +5,12 @@ import 'package:zoo_console/src/framework/framework.dart';
 import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/src/utils/utils.dart';
 
-String _prompt(SpinnerStateType _) => '';
-
-enum SpinnerStateType { inProgress, success, failed }
+enum LoaderStateType { inProgress, success, failed }
 
 /// A spinner or a loading indicator component.
-class Spinner extends Component<SpinnerState> {
-  /// Construts a [Spinner] component with the default theme.
-  Spinner({
+class Loader extends Component<LoaderState> {
+  /// Construts a [Loader] component with the default theme.
+  Loader({
     required this.prompt,
     String? icon,
     String? failedIcon,
@@ -21,8 +19,8 @@ class Spinner extends Component<SpinnerState> {
         icon = icon ?? Theme.defaultTheme.successPrefix,
         failedIcon = failedIcon ?? Theme.defaultTheme.errorPrefix;
 
-  /// Constructs a [Spinner] component with the supplied theme.
-  Spinner.withTheme({
+  /// Constructs a [Loader] component with the supplied theme.
+  Loader.withTheme({
     required this.prompt,
     String? icon,
     String? failedIcon,
@@ -67,10 +65,10 @@ class Spinner extends Component<SpinnerState> {
   void setContext(Context c) => _context = c;
 }
 
-/// Handles a [Spinner]'s state.
-class SpinnerState {
-  /// Constructs a state to manage a [Spinner].
-  SpinnerState({required this.success, required this.failed, required this.update});
+/// Handles a [Loader]'s state.
+class LoaderState {
+  /// Constructs a state to manage a [Loader].
+  LoaderState({required this.success, required this.failed, required this.update});
 
   void Function() Function(String? message) update;
 
@@ -83,8 +81,8 @@ class SpinnerState {
   void Function() Function(String? message) failed;
 }
 
-class _SpinnerState extends State<Spinner> {
-  late SpinnerStateType stateType;
+class _SpinnerState extends State<Loader> {
+  late LoaderStateType stateType;
   late String message;
   late int index;
   late StreamSubscription<ProcessSignal> sigint;
@@ -92,7 +90,7 @@ class _SpinnerState extends State<Spinner> {
   @override
   void init() {
     super.init();
-    stateType = SpinnerStateType.inProgress;
+    stateType = LoaderStateType.inProgress;
     message = component.prompt;
     index = 0;
     sigint = handleSigint();
@@ -111,25 +109,25 @@ class _SpinnerState extends State<Spinner> {
   @override
   void render() {
     final line = StringBuffer();
-    if (stateType == SpinnerStateType.success) {
+    if (stateType == LoaderStateType.success) {
       line.write(component.icon);
-    } else if (stateType == SpinnerStateType.failed) {
+    } else if (stateType == LoaderStateType.failed) {
       line.write(component.failedIcon);
     } else {
       line.write(component.theme.spinners[index]);
     }
 
     final x = switch (stateType) {
-      SpinnerStateType.inProgress => component.theme.defaultStyle(message),
-      SpinnerStateType.success => component.theme.valueStyle(message),
-      SpinnerStateType.failed => component.theme.errorStyle(message),
+      LoaderStateType.inProgress => component.theme.defaultStyle(message),
+      LoaderStateType.success => component.theme.valueStyle(message),
+      LoaderStateType.failed => component.theme.errorStyle(message),
     };
     line.write(x);
     context.writeln(line.toString());
   }
 
   @override
-  SpinnerState interact() {
+  LoaderState interact() {
     final timer = Timer.periodic(
       Duration(
         milliseconds: component.theme.spinningInterval,
@@ -141,17 +139,17 @@ class _SpinnerState extends State<Spinner> {
       },
     );
 
-    final state = SpinnerState(
+    final state = LoaderState(
       update: (message) {
         setState(() {
-          stateType = SpinnerStateType.inProgress;
+          stateType = LoaderStateType.inProgress;
           if (message != null) this.message = message;
         });
         return () {};
       },
       success: (message) {
         setState(() {
-          stateType = SpinnerStateType.success;
+          stateType = LoaderStateType.success;
           if (message != null) this.message = message;
           sigint.cancel();
         });
@@ -165,7 +163,7 @@ class _SpinnerState extends State<Spinner> {
       },
       failed: (message) {
         setState(() {
-          stateType = SpinnerStateType.failed;
+          stateType = LoaderStateType.failed;
           if (message != null) this.message = message;
           sigint.cancel();
         });

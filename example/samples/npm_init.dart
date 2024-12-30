@@ -1,73 +1,51 @@
 import 'dart:convert' show JsonEncoder;
 import 'dart:io' show exit, stderr, stdout;
 
-import 'package:zoo_console/src/components/components.dart';
-import 'package:zoo_console/src/theme/theme.dart';
+import 'package:zoo_console/zoo_console.dart';
 
 void main() {
-  final theme = Theme.basicTheme;
+  start('npm', message: 'This utility will walk you through creating a package.json file.');
 
-  stdout.writeln(
-    'This utility will walk you through creating a package.json file.',
-  );
-  stdout.writeln();
-  stdout.writeln('Press ^C at any time to quit.');
+  console.writelnStyled('Press ^C at any time to quit.');
 
-  final name = Input.withTheme(
-    theme: theme,
-    prompt: 'package name',
+  final name = prompt(
+    'package name',
     defaultValue: 'interact',
-    validator: (x) {
-      if (x.contains(RegExp(r'[^a-zA-Z\d]'))) {
-        throw ValidationError('Contains an invalid character!');
-      }
-      return true;
-    },
-  ).interact();
+    validator: GenericValidator<String>('Contains an invalid character!', (x) => x.contains(RegExp(r'[^a-zA-Z\d]'))),
+  );
 
-  final version = Input.withTheme(
-    theme: theme,
-    prompt: 'version',
+  final version = prompt(
+    'version',
     defaultValue: '1.0.0',
-    validator: (x) {
-      if (!RegExp(r'^(\d+\.)?(\d+\.)?(\*|\d+)$').hasMatch(x)) {
-        throw ValidationError('Not a valid version!');
-      }
-      return true;
-    },
-  ).interact();
+    validator:
+        GenericValidator<String>('Not a valid version!', (x) => !RegExp(r'^(\d+\.)?(\d+\.)?(\*|\d+)$').hasMatch(x)),
+  );
 
-  final description = Input.withTheme(
-    theme: theme,
-    prompt: 'description',
-  ).interact();
+  final description = prompt(
+    'description',
+  );
 
-  final entry = Input.withTheme(
-    theme: theme,
-    prompt: 'entry point',
+  final entry = prompt(
+    'entry point',
     defaultValue: 'index.js',
-  ).interact();
+  );
 
-  final testCommand = Input.withTheme(
-    theme: theme,
-    prompt: 'test command',
-  ).interact();
+  final testCommand = prompt(
+    'test command',
+  );
 
-  final repo = Input.withTheme(
-    theme: theme,
-    prompt: 'git repository',
-  ).interact();
+  final repo = prompt(
+    'git repository',
+  );
 
-  final keywords = Input.withTheme(
-    theme: theme,
-    prompt: 'keywords',
-  ).interact();
+  final keywords = prompt(
+    'keywords',
+  );
 
-  final license = Input.withTheme(
-    theme: theme,
-    prompt: 'license',
+  final license = prompt(
+    'license',
     defaultValue: 'ISC',
-  ).interact();
+  );
 
   stdout.writeln('About to write this to package.json:');
 
@@ -91,12 +69,11 @@ void main() {
   stdout.writeln(JsonEncoder.withIndent(''.padLeft(4)).convert(content));
   stdout.writeln();
 
-  final ok = Confirm.withTheme(
-    theme: theme,
-    prompt: 'Is this OK?',
+  final ok = confirm(
+    'Is this OK?',
     defaultValue: true,
-    waitForNewLine: true,
-  ).interact();
+    enterForConfirm: true,
+  );
 
   if (ok) {
     stdout.writeln('Done.');

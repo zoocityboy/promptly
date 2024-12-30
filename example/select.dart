@@ -7,23 +7,18 @@ void main() {
 
   final x = select<String>(
     'Your favorite programming language',
-    options: languages,
-    display: (p0) => p0,
+    choices: languages,
   );
-  newLine();
-  verticalLine();
-  ZooConsole.instance.info('Omg, I like $x too.');
-  verticalLine();
-
-  // stdout.writeln('Omg, I like $x too.');
+  line();
+  console.style('Language selected: ${x.bold().green()}', prefix: (xx) => xx.prefixTraceStartStyled.green());
 
   final _ = select<String>(
     'Favorite superhero',
-    options: heroes,
+    choices: heroes,
     display: (p0) => p0,
     defaultValue: heroes[2],
   );
-  newLine();
-  verticalLine();
-  ZooConsole.instance.info('Agreed!');
+  line();
+  // ignore: no_wildcard_variable_uses
+  end('Superhero', message: 'selected: ${_.green().bold()}');
 }

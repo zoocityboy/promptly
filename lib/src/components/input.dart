@@ -1,29 +1,20 @@
 import 'package:zoo_console/src/framework/framework.dart';
 import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/src/utils/prompt.dart';
-
-/// The error message to be thrown from the [Input] component's
-/// validator when there is an error.
-class ValidationError {
-  /// Constructs a [ValidationError] with given message.
-  ValidationError(this.message);
-
-  /// The error message.
-  final String message;
-}
+import 'package:zoo_console/src/validators/validator.dart';
 
 /// An input component.
-class Input extends Component<String> {
-  /// Constructs an [Input] component with the default theme.
-  Input({
+class Prompt extends Component<String> {
+  /// Constructs an [Prompt] component with the default theme.
+  Prompt({
     required this.prompt,
     this.validator,
     this.initialText = '',
     this.defaultValue,
   }) : theme = Theme.zooTheme;
 
-  /// Constructs an [Input] component with the supplied theme.
-  Input.withTheme({
+  /// Constructs an [Prompt] component with the supplied theme.
+  Prompt.withTheme({
     required this.prompt,
     required this.theme,
     this.validator,
@@ -48,13 +39,13 @@ class Input extends Component<String> {
   /// entered the input. If the function throw a [ValidationError]
   /// instead of returning `true`, the error will be shown and
   /// a new input will be asked.
-  final bool Function(String)? validator;
+  final Validator<String>? validator;
 
   @override
-  _InputState createState() => _InputState();
+  _PromptState createState() => _PromptState();
 }
 
-class _InputState extends State<Input> {
+class _PromptState extends State<Prompt> {
   String? value;
   String? error;
 
@@ -102,10 +93,11 @@ class _InputState extends State<Input> {
       );
       final input = context.readLine(initialText: component.initialText);
       final line = input.isEmpty && component.defaultValue != null ? component.defaultValue! : input;
+      final validator = component.validator;
 
-      if (component.validator != null) {
+      if (validator != null) {
         try {
-          component.validator!(line);
+          validator.call(line);
         } on ValidationError catch (e) {
           setState(() {
             error = e.message;

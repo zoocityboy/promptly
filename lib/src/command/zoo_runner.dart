@@ -2,20 +2,23 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:args/command_runner.dart';
+import 'package:zoo_console/src/logger.dart';
 import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/zoo_console.dart';
 
-class ZooRunner extends CommandRunner<dynamic> {
+class ZooRunner extends CommandRunner<int> {
   ZooRunner(
     String executableName,
     String description, {
-    required this.cliPackageVersion,
-  }) : super(executableName, appDescription(executableName, cliPackageVersion, description)) {
+    required this.version,
+  }) : super(executableName, appDescription(executableName, version, description)) {
     ZooConsole();
+    ZooLogger(printer: (level, message) => ZooConsole.instance.writeln(message));
   }
-  final String cliPackageVersion;
+  final String version;
 
   static ZooConsole get console => ZooConsole.instance;
+  static ZooLogger get logger => ZooLogger.instance;
   static String appDescription(String executableName, String cliPackageVersion, String description) {
     final StringBuffer buffer = StringBuffer();
     buffer.write(console.prefixStartStyled);
@@ -29,7 +32,8 @@ class ZooRunner extends CommandRunner<dynamic> {
   }
 
   @override
-  Future<dynamic> run(Iterable<String> args) {
+  Future<int?> run(Iterable<String> args) {
+    console.clear();
     final p = parse(args);
     // p.flag('debug') ? console.level = LogLevel.verbose : console.level = LogLevel.info;
     return super.run(args);

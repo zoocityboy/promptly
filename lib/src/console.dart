@@ -1,13 +1,14 @@
-import 'package:zoo_console/src/components/confirm.dart';
-import 'package:zoo_console/src/components/input.dart';
-import 'package:zoo_console/src/components/multi_select.dart';
-import 'package:zoo_console/src/components/password.dart';
-import 'package:zoo_console/src/components/select.dart';
-import 'package:zoo_console/src/components/spinner.dart';
-import 'package:zoo_console/src/framework/framework.dart';
+import 'package:zoo_console/src/components/loader.dart';
 import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/zoo_console.dart';
 
+part 'console.direct.dart';
+
+/// A class that represents a console for the Zoo application.
+///
+/// This class provides various methods and properties to interact with
+/// the console, allowing for input and output operations within the Zoo
+/// application.
 class ZooConsole {
   static final ZooConsole _instance = ZooConsole._internal();
 
@@ -58,7 +59,7 @@ class ZooConsole {
   String get prefixErrorStyled => theme.errorStyle('■').padRight(spacing);
 
   /// Returns a styled trace start prefix with padding and cyan color.
-  String get prefixTraceStartStyled => '•'.padRight(spacing).white();
+  String get prefixTraceStartStyled => '•'.padRight(spacing).cyan();
 
   /// Returns a styled trace item prefix with padding, cyan color, and dim effect.
   String get prefixTraceItemStyled => '▹'.padRight(spacing).cyan().dim();
@@ -78,6 +79,9 @@ class ZooConsole {
   ///
   /// - Parameter message: The message to be written to the console.
   void write(String message) => _ctx.write(message);
+  void writeStyled(String message) => _ctx
+    ..write(prefixVerticalStyled)
+    ..write(theme.defaultStyle(message));
 
   /// Writes a message to the console followed by a newline.
   ///
@@ -85,6 +89,14 @@ class ZooConsole {
   ///
   /// @param message The message to be written to the console.
   void writeln(String message) => _ctx.writeln(message);
+  void writelnStyled(String message) => _ctx
+    ..write(prefixVerticalStyled)
+    ..writeln(theme.defaultStyle(message));
+
+  void style(String message, {String Function(ZooConsole)? prefix, bool newLine = true}) => _ctx
+    ..write(prefix != null ? prefix.call(this) : prefixVerticalStyled)
+    ..write(theme.defaultStyle(message))
+    ..write(newLine ? '\n$prefixVerticalStyled\n' : '');
 
   /// Logs an informational message to the console.
   ///
@@ -151,6 +163,7 @@ class ZooConsole {
   /// Clears the console screen.
   void clear() {
     Context.reset();
+    _ctx.wipe();
   }
 
   /// Starts the console with the given title and an optional message.
@@ -171,7 +184,7 @@ class ZooConsole {
       sb.write(_theme.hintStyle(message));
     }
     _ctx.writeln(sb.toString());
-    verticalLine();
+    line();
   }
 
   /// Ends the current console session with an optional message.
@@ -191,26 +204,32 @@ class ZooConsole {
       sb.write(' ');
       sb.write(_theme.hintStyle(message));
     }
-    verticalLine();
+    line();
     _ctx.writeln(sb.toString());
   }
 
-  void newLine() {
-    _ctx.writeln(' ');
+  void spacer() => _ctx.writeln('');
+
+  void line({String? message}) {
+    if (message == null) {
+      _ctx.writeln(prefixVerticalStyled);
+    } else {
+      _ctx.write(prefixVerticalStyled);
+      _ctx.write(theme.defaultStyle(message));
+      _ctx.writeln();
+    }
   }
 
-  void verticalLine() {
-    _ctx.writeln(prefixVerticalStyled);
-  }
+  String link(LinkData data) => data.link();
 
-  /// Constructs an [Input] component with the supplied_theme.
+  /// Constructs an [Prompt] component with the supplied_theme.
   String prompt(
     String prompt, {
-    bool Function(String)? validator,
+    Validator<String>? validator,
     String initialText = '',
     String? defaultValue,
   }) =>
-      Input.withTheme(
+      Prompt.withTheme(
         theme: _theme,
         prompt: prompt,
         validator: validator,
@@ -237,51 +256,65 @@ class ZooConsole {
   bool confirm(
     String prompt, {
     bool? defaultValue,
-    bool waitForNewLine = false,
+    bool enterForConfirm = false,
   }) =>
-      Confirm.withTheme(theme: _theme, prompt: prompt, defaultValue: defaultValue, waitForNewLine: waitForNewLine)
+      Confirm.withTheme(theme: _theme, prompt: prompt, defaultValue: defaultValue, enterForConfirm: enterForConfirm)
           .interact();
 
   /// Constructs a [Select] component with the supplied_theme.
   T select<T>(
     String prompt, {
-    required List<T> options,
+    required List<T> choices,
     T? defaultValue,
-    required String Function(T) display,
+    required String Function(T)? display,
   }) {
     final result = Select.withTheme(
       theme: _theme,
       prompt: prompt,
-      options: options.map(display).toList(),
-      initialIndex: defaultValue != null ? options.indexOf(defaultValue) : 0,
+      choices: choices.map((e) => display?.call(e) ?? e.toString()).toList(),
+      initialIndex: defaultValue != null ? choices.indexOf(defaultValue) : 0,
     ).interact();
-    return options[result];
+    return choices[result];
   }
 
   /// Constructs a [MultiSelect] component with the supplied_theme.
   List<T> multiSelect<T>(
     String prompt, {
-    required List<T> options,
+    required List<T> choices,
     List<T>? defaultValues,
-    required String Function(T) display,
+    String Function(T)? display,
   }) {
     final result = MultiSelect.withTheme(
       theme: _theme,
       prompt: prompt,
-      options: options.map(display).toList(),
-      defaults: defaultValues != null ? options.map((e) => defaultValues.contains(e)).toList() : null,
+      choices: choices.map((e) => display?.call(e) ?? e.toString()).toList(),
+      defaults: defaultValues != null ? choices.map((e) => defaultValues.contains(e)).toList() : null,
     ).interact();
-    return result.map((index) => options[index]).toList();
+    return result.map((index) => choices[index]).toList();
   }
 
-  /// Constructs a [Spinner] component with the supplied_theme.
-  SpinnerState progress(
+  TableRow table(
+    String prompt, {
+    required List<String> headers,
+    required List<TableRow> rows,
+  }) {
+    final result = Table.withTheme(
+      prompt,
+      theme: _theme,
+      headers: headers,
+      rows: rows,
+    ).interact();
+    return rows[result];
+  }
+
+  /// Constructs a [Loader] component with the supplied_theme.
+  LoaderState processing(
     String prompt, {
     String? successMessage,
     String? failedMessage,
     bool clear = false,
   }) =>
-      Spinner.withTheme(
+      Loader.withTheme(
         prompt: prompt,
         theme: _theme,
         icon: _theme.successPrefix,
@@ -291,6 +324,10 @@ class ZooConsole {
 
   /// Executes a task asynchronously.
   ///
+  /// This function performs an asynchronous operation. The specific details
+  /// of the task are not provided in this snippet.
+  ///
+  /// Returns a [Future] that completes with no value when the task is done.
   /// This method performs a specific task and returns a [Future] that completes
   /// when the task is finished. The exact nature of the task is not specified
   /// in this snippet.
@@ -299,12 +336,12 @@ class ZooConsole {
   /// - Any exceptions that might occur during the execution of the task.
   Future<void> task(
     String prompt, {
-    required Future<void> Function(SpinnerState spinner) task,
+    required Future<void> Function(LoaderState spinner) task,
     String? successMessage,
     String? failedMessage,
     bool clear = false,
   }) async {
-    final spinner = Spinner.withTheme(
+    final spinner = Loader.withTheme(
       prompt: prompt,
       theme: _theme,
       icon: _theme.successPrefix,
@@ -313,87 +350,10 @@ class ZooConsole {
     ).interact();
     try {
       final result = await task(spinner);
-
       spinner.success(successMessage);
       return result;
     } catch (e) {
-      spinner.failed(failedMessage);
+      spinner.failed(failedMessage ?? e.toString());
     }
   }
 }
-
-/// Prompts the user with a message and returns their input as a string.
-///
-/// The function displays a message to the user and waits for their input.
-/// Once the user provides their input, it is returned as a string.
-///
-/// Returns:
-///   A string containing the user's input.
-String prompt(
-  String prompt, {
-  bool Function(String)? validator,
-  String initialText = '',
-  String? defaultValue,
-}) =>
-    ZooConsole.instance.prompt(prompt, validator: validator, initialText: initialText, defaultValue: defaultValue);
-
-/// Constructs a [Password] component with the suppliedzooConsoleTheme.
-String password(
-  String prompt, {
-  bool confirmation = false,
-  String? confirmPrompt,
-  String? confirmError,
-}) =>
-    ZooConsole.instance
-        .password(prompt, confirmation: confirmation, confirmPrompt: confirmPrompt, confirmError: confirmError);
-
-/// Constructs a [Confirm] component with the suppliedzooConsoleTheme.
-bool confirm(
-  String prompt, {
-  bool? defaultValue,
-  bool waitForNewLine = false,
-}) =>
-    ZooConsole.instance.confirm(prompt, defaultValue: defaultValue, waitForNewLine: waitForNewLine);
-
-/// Constructs a [Select] component with the suppliedzooConsoleTheme.
-T select<T>(
-  String prompt, {
-  required List<T> options,
-  T? defaultValue,
-  required String Function(T) display,
-}) =>
-    ZooConsole.instance.select(prompt, options: options, defaultValue: defaultValue, display: display);
-
-/// Constructs a [MultiSelect] component with the suppliedzooConsoleTheme.
-List<T> multiSelect<T>(
-  String prompt, {
-  required List<T> options,
-  List<T>? defaultValues,
-  required String Function(T) display,
-}) =>
-    ZooConsole.instance.multiSelect(prompt, options: options, defaultValues: defaultValues, display: display);
-
-/// Constructs a [Spinner] component with the suppliedzooConsoleTheme.
-SpinnerState progress(
-  String prompt, {
-  String? successMessage,
-  String? failedMessage,
-  bool clear = false,
-}) =>
-    ZooConsole.instance.progress(prompt, successMessage: successMessage, failedMessage: failedMessage, clear: clear);
-
-Future<void> task(
-  String prompt, {
-  required Future<void> Function(SpinnerState spinner) task,
-  String? successMessage,
-  String? failedMessage,
-  bool clear = false,
-}) =>
-    ZooConsole.instance
-        .task(prompt, task: task, successMessage: successMessage, failedMessage: failedMessage, clear: clear);
-
-void newLine() => ZooConsole.instance.newLine();
-void verticalLine() => ZooConsole.instance.verticalLine();
-void clear() => ZooConsole.instance.clear();
-void start(String title, {String? message}) => ZooConsole.instance.start(title, message: message);
-void end(String title, {String? message}) => ZooConsole.instance.end(title, message: message);

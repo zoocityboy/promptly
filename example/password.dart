@@ -1,12 +1,13 @@
-import 'dart:io' show stdout;
-
-import 'package:zoo_console/src/components/password.dart';
+import 'package:zoo_console/zoo_console.dart';
 
 void main() {
-  final password = Password(
-    prompt: 'Password',
+  start('Password', message: 'Enter your password');
+  final value = password(
+    'Password',
     confirmation: true,
     confirmPrompt: 'Repeat password',
-  ).interact();
-  stdout.writeln(password);
+  );
+  spacer();
+  line();
+  end('Password', message: 'Password `$value` entered');
 }

@@ -9,7 +9,7 @@ class Confirm extends Component<bool> {
   Confirm({
     required this.prompt,
     this.defaultValue,
-    this.waitForNewLine = false,
+    this.enterForConfirm = false,
   }) : theme = Theme.zooTheme;
 
   /// Constructs a [Confirm] component with the supplied theme.
@@ -17,7 +17,7 @@ class Confirm extends Component<bool> {
     required this.theme,
     required this.prompt,
     this.defaultValue,
-    this.waitForNewLine = false,
+    this.enterForConfirm = false,
   });
 
   /// The theme of the component.
@@ -31,7 +31,7 @@ class Confirm extends Component<bool> {
 
   /// Determines whether to wait for the Enter key after
   /// the user has responded.
-  final bool waitForNewLine;
+  final bool enterForConfirm;
 
   @override
   _ConfirmState createState() => _ConfirmState();
@@ -87,7 +87,7 @@ class _ConfirmState extends State<Confirm> {
       if (key.isControl) {
         if (key.controlChar == ControlCharacter.enter &&
             answer != null &&
-            (component.waitForNewLine || component.defaultValue != null)) {
+            (component.enterForConfirm || component.defaultValue != null)) {
           return answer!;
         }
       } else {
@@ -96,14 +96,14 @@ class _ConfirmState extends State<Confirm> {
             setState(() {
               answer = true;
             });
-            if (!component.waitForNewLine) {
+            if (!component.enterForConfirm) {
               return answer!;
             }
           case 'n':
             setState(() {
               answer = false;
             });
-            if (!component.waitForNewLine) {
+            if (!component.enterForConfirm) {
               return answer!;
             }
           default:

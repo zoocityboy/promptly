@@ -3,12 +3,11 @@ import 'package:zoo_console/src/theme/theme.dart';
 
 Future<void> main() async {
   const length = 1000;
-  final theme = Theme.colorfulTheme;
+  final theme = Theme.zooTheme;
 
   final progress = Progress.withTheme(
     theme: theme,
     length: length,
-    rightPrompt: (current) => ' ${current.toString().padLeft(3)}/$length',
   ).interact();
 
   for (var i = 0; i < 500; i++) {

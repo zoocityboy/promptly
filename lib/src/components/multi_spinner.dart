@@ -1,11 +1,11 @@
+import 'package:zoo_console/src/components/loader.dart';
 import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/components/spinner.dart';
 
-/// A shared context and handler for rendering multiple [Spinner]s.
+/// A shared context and handler for rendering multiple [Loader]s.
 class MultiSpinner {
   final Context _context = Context();
   final List<StringBuffer> _lines = [];
-  final List<SpinnerState> _spinners = [];
+  final List<LoaderState> _spinners = [];
   final List<void Function()> _disposers = [];
 
   void _dispose(void Function() fn) {
@@ -31,8 +31,8 @@ class MultiSpinner {
     _context.increaseRenderCount();
   }
 
-  /// Adds a new [Spinner] to current [MultiSpinner].
-  SpinnerState add(Spinner spinner) {
+  /// Adds a new [Loader] to current [MultiSpinner].
+  LoaderState add(Loader spinner) {
     final index = _spinners.length;
 
     _lines.add(StringBuffer());
@@ -44,7 +44,7 @@ class MultiSpinner {
     );
     _spinners.add(spinner.interact());
 
-    final state = SpinnerState(
+    final state = LoaderState(
       success: (message) {
         final disposer = _spinners[index].success(message);
         _dispose(() {

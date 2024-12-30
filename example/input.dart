@@ -1,36 +1,27 @@
-import 'package:zoo_console/src/components/input.dart';
-import 'package:zoo_console/zoo_console.dart' show Input, Theme, ValidationError, ZooConsole, prompt;
+import 'package:zoo_console/zoo_console.dart' show EmailValidator, end, line, prompt, start;
 
 void main() {
-  final console = ZooConsole();
-  final name = console.prompt('Your name');
-  console.writeln(name);
+  start('Input', message: 'Please provide the following information:');
+  final name = prompt('Your name');
+  line();
 
   final email = prompt(
     'Your email',
-    validator: (String x) {
-      if (x.contains('@')) {
-        return true;
-      } else {
-        throw ValidationError('Not a valid email');
-      }
-    },
+    validator: EmailValidator(),
   );
-
-  console.writeln(email);
-  console.verticalLine();
+  line();
 
   final planet = prompt(
     'Your planet',
     defaultValue: 'Earth',
   );
-  console.writeln(planet);
-  console.verticalLine();
+  line();
 
   final galaxy = prompt(
     'Your galaxy',
     initialText: 'Andromeda',
   );
-  console.writeln(galaxy);
-  console.verticalLine();
+  line();
+
+  end('end', message: '$name, $email, $planet, $galaxy');
 }

@@ -23,10 +23,11 @@ As an overview, you can make a `Select` component like this.
 
 ```dart
 final languages = ['Rust', 'Dart', 'TypeScript'];
-final selection = Select(
-  prompt: 'Your favorite programming language',
+final selection = select<String>(
+  'Your favorite programming language',
   options: languages,
-).interact();
+
+);
 
 print('${languages[selection]}');
 ```
@@ -39,7 +40,7 @@ It will result in something like this,
 
 ## Installation
 
-Install the latest version of interact as a dependency as shown in [pub.dev](https://pub.dev/packages/interact).
+Install the latest version of interact as a dependency as shown in [pub.dev](https://pub.dev/packages/zoo_console).
 
 <br>
 
@@ -47,7 +48,7 @@ Install the latest version of interact as a dependency as shown in [pub.dev](htt
 
 ### Components
 
-These are the snippets of components with their properties and arguments. Check the [pub documentation](https://pub.dev/documentation/interact/latest/) to get to know more about them in detail.
+These are the snippets of components with their properties and arguments. Check the [pub documentation](https://pub.dev/documentation/zoo_console/latest/) to get to know more about them in detail.
 
 <br>
 
@@ -56,11 +57,11 @@ These are the snippets of components with their properties and arguments. Check 
 A confirm component asks the user for a simple yes or no and will return a boolean accordingly.
 
 ```dart
-final answer = Confirm(
-  prompt: 'Does it work?',
+final answer = confirm(
+  'Does it work?',
   defaultValue: true, // this is optional
   waitForNewLine: true, // optional and will be false by default
-).interact();
+);
 ```
 
 If `waitForNewLine` is true, the prompt will wait for an <kbd>Enter</kbd> key from the user regardless of the answer.
@@ -72,7 +73,7 @@ If `waitForNewLine` is true, the prompt will wait for an <kbd>Enter</kbd> key fr
 An input component asks the user for a string that could be validated.
 
 ```dart
-final email = Input(
+final email = prompt<String>(
   prompt: 'Your email',
   defaultValue: '', // optional, will provide the user as a hint
   initialText: '', // optional, will be autofilled in the input
@@ -83,7 +84,7 @@ final email = Input(
       throw ValidationError('Not a valid email');
     }
   },
-).interact();
+);
 ```
 
 The message passed in the `ValidationError` exception will be shown as an error until the validator returns true.
@@ -95,12 +96,12 @@ The message passed in the `ValidationError` exception will be shown as an error 
 A password component behaves pretty much the same as an input component, but the user input will be hidden and by default, it has a repeat password validator that checks if two password inputs are the same or not.
 
 ```dart
-final password = Password(
+final value = password(
   prompt: 'Password',
   confirmation: true, // optional and will be false by default
   confirmPrompt: 'Repeat password', // optional
   confirmError: 'Passwords do not match' // optional
-).interact();
+);
 ```
 
 <br>
@@ -112,11 +113,32 @@ A select component asks the user to choose between the options supplied and the 
 ```dart
 final languages = ['Rust', 'Dart', 'TypeScript'];
 
-final selection = Select(
+final selection = select<String>(
   prompt: 'Your favorite programming language',
   options: languages,
-  initialIndex: 2, // optional, will be 0 by default
-).interact();
+  defaultValue: languages[2], // optional, will be 0 by default
+);
+```
+
+
+```dart
+/// Custom lang class
+class Lang{
+  const Lang(this.name, this.code)
+  final name;
+  final code;
+
+  String get display => '$name ($code)';
+}
+
+// available choices
+final languages = [Lang('English','en'),Lang('Czech','cs')];
+final selection = select<Lang>(
+  prompt: 'Your favorite language',
+  options: languages,
+  defaultValue: languages[2],
+  display:(value)=> value.display,
+);
 ```
 
 <br>
@@ -126,11 +148,31 @@ final selection = Select(
 A multi-select component asks the user for multiple options check by using the <kbd>SpaceBar</kbd>. Similarly, the multi-select component will return a list of selected indexes.
 
 ```dart
-final answers = MultiSelect(
+final options = ['A', 'B', 'C'];
+final answers = multiSelect<String>(
   prompt: 'Let me know your answers',
-  options: ['A', 'B', 'C'],
-  defaults: [false, true, false], // optional, will be all false by default
-).interact();
+  options: options,
+  defaults: [options[0]], // optional, will be all false by default
+);
+```
+
+
+```dart
+class Lang{
+  const Lang(this.name, this.code)
+  final name;
+  final code;
+
+  String get display => '$name ($code)';
+}
+final languages = [Lang('English','en'),Lang('Czech','cs')];
+
+final selection = multiSelect<Lang>(
+  prompt: 'Your favorite language',
+  options: languages,
+  defaultValue: [languages[2]],
+  display:(value)=> value.display,
+);
 ```
 
 <br>
@@ -156,18 +198,10 @@ Sometimes the list given can be massive, so setting the `showOutput` to false ma
 A spinner will show a spinning indicator until the user calls it's `done` method. When it's done, it shows the icon given in place of the spinner.
 
 ```dart
-final gift = Spinner(
-  icon: '🏆',
-  leftPrompt: (done) => '', // prompts are optional
-  rightPrompt: (state) => switch (state) {
-      SpinnerStateType.inProgress => 'Processing...',
-      SpinnerStateType.done => 'Done!',
-      SpinnerStateType.failed => 'Failed!',
-    },
-).interact();
+final gift = loader('Loadingn data');
 
 await Future.delayed(const Duration(seconds: 5));
-gift.done();
+gift.success('Data loaded');
 ```
 
 Using multiple spinners at once is a common practice, but because of the way the library renders things, it's not possible to have multiple them normally. It will break the rendering process of all components.
@@ -233,38 +267,6 @@ p1.done();
 
 <br>
 
-### Customizing Themes
-
-Because most of the visually rendered parts come from the theme object which is available for all components, you can customize a lot of them by changing the theme. Changing a theme for a component can be done by using the `withTheme` constructor.
-
-```dart
-final progress = Progress.withTheme(
-  theme: Theme(),
-  length: length,
-  rightPrompt: (current) => ' ${current.toString().padLeft(3)}/$length',
-).interact();
-```
-
-The components used the `Theme.defaultTheme` as the theme by default. The `Theme` object has two premade themes,
-
-- `Theme.colorfulTheme` which is made with colorful ASCII/emojis
-- `Theme.basicTheme` which is mostly text characters and without colors
-
-and the `Theme.defaultTheme` is the colorful theme by default.
-
-Because constructing a theme from scrap requires you to write a lot of properties, it might be easier to extend existing themes to create a new one which can be done using the `copyWith` method.
-
-```dart
-import 'package:tint/tint.dart'; // for extension methods
-// ...
-Theme customTheme = Theme.colorfulTheme.copyWith(
-  activeItemPrefix: '👉'
-  activeItemStyle: (x) => x.yellow().underline(),
-);
-```
-
-Technically, you can also override `Theme.defaultTheme` as a shortcut.
-
 ### Handling Exceptions
 
 If your program throw exceptions and exit midway, interact's components won't be able to finish their tasks and gracefully quit therefore causing certain problems like cursors not showing up, terminal colors got modified etc. To fix these problems you should always try to catch exceptions and reset to terminal defaults using `reset` function.
@@ -281,13 +283,13 @@ try {
 
 <br>
 
-## Forked from [frencojobs/interact](https://github.com/frencojobs/interact)
+## Forked from [payam-zahedi/interact](https://github.com/payam-zahedi/interact)
 
-This repository is a fork of the original [interact](https://github.com/frencojobs/interact) created by [frencojobs](https://github.com/frencojobs/), which was licensed under the MIT License.
+This repository is a fork of the original [interact](https://github.com/payam-zahedi/interact) created by [payam-zahedi](https://github.com/payam-zahedi/), which was licensed under the MIT License.
 
 ##### Intent and Purpose
 
-I have forked this repository to continue its development and address maintenance issues since the original project is no longer actively maintained.
+I want to open source my improvements and custom implementations based on [payam-zahedi/interact](https://github.com/payam-zahedi/interact)
 
 
 <br>

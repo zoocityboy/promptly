@@ -1,27 +1,25 @@
 import 'package:zoo_console/src/components/components.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/zoo_console.dart' show MultiProgress, Progress, Theme, Tint;
+import 'package:zoo_console/src/console.dart';
 
 Future<void> main() async {
   final bars = MultiProgress();
-
+  ZooConsole();
   const length = 1000;
-  final theme = Theme.basicTheme.copyWith(
-    emptyProgress: '-',
-    progressPrefix: '',
-    progressSuffix: '',
-    emptyProgressStyle: (x) => x.blue(),
-    filledProgressStyle: (x) => x.cyan(),
-    leadingProgressStyle: (x) => x.cyan(),
-  );
+  // final theme = Theme.basicTheme.copyWith(
+  //   emptyProgress: '-',
+  //   progressPrefix: '',
+  //   progressSuffix: '',
+  //   emptyProgressStyle: (x) => x.darkGray(),
+  //   filledProgressStyle: (x) => x.green(),
+  //   leadingProgressStyle: (x) => x.cyan(),
+  // );
+  final theme = ZooConsole.instance.theme;
 
   final p1 = bars.add(
     Progress.withTheme(
       size: 0.5,
       theme: theme,
       length: length,
-      leftPrompt: (current) => '${(current / length).toStringAsPrecision(2).padLeft(4)} % ',
-      rightPrompt: (current) => ' ${current.toString().padLeft(4)}/$length',
     ),
   );
 
@@ -30,8 +28,6 @@ Future<void> main() async {
       size: 0.5,
       theme: theme,
       length: length,
-      leftPrompt: (current) => '${(current / length).toStringAsPrecision(2).padLeft(4)} % ',
-      rightPrompt: (current) => ' ${current.toString().padLeft(4)}/$length',
     ),
   );
 
@@ -40,8 +36,6 @@ Future<void> main() async {
       size: 0.5,
       theme: theme,
       length: length,
-      leftPrompt: (current) => '${(current / length).toStringAsPrecision(2).padLeft(4)} % ',
-      rightPrompt: (current) => ' ${current.toString().padLeft(4)}/$length',
     ),
   );
 

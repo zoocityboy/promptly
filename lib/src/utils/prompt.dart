@@ -36,10 +36,12 @@ String promptSuccess({
   buffer.writeln(message.gray());
 
   for (final part in parts) {
-    buffer.write(' '.padLeft(spacing) + theme.messageStyle(theme.successSuffix));
+    // buffer.write(' '.padLeft(spacing) + theme.messageStyle(theme.successSuffix));
+    buffer.write(' '.padLeft(spacing));
     buffer.write(theme.valueStyle(part));
     if (part != parts.last) buffer.writeln(' '.padLeft(spacing));
   }
+  buffer.write('\n');
 
   return buffer.toString();
 }

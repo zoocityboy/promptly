@@ -6,7 +6,23 @@ import 'package:zoo_console/src/framework/framework.dart';
 import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/src/utils/utils.dart';
 
-String _prompt(int x) => '';
+String _startLabel(ProgressData x) {
+  int numDigits(int n) => n.toString().length;
+  return '${x.filled.toString().padLeft(numDigits(x.length), '')}/${x.length}';
+}
+
+String _endLabel(ProgressData x) {
+  int numDigits(int n) => n.toString().length;
+  return '${x.percentage.toString().padLeft(numDigits(x.length), '')}%';
+}
+
+typedef ProgressData = ({int filled, int length});
+
+extension ProgressDataPercentage on ProgressData {
+  int get percentage => ((filled / length) * 100).toInt();
+}
+
+typedef ProgressFn = String Function(ProgressData progress);
 
 /// A progress bar component.
 class Progress extends Component<ProgressState> {
@@ -14,8 +30,8 @@ class Progress extends Component<ProgressState> {
   Progress({
     required this.length,
     this.size = 1.0,
-    this.leftPrompt = _prompt,
-    this.rightPrompt = _prompt,
+    this.startLabel = _startLabel,
+    this.endLabel = _endLabel,
   }) : theme = Theme.zooTheme;
 
   /// Constructs a [Progress] component with the supplied theme.
@@ -23,8 +39,8 @@ class Progress extends Component<ProgressState> {
     required this.theme,
     required this.length,
     this.size = 1.0,
-    this.leftPrompt = _prompt,
-    this.rightPrompt = _prompt,
+    this.startLabel = _startLabel,
+    this.endLabel = _endLabel,
   });
 
   Context? _context;
@@ -43,11 +59,11 @@ class Progress extends Component<ProgressState> {
 
   /// The prompt function to be shown on the left side
   /// of the progress bar.
-  final String Function(int) leftPrompt;
+  final ProgressFn startLabel;
 
   /// The prompt function to be shown on the right side
   /// of the progress bar.
-  final String Function(int) rightPrompt;
+  final ProgressFn endLabel;
   @override
   _ProgressState createState() => _ProgressState();
 
@@ -117,15 +133,15 @@ class _ProgressState extends State<Progress> {
   @override
   void render() {
     final line = StringBuffer();
-    final leftPrompt = component.leftPrompt(current);
-    final rightPrompt = component.rightPrompt(current);
+    final startLabel = component.startLabel((filled: current, length: component.length));
+    final endLabel = component.endLabel((filled: current, length: component.length));
     final occupied = component.theme.progressPrefix.strip().length +
         component.theme.progressSuffix.strip().length +
-        leftPrompt.strip().length +
-        rightPrompt.strip().length;
+        startLabel.strip().length +
+        endLabel.strip().length;
     final available = (context.windowWidth * component.size).round() - occupied;
 
-    line.write(leftPrompt);
+    line.write(startLabel);
     line.write(component.theme.progressPrefix);
     line.write(
       _progress(
@@ -135,7 +151,7 @@ class _ProgressState extends State<Progress> {
       ),
     );
     line.write(component.theme.progressSuffix);
-    line.write(rightPrompt);
+    line.write(endLabel);
 
     context.writeln(line.toString());
   }

@@ -1,23 +1,23 @@
-import 'dart:io' show stdout;
-
-import 'package:zoo_console/src/components/multi_select.dart';
+import 'package:zoo_console/zoo_console.dart';
 
 void main() {
+  start('Multi Select', message: 'Select your favorite musicals');
   final musicals = ['Hamilton', 'Dear Evan Hansen', 'Wicked'];
 
-  final x = MultiSelect(
-    prompt: 'Let me know your favorite musicals',
-    options: musicals,
-    defaults: [false, true, false],
-  ).interact();
+  final x = multiSelect<String>(
+    'Let me know your favorite musicals',
+    choices: musicals,
+    display: (p0) => p0,
+    defaultValues: [musicals[0], musicals[2]],
+  );
 
   if (x.isEmpty) {
-    stdout.writeln("Oh, you're not a musical fan.");
+    console.style("Oh, you're not a musical fan.");
   } else if (x.length == 3) {
-    stdout.writeln("Omg you're such a musical fan!");
+    console.style("Omg you're such a musical fan!");
   } else {
-    stdout.writeln(
-      '${x.map((i) => musicals[i]).join(' and ')} '
+    end(
+      '${x.map((i) => i).join(' and ')} '
       '${x.length == 1 ? 'is' : 'are'} the best!',
     );
   }

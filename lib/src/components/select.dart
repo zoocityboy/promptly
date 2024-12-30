@@ -8,14 +8,14 @@ class Select extends Component<int> {
   /// Constructs a [Select] component with the default theme.
   Select({
     required this.prompt,
-    required this.options,
+    required this.choices,
     this.initialIndex = 0,
   }) : theme = Theme.zooTheme;
 
   /// Constructs a [Select] component with the supplied theme.
   Select.withTheme({
     required this.prompt,
-    required this.options,
+    required this.choices,
     required this.theme,
     this.initialIndex = 0,
   });
@@ -33,7 +33,7 @@ class Select extends Component<int> {
 
   /// The [List] of available [String] options to show
   /// to the user.
-  final List<String> options;
+  final List<String> choices;
 
   @override
   _SelectState createState() => _SelectState();
@@ -46,11 +46,11 @@ class _SelectState extends State<Select> {
   void init() {
     super.init();
 
-    if (component.options.isEmpty) {
+    if (component.choices.isEmpty) {
       throw Exception("Options can't be empty");
     }
 
-    if (component.options.length - 1 < component.initialIndex) {
+    if (component.choices.length - 1 < component.initialIndex) {
       throw Exception("Default value is out of options' range");
     } else {
       index = component.initialIndex;
@@ -71,7 +71,7 @@ class _SelectState extends State<Select> {
       promptSuccess(
         theme: component.theme,
         message: component.prompt,
-        value: component.options[index],
+        value: component.choices[index],
       ),
     );
     context.showCursor();
@@ -81,8 +81,8 @@ class _SelectState extends State<Select> {
 
   @override
   void render() {
-    for (var i = 0; i < component.options.length; i++) {
-      final option = component.options[i];
+    for (var i = 0; i < component.choices.length; i++) {
+      final option = component.choices[i];
       final line = StringBuffer();
 
       if (i == index) {
@@ -106,11 +106,11 @@ class _SelectState extends State<Select> {
       switch (key.controlChar) {
         case ControlCharacter.arrowUp:
           setState(() {
-            index = (index - 1) % component.options.length;
+            index = (index - 1) % component.choices.length;
           });
         case ControlCharacter.arrowDown:
           setState(() {
-            index = (index + 1) % component.options.length;
+            index = (index + 1) % component.choices.length;
           });
         case ControlCharacter.enter:
           return index;

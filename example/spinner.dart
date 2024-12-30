@@ -4,7 +4,7 @@ import 'package:zoo_console/zoo_console.dart';
 Future<void> main() async {
   final theme = Theme.zooTheme;
 
-  final gift = progress(
+  final gift = processing(
     'Spinning the wheel...',
   );
 

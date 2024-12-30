@@ -12,6 +12,7 @@ dependencies:
   dart_console: ^4.1.0
   meta: ^1.15.0
   tint: ^2.0.0
+  version: ^3.0.2
 
 dev_dependencies:
   lint: ^2.0.1

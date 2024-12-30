@@ -8,14 +8,14 @@ class MultiSelect extends Component<List<int>> {
   /// Constructs a [MultiSelect] component with the default theme.
   MultiSelect({
     required this.prompt,
-    required this.options,
+    required this.choices,
     this.defaults,
   }) : theme = Theme.zooTheme;
 
   /// Constructs a [MultiSelect] component with the supplied theme.
   MultiSelect.withTheme({
     required this.prompt,
-    required this.options,
+    required this.choices,
     required this.theme,
     this.defaults,
   });
@@ -28,7 +28,7 @@ class MultiSelect extends Component<List<int>> {
 
   /// The [List] of available [String] options to show to
   /// the user.
-  final List<String> options;
+  final List<String> choices;
 
   /// The default values to indicate which options are checked.
   final List<bool>? defaults;
@@ -47,16 +47,16 @@ class _MultiSelectState extends State<MultiSelect> {
 
     index = 0;
     selection = [];
-    if (component.options.isEmpty) {
+    if (component.choices.isEmpty) {
       throw Exception("Options can't be empty");
     }
 
     if (component.defaults != null) {
-      if (component.defaults!.length != component.options.length) {
+      if (component.defaults!.length != component.choices.length) {
         throw Exception(
           'Default selections have a different length of '
           '${component.defaults!.length} '
-          'than options of ${component.options.length}',
+          'than options of ${component.choices.length}',
         );
       } else {
         selection.addAll(
@@ -76,7 +76,7 @@ class _MultiSelectState extends State<MultiSelect> {
 
   @override
   void dispose() {
-    final values = selection.map((x) => component.options[x]).map(component.theme.valueStyle).join('☃︎ ');
+    final values = selection.map((x) => component.choices[x]).map(component.theme.valueStyle).join('☃︎ ');
 
     context.writeln(
       promptSuccess(
@@ -92,8 +92,8 @@ class _MultiSelectState extends State<MultiSelect> {
 
   @override
   void render() {
-    for (var i = 0; i < component.options.length; i++) {
-      final option = component.options[i];
+    for (var i = 0; i < component.choices.length; i++) {
+      final option = component.choices[i];
       final line = StringBuffer();
 
       if (component.theme.showActiveCursor) {
@@ -131,11 +131,11 @@ class _MultiSelectState extends State<MultiSelect> {
         switch (key.controlChar) {
           case ControlCharacter.arrowUp:
             setState(() {
-              index = (index - 1) % component.options.length;
+              index = (index - 1) % component.choices.length;
             });
           case ControlCharacter.arrowDown:
             setState(() {
-              index = (index + 1) % component.options.length;
+              index = (index + 1) % component.choices.length;
             });
           case ControlCharacter.enter:
             return selection;

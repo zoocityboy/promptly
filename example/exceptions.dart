@@ -1,9 +1,8 @@
-import 'package:zoo_console/src/components/spinner.dart';
-import 'package:zoo_console/zoo_console.dart' show Spinner, reset;
+import 'package:zoo_console/zoo_console.dart' show Loader, reset;
 
 Future<void> main() async {
   try {
-    Spinner(
+    Loader(
       prompt: 'throwing an exception',
       icon: '🚨',
     ).interact();
