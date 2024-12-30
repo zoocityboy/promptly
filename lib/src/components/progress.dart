@@ -27,23 +27,30 @@ typedef ProgressFn = String Function(ProgressData progress);
 /// A progress bar component.
 class Progress extends Component<ProgressState> {
   /// Constructs a [Progress] component with the default theme.
-  Progress({
+  Progress(
+    this.prompt, {
     required this.length,
     this.size = 1.0,
-    this.startLabel = _startLabel,
-    this.endLabel = _endLabel,
-  }) : theme = Theme.zooTheme;
+    ProgressFn? startLabel,
+    ProgressFn? endLabel,
+  })  : theme = Theme.zooTheme,
+        startLabel = startLabel ?? _startLabel,
+        endLabel = endLabel ?? _endLabel;
 
   /// Constructs a [Progress] component with the supplied theme.
-  Progress.withTheme({
+  Progress.withTheme(
+    this.prompt, {
     required this.theme,
     required this.length,
     this.size = 1.0,
-    this.startLabel = _startLabel,
-    this.endLabel = _endLabel,
-  });
+    ProgressFn? startLabel,
+    ProgressFn? endLabel,
+  })  : startLabel = startLabel ?? _startLabel,
+        endLabel = endLabel ?? _endLabel;
 
   Context? _context;
+
+  final String prompt;
 
   /// The theme of the component.
   final Theme theme;

@@ -6,6 +6,7 @@ Future<void> main() async {
   final theme = Theme.zooTheme;
 
   final progress = Progress.withTheme(
+    'Downloading',
     theme: theme,
     length: length,
   ).interact();

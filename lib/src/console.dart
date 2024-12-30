@@ -1,4 +1,4 @@
-import 'package:zoo_console/src/components/loader.dart';
+import 'package:zoo_console/src/components/components.dart';
 import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/zoo_console.dart';
 
@@ -306,6 +306,22 @@ class ZooConsole {
     ).interact();
     return rows[result];
   }
+
+  ProgressState progress(
+    String prompt, {
+    required int length,
+    double size = 1.0,
+    ProgressFn? startLabel,
+    ProgressFn? endLabel,
+  }) =>
+      Progress.withTheme(
+        prompt,
+        length: length,
+        theme: _theme,
+        size: size,
+        startLabel: startLabel,
+        endLabel: endLabel,
+      ).interact();
 
   /// Constructs a [Loader] component with the supplied_theme.
   LoaderState processing(

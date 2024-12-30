@@ -42,7 +42,7 @@ class IsNotEmptyValidator extends Validator<String> {
 }
 
 class CustomStringValidator extends Validator<String> {
-  CustomStringValidator(String message, this.validator) : super('');
+  CustomStringValidator(super.message, this.validator);
   final bool Function(String value) validator;
   @override
   void call(String value) {
@@ -54,7 +54,7 @@ class CustomStringValidator extends Validator<String> {
 
 /// A generic validator that takes a function to validate the input.
 class GenericValidator<T> extends Validator<T> {
-  GenericValidator(String message, this.validator) : super(message);
+  GenericValidator(super.message, this.validator);
   final bool Function(T value) validator;
   @override
   void call(T value) {

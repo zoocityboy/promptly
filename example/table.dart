@@ -34,21 +34,10 @@ const earlyPresidents = [
 ];
 
 void main() {
-  // final tabled = dartConsole.Table()
-  //   ..insertColumn(header: 'Number', alignment: dartConsole.TextAlignment.center)
-  //   ..insertColumn(header: 'Presidency', alignment: dartConsole.TextAlignment.right)
-  //   ..insertColumn(header: 'President')
-  //   ..insertColumn(header: 'Party')
-  //   ..insertRows(earlyPresidents)
-  //   ..borderStyle = dartConsole.BorderStyle.rounded
-  //   ..borderColor = dartConsole.ConsoleColor.brightBlue
-  //   ..borderType = dartConsole.BorderType.horizontal
-  //   ..headerStyle = dartConsole.FontStyle.bold;
-  // console.write(tabled.toString());
-
   final x = table(
     'Select a row:',
     headers: ['Number', 'Presidency', 'President', 'Party'],
     rows: earlyPresidents,
   );
+  write(x.toString());
 }

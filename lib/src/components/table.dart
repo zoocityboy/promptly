@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:dart_console/dart_console.dart' as dartConsole;
+import 'package:dart_console/dart_console.dart' as dc;
 import 'package:zoo_console/src/framework/framework.dart';
 import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/src/utils/prompt.dart';
@@ -85,7 +85,7 @@ class _TableState extends State<Table> {
 
   @override
   void render() {
-    final dartConsole.Table table = dartConsole.Table();
+    final dc.Table table = dc.Table();
     for (var i = 0; i < component.headers.length; i++) {
       table.insertColumn(header: component.headers[i]);
     }
@@ -96,10 +96,10 @@ class _TableState extends State<Table> {
           : component.rows[i];
       table.insertRow(data);
     }
-    table.borderStyle = dartConsole.BorderStyle.rounded;
-    table.borderColor = dartConsole.ConsoleColor.white;
-    table.borderType = dartConsole.BorderType.vertical;
-    table.headerStyle = dartConsole.FontStyle.bold;
+    table.borderStyle = dc.BorderStyle.rounded;
+    table.borderColor = dc.ConsoleColor.white;
+    table.borderType = dc.BorderType.vertical;
+    table.headerStyle = dc.FontStyle.bold;
     final rndr = table.render();
     tableRenderCount = rndr.split('\n').length;
     context.writeln(rndr);
@@ -110,21 +110,21 @@ class _TableState extends State<Table> {
     while (true) {
       final key = context.readKey();
       switch (key.controlChar) {
-        case dartConsole.ControlCharacter.arrowUp:
+        case dc.ControlCharacter.arrowUp:
           context.erasePreviousLine(tableRenderCount);
           context.resetLinesCount();
           setState(() {
             index = (index - 1) % component.rows.length;
           });
 
-        case dartConsole.ControlCharacter.arrowDown:
+        case dc.ControlCharacter.arrowDown:
           context.erasePreviousLine(tableRenderCount);
           context.resetLinesCount();
           setState(() {
             index = (index + 1) % component.rows.length;
           });
 
-        case dartConsole.ControlCharacter.enter:
+        case dc.ControlCharacter.enter:
           return index;
         default:
           break;

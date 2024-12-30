@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:args/command_runner.dart';
-import 'package:zoo_console/src/logger.dart';
+import 'package:zoo_console/src/command/global.dart';
 import 'package:zoo_console/src/theme/theme.dart';
 import 'package:zoo_console/zoo_console.dart';
 
@@ -14,6 +14,9 @@ class ZooRunner extends CommandRunner<int> {
   }) : super(executableName, appDescription(executableName, version, description)) {
     ZooConsole();
     ZooLogger(printer: (level, message) => ZooConsole.instance.writeln(message));
+    GlobalArgs(argParser)
+      ..addDebugFlag()
+      ..addVerboseFlag();
   }
   final String version;
 
@@ -35,7 +38,7 @@ class ZooRunner extends CommandRunner<int> {
   Future<int?> run(Iterable<String> args) {
     console.clear();
     final p = parse(args);
-    // p.flag('debug') ? console.level = LogLevel.verbose : console.level = LogLevel.info;
+    p.flag('debug') ? logger.level = ZooLogLevel.verbose : logger.level = ZooLogLevel.error;
     return super.run(args);
   }
 
@@ -86,7 +89,9 @@ extension CommandRunnerX on CommandRunner {
       buffer.writeLine(console.prefixVerticalStyled);
       buffer.write(_wrap(usageFooter ?? ''.gray()));
     }
-    buffer.writeln(console.prefixUsageStyled);
+    buffer.writeln();
+    buffer.writeln();
+    // buffer.writeln(console.prefixUsageStyled);
 
     return buffer.toString();
   }
@@ -200,7 +205,7 @@ String getZooCommandUsage(Map<String, Command> commands, {bool isSubcommand = fa
       final lines = wrapTextAsLines(command.summary, start: columnStart, length: lineLength);
       buffer.writeln();
       buffer.write(console.prefixVerticalStyled);
-      buffer.write('  ${command.name.white().padLeft(length)} ${command.hidden}   ${lines.first.darkGray()}');
+      buffer.write('  ${command.name.white().padLeft(length)}  ${console.theme.hintStyle(lines.first)}');
 
       for (final line in lines.skip(1)) {
         buffer.write(console.prefixVerticalStyled);

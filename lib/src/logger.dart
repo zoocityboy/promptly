@@ -53,6 +53,12 @@ class ZooLogger {
   /// Only messages with a severity equal to or higher than this level will be logged.
   ZooLogLevel _level;
 
+  /// The logging level for the logger.
+  // ignore: avoid_setters_without_getters
+  set level(ZooLogLevel level) {
+    _level = level;
+  }
+
   /// A printer instance used to handle the log output.
   ///
   /// This is an instance of [ZooLogPrinter] which is responsible for formatting

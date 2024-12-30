@@ -1,4 +1,4 @@
-library interact.framework;
+library zoo_console.framework;
 
 import 'dart:io';
 
@@ -7,4 +7,5 @@ import 'package:meta/meta.dart';
 
 part 'component.dart';
 part 'context.dart';
+part 'locator.dart';
 part 'state.dart';

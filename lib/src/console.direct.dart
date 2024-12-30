@@ -109,6 +109,44 @@ List<T> multiSelect<T>(
 }) =>
     ZooConsole.instance.multiSelect(prompt, choices: choices, defaultValues: defaultValues, display: display);
 
+/// Creates a table row with the specified properties.
+///
+/// This function returns a `TableRow` widget that can be used in a `Table`
+/// widget. The properties of the table row can be customized by passing
+/// the appropriate parameters.
+///
+/// Returns:
+///   A `TableRow` widget with the specified properties.
+TableRow table(
+  String prompt, {
+  required List<String> headers,
+  required List<TableRow> rows,
+}) =>
+    ZooConsole.instance.table(prompt, rows: rows, headers: headers);
+
+/// Creates a progress state with the specified parameters.
+///
+/// The [length] parameter is required and specifies the total length of the progress.
+/// The [size] parameter is optional and defaults to 1.0, specifying the size of the progress.
+/// The [startLabel] parameter is an optional function that returns a label to be displayed at the start of the progress.
+/// The [endLabel] parameter is an optional function that returns a label to be displayed at the end of the progress.
+///
+/// Returns a [ProgressState] object representing the progress state.
+ProgressState progress(
+  String prompt, {
+  required int length,
+  double size = 1.0,
+  ProgressFn? startLabel,
+  ProgressFn? endLabel,
+}) =>
+    ZooConsole.instance.progress(
+      prompt,
+      length: length,
+      size: size,
+      startLabel: startLabel,
+      endLabel: endLabel,
+    );
+
 /// Displays a processing loader with a given prompt message.
 ///
 /// The loader will display a success or failure message based on the outcome
@@ -182,18 +220,3 @@ String link(LinkData data) => ZooConsole.instance.link(data);
 
 void write(String message) => ZooConsole.instance.write(message);
 void writeln(String message) => ZooConsole.instance.writeln(message);
-
-/// Creates a table row with the specified properties.
-///
-/// This function returns a `TableRow` widget that can be used in a `Table`
-/// widget. The properties of the table row can be customized by passing
-/// the appropriate parameters.
-///
-/// Returns:
-///   A `TableRow` widget with the specified properties.
-TableRow table(
-  String prompt, {
-  required List<String> headers,
-  required List<TableRow> rows,
-}) =>
-    ZooConsole.instance.table(prompt, rows: rows, headers: headers);

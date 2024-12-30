@@ -17,6 +17,7 @@ Future<void> main() async {
 
   final p1 = bars.add(
     Progress.withTheme(
+      'Downloading',
       size: 0.5,
       theme: theme,
       length: length,
@@ -25,6 +26,7 @@ Future<void> main() async {
 
   final p2 = bars.add(
     Progress.withTheme(
+      'Downloading',
       size: 0.5,
       theme: theme,
       length: length,
@@ -33,6 +35,7 @@ Future<void> main() async {
 
   final p3 = bars.add(
     Progress.withTheme(
+      'Downloading',
       size: 0.5,
       theme: theme,
       length: length,
