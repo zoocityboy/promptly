@@ -1,7 +1,7 @@
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/src/utils/prompt.dart';
-import 'package:zoo_console/src/validators/validator.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/prompt.dart';
+import 'package:promptly/src/validators/validator.dart';
 
 /// An input component.
 class Prompt extends Component<String> {
@@ -11,7 +11,7 @@ class Prompt extends Component<String> {
     this.validator,
     this.initialText = '',
     this.defaultValue,
-  }) : theme = Theme.zooTheme;
+  }) : theme = Theme.defaultTheme;
 
   /// Constructs an [Prompt] component with the supplied theme.
   Prompt.withTheme({
@@ -60,7 +60,7 @@ class _PromptState extends State<Prompt> {
     if (value != null) {
       context.writeln(
         promptSuccess(
-          theme: component.theme,
+          theme: component.theme.promptTheme,
           message: component.prompt,
           value: value!,
         ),
@@ -74,7 +74,7 @@ class _PromptState extends State<Prompt> {
     if (error != null) {
       context.writeln(
         promptError(
-          theme: component.theme,
+          theme: component.theme.promptTheme,
           message: error!,
         ),
       );
@@ -86,7 +86,7 @@ class _PromptState extends State<Prompt> {
     while (true) {
       context.write(
         promptInput(
-          theme: component.theme,
+          theme: component.theme.promptTheme,
           message: component.prompt,
           hint: component.defaultValue,
         ),

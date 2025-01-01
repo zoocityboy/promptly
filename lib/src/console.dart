@@ -1,6 +1,6 @@
-import 'package:zoo_console/src/components/components.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/zoo_console.dart';
+import 'package:promptly/promptly.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/string_buffer.dart';
 
 part 'console.direct.dart';
 
@@ -9,22 +9,22 @@ part 'console.direct.dart';
 /// This class provides various methods and properties to interact with
 /// the console, allowing for input and output operations within the Zoo
 /// application.
-class ZooConsole {
-  static final ZooConsole _instance = ZooConsole._internal();
+class Console {
+  static final Console _instance = Console._internal();
 
   /// Access to singleton instance
-  static ZooConsole get instance => _instance;
+  static Console get instance => _instance;
 
-  factory ZooConsole({Theme? theme}) {
+  factory Console({Theme? theme}) {
     if (theme != null) {
       _instance._theme = theme;
     }
     return _instance;
   }
 
-  ZooConsole._internal()
+  Console._internal()
       : _ctx = Context(),
-        _theme = Theme.zooTheme;
+        _theme = Theme.defaultTheme;
 
   late Theme _theme;
   final Context _ctx;
@@ -40,32 +40,32 @@ class ZooConsole {
   /// Returns the current [Theme] object.
   Theme get theme => _theme;
 
-  /// Returns a styled vertical line prefix with padding and gray color.
-  String get prefixVerticalStyled => theme.linePrefixStyle('│');
+  // /// Returns a styled vertical line prefix with padding and gray color.
+  // String get prefixVerticalStyled => theme.colors.prefix('│').padRight(spacing);
 
-  /// Returns a styled start line prefix with padding and gray color.
-  String get prefixStartStyled => theme.linePrefixStyle('┌');
+  // /// Returns a styled start line prefix with padding and gray color.
+  // String get prefixStartStyled => theme.colors.prefix('┌').padRight(spacing);
 
-  /// Returns a styled end line prefix with padding and gray color.
-  String get prefixEndStyled => theme.linePrefixStyle('└');
+  // /// Returns a styled end line prefix with padding and gray color.
+  // String get prefixEndStyled => theme.colors.prefix('└').padRight(spacing);
 
-  /// Returns a styled diamond prefix with padding and green color.
-  String get prefixDiamondStyled => '◇'.padRight(spacing).green();
+  // /// Returns a styled diamond prefix with padding and green color.
+  // String get prefixDiamondStyled => theme.colors.success('◇').padRight(spacing);
 
-  /// Returns a styled usage prefix with padding and green color.
-  String get prefixUsageStyled => '◇'.padRight(spacing).green();
+  // /// Returns a styled usage prefix with padding and green color.
+  // String get prefixUsageStyled => theme.colors.success('◇').padRight(spacing);
 
-  /// Returns a styled error prefix with padding and red color.
-  String get prefixErrorStyled => theme.errorStyle('■').padRight(spacing);
+  // /// Returns a styled error prefix with padding and red color.
+  // String get prefixErrorStyled => theme.promptTheme.errorStyle('■').padRight(spacing);
 
-  /// Returns a styled trace start prefix with padding and cyan color.
-  String get prefixTraceStartStyled => '•'.padRight(spacing).cyan();
+  // /// Returns a styled trace start prefix with padding and cyan color.
+  // String get prefixTraceStartStyled => theme.colors.value('•').padRight(spacing);
 
-  /// Returns a styled trace item prefix with padding, cyan color, and dim effect.
-  String get prefixTraceItemStyled => '▹'.padRight(spacing).cyan().dim();
+  // /// Returns a styled trace item prefix with padding, cyan color, and dim effect.
+  // String get prefixTraceItemStyled => theme.colors.value('▹').padRight(spacing);
 
-  /// Returns a styled T-shaped prefix with padding and gray color.
-  String get prefixTStyled => '├'.padRight(spacing).darkGray();
+  // /// Returns a styled T-shaped prefix with padding and gray color.
+  // String get prefixTStyled => theme.colors.prefix('├').padRight(spacing);
 
   /// Writes a message to the console.
   ///
@@ -79,9 +79,7 @@ class ZooConsole {
   ///
   /// - Parameter message: The message to be written to the console.
   void write(String message) => _ctx.write(message);
-  void writeStyled(String message) => _ctx
-    ..write(prefixVerticalStyled)
-    ..write(theme.defaultStyle(message));
+  void writeStyled(String message) => _ctx.write(theme.prefixLine(theme.promptTheme.messageStyle(message)));
 
   /// Writes a message to the console followed by a newline.
   ///
@@ -89,14 +87,19 @@ class ZooConsole {
   ///
   /// @param message The message to be written to the console.
   void writeln(String message) => _ctx.writeln(message);
-  void writelnStyled(String message) => _ctx
-    ..write(prefixVerticalStyled)
-    ..writeln(theme.defaultStyle(message));
+  void writelnStyled(String message) {
+    final lines = message.split('\n');
+    for (final line in lines) {
+      _ctx
+        ..write(theme.prefixLine(theme.promptTheme.messageStyle(line)))
+        ..write('\n');
+    }
+  }
 
-  void style(String message, {String Function(ZooConsole)? prefix, bool newLine = true}) => _ctx
-    ..write(prefix != null ? prefix.call(this) : prefixVerticalStyled)
-    ..write(theme.defaultStyle(message))
-    ..write(newLine ? '\n$prefixVerticalStyled\n' : '');
+  void style(String message, {String Function(Console)? prefix, bool newLine = true}) => _ctx
+    ..write(prefix != null ? prefix.call(this) : theme.prefixLine(''))
+    ..write(theme.promptTheme.messageStyle(message))
+    ..write(newLine ? '\n${theme.prefixLine('')}\n' : '');
 
   /// Logs an informational message to the console.
   ///
@@ -107,38 +110,42 @@ class ZooConsole {
   /// ```dart
   /// info('This is an informational message.');
   /// ```
-  void info(String? message) {
-    if (message == null) return;
-    final sb = StringBuffer();
-    final lines = message.split('\n');
-    for (final line in lines) {
-      if (lines.indexOf(line) == 0) {
-        sb.write(prefixDiamondStyled);
-        sb.write(line.gray());
-      } else {
-        sb.write(prefixVerticalStyled);
-        sb.write(line.grey());
-      }
-      sb.write('\n');
-    }
-    _ctx.write(sb.toString());
+  void info(String? text) {
+    if (text == null) return;
+    final x = message(text, style: MessageStyle.info);
+    _ctx.writeln(x);
+    // final sb = StringBuffer();
+    // final lines = message.split('\n');
+    // for (final line in lines) {
+    //   if (lines.indexOf(line) == 0) {
+    //     sb.write(prefixDiamondStyled);
+    //     sb.write(line.gray());
+    //   } else {
+    //     sb.write(prefixVerticalStyled);
+    //     sb.write(line.grey());
+    //   }
+    //   sb.write('\n');
+    // }
+    // _ctx.write(sb.toString());
   }
 
   /// Logs an error message to the console.
-  void error(String message) {
-    final sb = StringBuffer();
-    final lines = message.split('\n');
-    for (final line in lines) {
-      if (lines.indexOf(line) == 0) {
-        sb.write(prefixErrorStyled);
-        sb.write(line.red());
-      } else {
-        sb.write(prefixVerticalStyled);
-        sb.write(line.grey());
-      }
-      sb.write('\n');
-    }
-    _ctx.write(sb.toString());
+  void error(String text) {
+    // final sb = StringBuffer();
+    // final lines = message.split('\n');
+    // for (final line in lines) {
+    //   if (lines.indexOf(line) == 0) {
+    //     sb.write(prefixErrorStyled);
+    //     sb.write(line.red());
+    //   } else {
+    //     sb.write(prefixVerticalStyled);
+    //     sb.write(line.grey());
+    //   }
+    //   sb.write('\n');
+    // }
+    // _ctx.write(sb.toString());
+    final x = message(text, style: MessageStyle.error);
+    _ctx.writeln(x);
   }
 
   /// Logs a fatal error message.
@@ -150,41 +157,22 @@ class ZooConsole {
   /// [message] The fatal error message to log. This can be `null`.
   /// [error] An optional error object associated with the fatal error.
   /// [stackTrace] An optional stack trace associated with the fatal error.
-  void fatal(String? message, {Object? error, StackTrace? stackTrace}) {
-    final sb = StringBuffer();
-    sb.write('$message');
-    if (error != null) {
-      sb.write(' $error');
-    }
-    _ctx.write(prefixErrorStyled);
-    _ctx.write(sb.toString().red());
+  void fatal(String? text, {Object? error, StackTrace? stackTrace}) {
+    // final sb = StringBuffer();
+    // sb.write('$message');
+    // if (error != null) {
+    //   sb.write(' $error');
+    // }
+    // _ctx.write(prefixErrorStyled);
+    // _ctx.write(sb.toString().red());
+    final x = message('$text', style: MessageStyle.info);
+    _ctx.writeln(x);
   }
 
   /// Clears the console screen.
   void clear() {
     Context.reset();
     _ctx.wipe();
-  }
-
-  /// Starts the console with the given title and an optional message.
-  ///
-  /// The [title] parameter specifies the title to be displayed.
-  /// The [message] parameter is an optional message that can be displayed.
-  ///
-  /// Example:
-  /// ```dart
-  /// start('Welcome', message: 'Hello, user!');
-  /// ```
-  void start(String title, {String? message}) {
-    final sb = StringBuffer();
-    sb.write(_theme.linePrefixStyle('┌'));
-    sb.write(' $title '.onGreen().white());
-    if (message != null) {
-      sb.write(' ');
-      sb.write(_theme.hintStyle(message));
-    }
-    _ctx.writeln(sb.toString());
-    line();
   }
 
   /// Ends the current console session with an optional message.
@@ -196,13 +184,37 @@ class ZooConsole {
   /// ```dart
   /// end('Session Title', message: 'Session ended successfully.');
   /// ```
-  void end(String title, {String? message}) {
+  void success(String title, {String? message}) {
     final sb = StringBuffer();
-    sb.write(_theme.linePrefixStyle('└'));
-    sb.write(' $title '.onGray().white());
+    sb.write(_theme.colors.prefix('└'));
+    sb.write(_theme.colors.prefix('❯'));
+    sb.write(_theme.colors.success('❯').dim());
+    sb.write(_theme.colors.success('❯'));
+    sb.write(' ');
+    // sb.write(_theme.colors.prefix('❯' * (_theme.spacing - 1)));
+    // sb.write(' ');
+    sb.write(_theme.colors.successBlock(' $title '));
     if (message != null) {
       sb.write(' ');
-      sb.write(_theme.hintStyle(message));
+      sb.write(_theme.colors.success(message));
+    }
+    line();
+    _ctx.writeln(sb.toString());
+  }
+
+  void failure(String title, {String? message}) {
+    final sb = StringBuffer();
+    sb.write(_theme.colors.prefix('└'));
+    sb.write(_theme.colors.prefix('❯'));
+    sb.write(_theme.colors.error('❯').dim());
+    sb.write(_theme.colors.error('❯'));
+    sb.write(' ');
+    sb.write(
+      ' $title '.onRed().white(),
+    );
+    if (message != null) {
+      sb.write(' ');
+      sb.write(_theme.colors.error(message));
     }
     line();
     _ctx.writeln(sb.toString());
@@ -212,15 +224,49 @@ class ZooConsole {
 
   void line({String? message}) {
     if (message == null) {
-      _ctx.writeln(prefixVerticalStyled);
+      _ctx.writeln(_theme.colors.prefix(_theme.symbols.hLine).padRight(_theme.spacing));
     } else {
-      _ctx.write(prefixVerticalStyled);
-      _ctx.write(theme.defaultStyle(message));
+      _ctx.writeln(_theme.colors.prefix(_theme.symbols.hLine).padRight(_theme.spacing));
+      _ctx.write(_theme.promptTheme.messageStyle(message));
       _ctx.writeln();
     }
+    // if (message == null) {
+    //   _ctx.writeln(prefixVerticalStyled);
+    // } else {
+    //   _ctx.write(prefixVerticalStyled);
+    //   _ctx.write(theme.promptTheme.messageStyle(message));
+    //   _ctx.writeln();
+    // }
   }
 
   String link(LinkData data) => data.link();
+
+  /// Writes a message to the console with the specified style.
+  String message(String message, {String? prefix, MessageStyle? style}) =>
+      Message.withTheme(theme: _theme, message: message, style: style, prefix: prefix).interect();
+
+  /// Starts the console with the given title and an optional message.
+  ///
+  /// The [title] parameter specifies the title to be displayed.
+  /// The [message] parameter is an optional message that can be displayed.
+  ///
+  /// Example:
+  /// ```dart
+  /// start('Welcome', message: 'Hello, user!');
+  /// ```
+  // void header(String title, {String? message}) {
+  //   final sb = StringBuffer();
+  //   sb.write(_theme.colors.prefix('┌'));
+  //   sb.write(_theme.colors.successBlock(' $title '.bold()));
+  //   if (message != null) {
+  //     sb.write(' ');
+  //     sb.write(_theme.promptTheme.hintStyle(message));
+  //   }
+  //   _ctx.writeln(sb.toString());
+  //   line();
+  // }
+  String header(String title, {String? message, String? prefix}) =>
+      Header.withTheme(theme: _theme, prefix: prefix, title: title).interact();
 
   /// Constructs an [Prompt] component with the supplied_theme.
   String prompt(
@@ -333,8 +379,8 @@ class ZooConsole {
       Loader.withTheme(
         prompt: prompt,
         theme: _theme,
-        icon: _theme.successPrefix,
-        failedIcon: _theme.errorPrefix,
+        icon: _theme.loaderTheme.successStyle(_theme.loaderTheme.successPrefix),
+        failedIcon: _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
         clear: clear,
       ).interact();
 
@@ -360,8 +406,8 @@ class ZooConsole {
     final spinner = Loader.withTheme(
       prompt: prompt,
       theme: _theme,
-      icon: _theme.successPrefix,
-      failedIcon: _theme.errorPrefix,
+      icon: _theme.loaderTheme.successPrefix,
+      failedIcon: _theme.loaderTheme.errorPrefix,
       clear: clear,
     ).interact();
     try {

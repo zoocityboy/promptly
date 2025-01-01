@@ -1,7 +1,7 @@
-import 'package:zoo_console/zoo_console.dart';
+import 'package:promptly/promptly.dart';
 
 void main() {
-  start('Select', message: 'Select your favorite programming language');
+  header('Select', message: 'Select your favorite programming language');
   final languages = ['Rust', 'Dart', 'TypeScript'];
   final heroes = ['Iron Man', 'Captain America', 'My Dad'];
 
@@ -10,7 +10,7 @@ void main() {
     choices: languages,
   );
   line();
-  console.style('Language selected: ${x.bold().green()}', prefix: (xx) => xx.prefixTraceStartStyled.green());
+  console.style('Language selected: ${x.bold().green()}', prefix: (xx) => xx.message('', style: MessageStyle.verbose));
 
   final _ = select<String>(
     'Favorite superhero',
@@ -20,5 +20,6 @@ void main() {
   );
   line();
   // ignore: no_wildcard_variable_uses
-  end('Superhero', message: 'selected: ${_.green().bold()}');
+  success('Superhero', message: 'selected: ${_.bold()}');
+  failure('Superhero', message: 'selected: ${_.bold()}');
 }

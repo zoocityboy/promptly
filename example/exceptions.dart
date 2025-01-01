@@ -1,11 +1,12 @@
-import 'package:zoo_console/zoo_console.dart' show Loader, reset;
+import 'package:promptly/promptly.dart' show processing, reset;
 
 Future<void> main() async {
   try {
-    Loader(
-      prompt: 'throwing an exception',
-      icon: '🚨',
-    ).interact();
+    processing(
+      'throwing an exception',
+      failedMessage: 'An error occurred',
+    );
+
     await Future.delayed(const Duration(seconds: 1));
     throw Exception();
   } catch (e) {

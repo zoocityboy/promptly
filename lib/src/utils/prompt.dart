@@ -1,21 +1,21 @@
 import 'package:tint/tint.dart';
-import 'package:zoo_console/src/theme/theme.dart';
+import 'package:promptly/src/theme/theme.dart';
 
 /// Generates a formatted input message to prompt.
 String promptInput({
-  required Theme theme,
+  required PromptTheme theme,
   required String message,
   String? hint,
 }) {
   final buffer = StringBuffer();
 
-  buffer.write(theme.inputPrefix);
+  buffer.write(theme.promptPrefix);
   buffer.write(theme.messageStyle(message));
   if (hint != null) {
     buffer.write(' ');
     buffer.write(theme.hintStyle(hint));
   }
-  buffer.write(theme.inputSuffix);
+  buffer.write(theme.promptSuffix);
   buffer.write(' ');
 
   return buffer.toString();
@@ -24,7 +24,7 @@ String promptInput({
 /// Generates a success prompt, a message to indicates
 /// the interaction is successfully finished.
 String promptSuccess({
-  required Theme theme,
+  required PromptTheme theme,
   required String message,
   required String value,
   int spacing = 3,
@@ -48,7 +48,7 @@ String promptSuccess({
 
 /// Generates a message to use as an error prompt.
 String promptError({
-  required Theme theme,
+  required PromptTheme theme,
   required String message,
   int spacing = 3,
 }) {

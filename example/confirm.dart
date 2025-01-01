@@ -1,7 +1,7 @@
-import 'package:zoo_console/zoo_console.dart';
+import 'package:promptly/promptly.dart';
 
 void main() {
-  start('Confirm', message: 'Please confirm the following:');
+  header('Confirm', message: 'Please confirm the following:');
   final x = confirm('Does it work?');
   line(message: x ? 'Awesome!' : 'Wait what! Check again.');
 

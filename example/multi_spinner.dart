@@ -1,5 +1,5 @@
-import 'package:zoo_console/src/components/loader.dart';
-import 'package:zoo_console/src/components/multi_spinner.dart';
+import 'package:promptly/src/components/loader.dart';
+import 'package:promptly/src/components/multi_spinner.dart';
 
 Future<void> main() async {
   final spinners = MultiSpinner();

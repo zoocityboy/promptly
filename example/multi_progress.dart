@@ -1,9 +1,8 @@
-import 'package:zoo_console/src/components/components.dart';
-import 'package:zoo_console/src/console.dart';
+import 'package:promptly/src/components/components.dart';
+import 'package:promptly/src/console.dart';
 
 Future<void> main() async {
   final bars = MultiProgress();
-  ZooConsole();
   const length = 1000;
   // final theme = Theme.basicTheme.copyWith(
   //   emptyProgress: '-',
@@ -13,7 +12,7 @@ Future<void> main() async {
   //   filledProgressStyle: (x) => x.green(),
   //   leadingProgressStyle: (x) => x.cyan(),
   // );
-  final theme = ZooConsole.instance.theme;
+  final theme = Console.instance.theme;
 
   final p1 = bars.add(
     Progress.withTheme(
@@ -67,7 +66,7 @@ Future<void> main() async {
     p1.increase(2);
   }
 
-  p1.done();
-  p2.done();
-  p3.done();
+  p1.finish();
+  p2.finish();
+  p3.finish();
 }

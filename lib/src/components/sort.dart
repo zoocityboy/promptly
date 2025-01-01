@@ -1,7 +1,7 @@
 import 'package:dart_console/dart_console.dart';
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/src/utils/prompt.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/prompt.dart';
 
 /// A sortable list component.
 class Sort extends Component<List<String>> {
@@ -10,7 +10,7 @@ class Sort extends Component<List<String>> {
     required this.prompt,
     required this.options,
     this.showOutput = true,
-  }) : theme = Theme.zooTheme;
+  }) : theme = Theme.defaultTheme;
 
   /// Constructs a [Sort] component with the default theme.
   Sort.withTheme({
@@ -43,6 +43,8 @@ class _SortState extends State<Sort> {
   int? picked;
   late List<int> options;
 
+  SelectTheme get theme => component.theme.selectTheme;
+
   @override
   void init() {
     super.init();
@@ -55,7 +57,7 @@ class _SortState extends State<Sort> {
 
     context.writeln(
       promptInput(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
       ),
     );
@@ -66,7 +68,7 @@ class _SortState extends State<Sort> {
   void dispose() {
     context.writeln(
       promptSuccess(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
         value: component.showOutput ? options.map((i) => component.options[i]).join(', ') : '',
       ),
@@ -84,25 +86,25 @@ class _SortState extends State<Sort> {
 
       if (component.theme.showActiveCursor) {
         if (i == index) {
-          line.write(component.theme.activeItemPrefix);
+          line.write(theme.activeLabel);
         } else {
-          line.write(component.theme.inactiveItemPrefix);
+          line.write(theme.inactiveLabel);
         }
         line.write(' ');
       }
 
       if (picked != null && picked == options[i]) {
-        line.write(component.theme.pickedItemPrefix);
+        line.write(theme.pickedLabel);
       } else {
-        line.write(component.theme.unpickedItemPrefix);
+        line.write(theme.inactiveLabel);
       }
 
       line.write(' ');
 
       if (i == index) {
-        line.write(component.theme.activeItemStyle(option));
+        line.write(theme.activeStyle(option));
       } else {
-        line.write(component.theme.inactiveItemStyle(option));
+        line.write(theme.inactiveStyle(option));
       }
       context.writeln(line.toString());
     }

@@ -1,4 +1,4 @@
-import 'package:zoo_console/zoo_console.dart';
+import 'package:promptly/promptly.dart';
 
 const earlyPresidents = [
   [

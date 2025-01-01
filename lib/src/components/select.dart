@@ -1,7 +1,7 @@
 import 'package:dart_console/dart_console.dart';
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/src/utils/prompt.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/prompt.dart';
 
 /// A selector component.
 class Select extends Component<int> {
@@ -10,7 +10,7 @@ class Select extends Component<int> {
     required this.prompt,
     required this.choices,
     this.initialIndex = 0,
-  }) : theme = Theme.zooTheme;
+  }) : theme = Theme.defaultTheme;
 
   /// Constructs a [Select] component with the supplied theme.
   Select.withTheme({
@@ -41,7 +41,7 @@ class Select extends Component<int> {
 
 class _SelectState extends State<Select> {
   int index = 0;
-
+  SelectTheme get theme => component.theme.selectTheme;
   @override
   void init() {
     super.init();
@@ -58,7 +58,7 @@ class _SelectState extends State<Select> {
 
     context.writeln(
       promptInput(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
       ),
     );
@@ -69,7 +69,7 @@ class _SelectState extends State<Select> {
   void dispose() {
     context.writeln(
       promptSuccess(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
         value: component.choices[index],
       ),
@@ -86,13 +86,13 @@ class _SelectState extends State<Select> {
       final line = StringBuffer();
 
       if (i == index) {
-        line.write(component.theme.activeItemPrefix);
+        line.write(theme.activeStyle(theme.activeLabel));
         line.write(' ');
-        line.write(component.theme.activeItemStyle(option));
+        line.write(theme.activeStyle(option));
       } else {
-        line.write(component.theme.inactiveItemPrefix);
+        line.write(theme.inactiveStyle(theme.inactiveLabel));
         line.write(' ');
-        line.write(component.theme.inactiveItemStyle(option));
+        line.write(theme.inactiveStyle(option));
       }
       context.writeln(line.toString());
     }

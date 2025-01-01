@@ -1,5 +1,5 @@
-import 'package:zoo_console/src/components/loader.dart';
-import 'package:zoo_console/src/framework/framework.dart';
+import 'package:promptly/src/components/loader.dart';
+import 'package:promptly/src/framework/framework.dart';
 
 /// A shared context and handler for rendering multiple [Loader]s.
 class MultiSpinner {

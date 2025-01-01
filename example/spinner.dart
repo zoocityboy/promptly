@@ -1,6 +1,7 @@
-import 'package:zoo_console/zoo_console.dart';
+import 'package:promptly/promptly.dart';
 
 Future<void> main() async {
+  header('Spinner', message: 'Spinning the wheel...');
   final gift = processing(
     'Spinning the wheel...',
   );

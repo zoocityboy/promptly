@@ -1,5 +1,5 @@
-import 'package:zoo_console/src/components/progress.dart';
-import 'package:zoo_console/src/framework/framework.dart';
+import 'package:promptly/src/components/progress.dart';
+import 'package:promptly/src/framework/framework.dart';
 
 /// A shared context and handler for rendering multiple [Progress] bars.
 class MultiProgress {
@@ -50,8 +50,8 @@ class MultiProgress {
       current: _bars[index].current,
       increase: (n) => _bars[index].increase(n),
       clear: () => _bars[index].clear(),
-      done: () {
-        final disposer = _bars[index].done();
+      finish: () {
+        final disposer = _bars[index].finish();
         _dispose(() {
           _disposers.add(disposer);
         });

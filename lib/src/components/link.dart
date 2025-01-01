@@ -1,11 +1,11 @@
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
 
 class Link extends Component<String> {
   Link({
     required this.uri,
     this.message,
-  }) : theme = Theme.zooTheme;
+  }) : theme = Theme.defaultTheme;
 
   Link.withTheme({
     required this.theme,
@@ -20,6 +20,13 @@ class Link extends Component<String> {
 
   @override
   _LinkState createState() => _LinkState();
+
+  String call() => interact();
+}
+
+class _LinkState extends State<Link> {
+  String? value;
+  LinkTheme get theme => component.theme.linkTheme;
 
   /// Wraps [uri] with an escape sequence so it's recognized as a hyperlink.
   /// An optional message can be used in place of the [uri].
@@ -36,32 +43,18 @@ class Link extends Component<String> {
     const leading = '\x1B]8;;';
     const trailing = '\x1B\\';
 
-    return '$leading$uri$trailing${message ?? uri}$leading$trailing';
-  }
-}
-
-class _LinkState extends State<Link> {
-  String? value;
-
-  @override
-  void init() {
-    // TODO: implement init
-    super.init();
-    value = component.link(uri: component.uri, message: component.message);
+    return '$leading${theme.linkStyle(uri.toString())}$trailing${message ?? uri}$leading$trailing';
   }
 
   @override
-  void dispose() {
-    // context.writeln(link(uri: uri, message: message));
-    if (value != null) {
-      context.writeln(value);
-    }
-    super.dispose();
+  void render() {
+    value ??= link(uri: component.uri, message: component.message);
+    context.writeln(value);
   }
 
   @override
   String interact() {
-    final line = component.link(uri: component.uri, message: component.message);
+    final line = link(uri: component.uri, message: component.message);
     setState(() {
       value = line;
     });

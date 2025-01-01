@@ -2,9 +2,9 @@ import 'dart:async' show StreamSubscription;
 import 'dart:io' show ProcessSignal;
 
 import 'package:tint/tint.dart';
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/src/utils/utils.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/utils.dart';
 
 String _startLabel(ProgressData x) {
   int numDigits(int n) => n.toString().length;
@@ -33,7 +33,7 @@ class Progress extends Component<ProgressState> {
     this.size = 1.0,
     ProgressFn? startLabel,
     ProgressFn? endLabel,
-  })  : theme = Theme.zooTheme,
+  })  : theme = Theme.defaultTheme,
         startLabel = startLabel ?? _startLabel,
         endLabel = endLabel ?? _endLabel;
 
@@ -99,7 +99,7 @@ class ProgressState {
     required this.current,
     required this.clear,
     required this.increase,
-    required this.done,
+    required this.finish,
   });
 
   /// Current progress.
@@ -113,13 +113,15 @@ class ProgressState {
 
   /// To be run to indicate that the progress is done,
   /// and the rendering can be wiped from the terminal.
-  void Function() Function() done;
+  void Function() Function() finish;
 }
 
 class _ProgressState extends State<Progress> {
   late int current;
   late bool done;
   late StreamSubscription<ProcessSignal> sigint;
+
+  ProgressTheme get theme => component.theme.progressTheme;
 
   @override
   void init() {
@@ -142,22 +144,20 @@ class _ProgressState extends State<Progress> {
     final line = StringBuffer();
     final startLabel = component.startLabel((filled: current, length: component.length));
     final endLabel = component.endLabel((filled: current, length: component.length));
-    final occupied = component.theme.progressPrefix.strip().length +
-        component.theme.progressSuffix.strip().length +
-        startLabel.strip().length +
-        endLabel.strip().length;
+    final occupied =
+        theme.prefix.strip().length + theme.suffix.strip().length + startLabel.strip().length + endLabel.strip().length;
     final available = (context.windowWidth * component.size).round() - occupied;
 
     line.write(startLabel);
-    line.write(component.theme.progressPrefix);
+    line.write(theme.prefix);
     line.write(
       _progress(
-        component.theme,
+        theme,
         available,
         (available / component.length * current).round(),
       ),
     );
-    line.write(component.theme.progressSuffix);
+    line.write(theme.suffix);
     line.write(endLabel);
 
     context.writeln(line.toString());
@@ -179,7 +179,7 @@ class _ProgressState extends State<Progress> {
           current = 0;
         });
       },
-      done: () {
+      finish: () {
         setState(() {
           done = true;
           sigint.cancel();
@@ -198,17 +198,17 @@ class _ProgressState extends State<Progress> {
   }
 
   String _progress(
-    Theme theme,
+    ProgressTheme theme,
     int length,
     int filled,
   ) {
-    final f = theme.filledProgressStyle(''.padRight(filled - 1, theme.filledProgress));
+    final f = theme.filledStyle(''.padRight(filled - 1, theme.filled));
     final l = filled == 0
         ? ''
         : filled == length
-            ? theme.filledProgressStyle(theme.filledProgress)
-            : theme.leadingProgressStyle(theme.leadingProgress);
-    final e = theme.emptyProgressStyle(''.padRight(length - filled, theme.emptyProgress));
+            ? theme.filledStyle(theme.filled)
+            : theme.leadingStyle(theme.leading);
+    final e = theme.emptyStyle(''.padRight(length - filled, theme.empty));
 
     return '$f$l$e';
   }
