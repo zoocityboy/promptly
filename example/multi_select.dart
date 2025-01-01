@@ -1,7 +1,7 @@
-import 'package:zoo_console/zoo_console.dart';
+import 'package:promptly/promptly.dart';
 
 void main() {
-  start('Multi Select', message: 'Select your favorite musicals');
+  header('Multi Select', message: 'Select your favorite musicals');
   final musicals = ['Hamilton', 'Dear Evan Hansen', 'Wicked'];
 
   final x = multiSelect<String>(
@@ -16,7 +16,7 @@ void main() {
   } else if (x.length == 3) {
     console.style("Omg you're such a musical fan!");
   } else {
-    end(
+    success(
       '${x.map((i) => i).join(' and ')} '
       '${x.length == 1 ? 'is' : 'are'} the best!',
     );

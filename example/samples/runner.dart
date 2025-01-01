@@ -1,35 +1,77 @@
 import 'dart:io';
 
-import 'package:zoo_console/zoo_console.dart';
+import 'package:promptly/promptly.dart';
+import 'package:promptly/src/command/zoo_app.dart';
+import 'package:promptly/src/framework/performance_tracer.dart';
+import 'package:promptly/src/theme/theme.dart';
 
 Future<void> main(List<String> args) async {
-  final runner = ZooRunner('app', 'My app', version: '0.0.1')..addCommand(TestCommand());
-  Future<dynamic> flushThenExit(int? status) {
-    return Future.wait<void>([stdout.close(), stderr.close()]).then<void>((_) => exit(status ?? 0));
-  }
-
-  await flushThenExit(await runner.run(args));
+  final app = await Promptly.init<int>(
+    'promptly',
+    description: 'Runner test',
+    version: '0.0.1',
+    theme: Theme.make(colors: ThemeColors.defaultColors),
+  )
+    ..addCommand(TestCommand())
+    ..addCommand(SecondCommand())
+    ..addCommand(ThirdCommand());
+  await app.run(args);
 }
 
-class TestCommand extends ZooCommand<int> {
-  TestCommand() : super('test', 'Test command');
+class TestCommand extends Command<int> {
+  TestCommand() : super('test', 'Test command', category: 'Basic') {
+    _span = tracer.startSpan(name: name);
+  }
+  late TraceSpan _span;
+  PerformanceTracer get tracer => get<PerformanceTracer>();
   @override
   Future<int> run() async {
-    start(name, message: description);
+    _span.attributes = argParser.options;
+    header(name, message: description);
 
     line();
     console.info('Hello world');
     line();
 
-    final pg = console.progress('Downloading', length: 10000);
-    for (var i = 0; i < 5000; i++) {
+    final pg = console.progress('Downloading', length: 1000);
+    for (var i = 0; i < 500; i++) {
       await Future.delayed(const Duration(milliseconds: 1));
       pg.increase(2);
     }
-    pg.done();
+    pg.finish();
 
     line();
-    end(name, message: 'Done');
+    success(name, message: 'Done');
+    _span.end();
+    console.writeStyled('Span: ${_span.name}');
+    console.writeStyled('Span: ${_span.toMap()}');
+
+    return exitCode;
+  }
+}
+
+class SecondCommand extends Command<int> {
+  SecondCommand() : super('second', 'Second command', category: 'Studio') {
+    argParser.addOption('name', help: 'Name of the person');
+    argParser.addOption('age', help: 'Age of the person');
+  }
+
+  @override
+  Future<int> run() async {
+    header(name, message: description);
+    return exitCode;
+  }
+}
+
+class ThirdCommand extends Command<int> {
+  ThirdCommand() : super('third', 'Third command', category: 'Studio') {
+    argParser.addOption('name', help: 'Name of the person');
+    argParser.addOption('age', help: 'Age of the person');
+  }
+
+  @override
+  Future<int> run() async {
+    header(name, message: description);
     return exitCode;
   }
 }

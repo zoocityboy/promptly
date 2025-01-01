@@ -1,9 +1,9 @@
 import 'dart:async' show StreamSubscription, Timer;
 import 'dart:io' show ProcessSignal;
 
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/src/utils/utils.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/utils.dart';
 
 enum LoaderStateType { inProgress, success, failed }
 
@@ -16,8 +16,8 @@ class Loader extends Component<LoaderState> {
     String? failedIcon,
     this.clear = false,
   })  : theme = Theme.defaultTheme,
-        icon = icon ?? Theme.defaultTheme.successPrefix,
-        failedIcon = failedIcon ?? Theme.defaultTheme.errorPrefix;
+        icon = icon ?? Theme.defaultTheme.loaderTheme.successPrefix,
+        failedIcon = failedIcon ?? Theme.defaultTheme.loaderTheme.errorPrefix;
 
   /// Constructs a [Loader] component with the supplied theme.
   Loader.withTheme({
@@ -26,8 +26,8 @@ class Loader extends Component<LoaderState> {
     String? failedIcon,
     required this.theme,
     this.clear = false,
-  })  : icon = icon ?? theme.successPrefix,
-        failedIcon = failedIcon ?? theme.errorPrefix;
+  })  : icon = icon ?? theme.loaderTheme.successPrefix,
+        failedIcon = failedIcon ?? theme.loaderTheme.errorPrefix;
 
   Context? _context;
   final String prompt;
@@ -86,6 +86,7 @@ class _SpinnerState extends State<Loader> {
   late String message;
   late int index;
   late StreamSubscription<ProcessSignal> sigint;
+  LoaderTheme get theme => component.theme.loaderTheme;
 
   @override
   void init() {
@@ -110,17 +111,17 @@ class _SpinnerState extends State<Loader> {
   void render() {
     final line = StringBuffer();
     if (stateType == LoaderStateType.success) {
-      line.write(component.icon);
+      line.write(component.icon.padRight(component.theme.spacing));
     } else if (stateType == LoaderStateType.failed) {
-      line.write(component.failedIcon);
+      line.write(component.failedIcon.padRight(component.theme.spacing));
     } else {
-      line.write(component.theme.spinners[index]);
+      line.write(theme.defaultStyle(theme.spinners[index].padRight(component.theme.spacing)));
     }
 
     final x = switch (stateType) {
-      LoaderStateType.inProgress => component.theme.defaultStyle(message),
-      LoaderStateType.success => component.theme.valueStyle(message),
-      LoaderStateType.failed => component.theme.errorStyle(message),
+      LoaderStateType.inProgress => theme.defaultStyle(message),
+      LoaderStateType.success => theme.successStyle(message),
+      LoaderStateType.failed => theme.errorStyle(message),
     };
     line.write(x);
     context.writeln(line.toString());
@@ -130,11 +131,11 @@ class _SpinnerState extends State<Loader> {
   LoaderState interact() {
     final timer = Timer.periodic(
       Duration(
-        milliseconds: component.theme.spinningInterval,
+        milliseconds: theme.interval,
       ),
       (timer) {
         setState(() {
-          index = (index + 1) % component.theme.spinners.length;
+          index = (index + 1) % theme.spinners.length;
         });
       },
     );

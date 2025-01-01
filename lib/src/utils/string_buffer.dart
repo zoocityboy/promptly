@@ -1,11 +1,20 @@
+import 'package:promptly/src/console.dart';
+import 'package:promptly/src/theme/theme.dart';
+
 extension StringBufferX on StringBuffer {
+  void verticalLine() {
+    this
+      ..write(console.theme.prefixLine(''))
+      ..write('\n');
+  }
+
   void writeLine(String line) {
-    write(line);
-    write('\n');
+    this.write(line);
+    this.write('\n');
   }
 
   void newLine() {
-    write('\n');
+    this.write('\n');
   }
 }
 

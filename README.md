@@ -1,19 +1,38 @@
-![alt text](https://raw.githubusercontent.com/zoocityboy/zoo_console/main/assets/zoo_console.png "Resoure")
+![alt text](https://raw.githubusercontent.com/zoocityboy/promptly/main/assets/promptly.png "Resoure")
 
 Developed by 🦏 [zoocityboy][zoocityboy_link]
-# Zoo Console
+# Promptly
 
-[![Pub](https://img.shields.io/pub/v/zoo_console.svg?style=flat-square)](https://pub.dev/packages/zoo_console)
-[![pub points](https://img.shields.io/pub/points/mason_coder?style=flat-square&color=2E8B57&label=pub%20points)](https://pub.dev/packages/zoo_console/score)
-[![ci](https://github.com/zoocityboy/zoo_console/actions/workflows/ci.yaml/badge.svg?style=flat-square)](https://github.com/zoocityboy/zoo_console/actions/workflows/ci.yaml)
-[![coverage](https://raw.githubusercontent.com/zoocityboy/zoo_console/main/coverage_badge.svg?style=flat-square)](https://github.com/zoocityboy/zoo_console/actions)
+[![Pub](https://img.shields.io/pub/v/promptly.svg?style=flat-square)](https://pub.dev/packages/promptly)
+[![pub points](https://img.shields.io/pub/points/mason_coder?style=flat-square&color=2E8B57&label=pub%20points)](https://pub.dev/packages/promptly/score)
+[![ci](https://github.com/zoocityboy/promptly/actions/workflows/ci.yaml/badge.svg?style=flat-square)](https://github.com/zoocityboy/promptly/actions/workflows/ci.yaml)
+[![coverage](https://raw.githubusercontent.com/zoocityboy/promptly/main/coverage_badge.svg?style=flat-square)](https://github.com/zoocityboy/promptly/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![style: zoo lints](https://img.shields.io/badge/style-zoo_lints-3EB489.svg?style=flat-square)](https://pub.dev/packages/zoo_lints)
 
 ![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=flat-square&logo=dart&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=flat-square&logo=githubactions&logoColor=white)
 
-[Documentation](https://zoocityboy.github.io/zoo_console/)
+[Documentation](https://zoocityboy.github.io/promptly/)
+
+## Features
+
+- [x] Argument parser
+- [x] CommandRunner, Command definition
+- [x] Command flow customizable [components](#components)
+- [x] Process helpers (executors) 
+
+### Command Runner
+
+A simple way to write command-line applications in Dart with styling and command loading capabilities.
+
+```dart
+Future<void> main(List<String> args) async {
+  await Promptly('app','MyAppDescription', theme: Theme.make(Theme.defaultColors)).run(args);
+}
+```
+
+### Components
 
 A collection of customizable interactive command-line components.
 
@@ -34,13 +53,13 @@ print('${languages[selection]}');
 
 It will result in something like this,
 
-<img src="https://i.imgur.com/boGsIn4.png" />
+<!-- <img src="https://i.imgur.com/boGsIn4.png" /> -->
 
 <br>
 
 ## Installation
 
-Install the latest version of interact as a dependency as shown in [pub.dev](https://pub.dev/packages/zoo_console).
+Install the latest version of interact as a dependency as shown in [pub.dev](https://pub.dev/packages/promptly).
 
 <br>
 
@@ -48,7 +67,7 @@ Install the latest version of interact as a dependency as shown in [pub.dev](htt
 
 ### Components
 
-These are the snippets of components with their properties and arguments. Check the [pub documentation](https://pub.dev/documentation/zoo_console/latest/) to get to know more about them in detail.
+These are the snippets of components with their properties and arguments. Check the [pub documentation](https://pub.dev/documentation/promptly/latest/) to get to know more about them in detail.
 
 <br>
 
@@ -60,11 +79,11 @@ A confirm component asks the user for a simple yes or no and will return a boole
 final answer = confirm(
   'Does it work?',
   defaultValue: true, // this is optional
-  waitForNewLine: true, // optional and will be false by default
+  enterForConfirm: true, // optional and will be false by default
 );
 ```
 
-If `waitForNewLine` is true, the prompt will wait for an <kbd>Enter</kbd> key from the user regardless of the answer.
+If `enterForConfirm` is true, the prompt will wait for an <kbd>Enter</kbd> key from the user regardless of the answer.
 
 <br>
 
@@ -77,16 +96,10 @@ final email = prompt<String>(
   prompt: 'Your email',
   defaultValue: '', // optional, will provide the user as a hint
   initialText: '', // optional, will be autofilled in the input
-  validator: (String x) { // optional
-    if (x.contains('@')) {
-      return true;
-    } else {
-      throw ValidationError('Not a valid email');
-    }
-  },
+  validator: EmailValidator()
 );
 ```
-
+You can use predefined validators build-in [Promptly] or create a custom Validators by extending `Validator<T>` class
 The message passed in the `ValidationError` exception will be shown as an error until the validator returns true.
 
 <br>
@@ -175,25 +188,10 @@ final selection = multiSelect<Lang>(
 );
 ```
 
-<br>
-
-#### Sort Component
-
-A sort component asks the user to sort the given list of options and returns the list ordered by the user.
-
-```dart
-final sorted = Sort(
-  prompt: 'Sort Tesla models from favorite to least',
-  options: ['S', '3', 'X', 'Y'],
-  showOutput: false, // optional, will be false by default
-).interact();
-```
-
-Sometimes the list given can be massive, so setting the `showOutput` to false makes the list not be shown in the success prompt.
 
 <br>
 
-#### Spinner and MultiSpinner Components
+#### Loader and MultiLoader Components
 
 A spinner will show a spinning indicator until the user calls it's `done` method. When it's done, it shows the icon given in place of the spinner.
 

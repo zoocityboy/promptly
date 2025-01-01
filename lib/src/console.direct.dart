@@ -1,6 +1,26 @@
 part of 'console.dart';
 
-final console = ZooConsole.instance;
+final console = Console.instance;
+int get spacint => console.spacing;
+Theme get currentTheme => console.theme;
+PromptTheme get promptTheme => currentTheme.promptTheme;
+LoaderTheme get loaderTheme => currentTheme.loaderTheme;
+SelectTheme get selectTheme => currentTheme.selectTheme;
+ConfirmTheme get confirmTheme => currentTheme.confirmTheme;
+HeaderTheme get headerTheme => currentTheme.headerTheme;
+TableTheme get tableTheme => currentTheme.tableTheme;
+
+/// Displays a message on the console with an optional prefix and style.
+///
+/// The [message] parameter specifies the message to be displayed.
+/// The [prefix] parameter is an optional string that will be prepended to the message.
+/// The [style] parameter is an optional [MessageStyle] that defines the style of the message.
+///
+String message(String message, {String? prefix, MessageStyle? style}) => Console.instance.message(
+      message,
+      prefix: prefix,
+      style: style,
+    );
 
 /// Prompts the user for input with a given message.
 ///
@@ -17,7 +37,7 @@ String prompt(
   String initialText = '',
   String? defaultValue,
 }) =>
-    ZooConsole.instance.prompt(prompt, validator: validator, initialText: initialText, defaultValue: defaultValue);
+    Console.instance.prompt(prompt, validator: validator, initialText: initialText, defaultValue: defaultValue);
 
 /// Prompts the user to enter a password securely.
 ///
@@ -34,7 +54,7 @@ String password(
   String? confirmPrompt,
   String? confirmError,
 }) =>
-    ZooConsole.instance
+    Console.instance
         .password(prompt, confirmation: confirmation, confirmPrompt: confirmPrompt, confirmError: confirmError);
 
 /// Prompts the user for a confirmation.
@@ -55,7 +75,7 @@ bool confirm(
   bool? defaultValue,
   bool enterForConfirm = false,
 }) =>
-    ZooConsole.instance.confirm(prompt, defaultValue: defaultValue, enterForConfirm: enterForConfirm);
+    Console.instance.confirm(prompt, defaultValue: defaultValue, enterForConfirm: enterForConfirm);
 
 /// Prompts the user to select an option from a list of provided options.
 ///
@@ -81,7 +101,7 @@ T select<T>(
   T? defaultValue,
   String Function(T)? display,
 }) =>
-    ZooConsole.instance.select(prompt, choices: choices, defaultValue: defaultValue, display: display);
+    Console.instance.select(prompt, choices: choices, defaultValue: defaultValue, display: display);
 
 /// Prompts the user with a multi-select question and returns the selected choices.
 ///
@@ -107,7 +127,7 @@ List<T> multiSelect<T>(
   List<T>? defaultValues,
   String Function(T)? display,
 }) =>
-    ZooConsole.instance.multiSelect(prompt, choices: choices, defaultValues: defaultValues, display: display);
+    Console.instance.multiSelect(prompt, choices: choices, defaultValues: defaultValues, display: display);
 
 /// Creates a table row with the specified properties.
 ///
@@ -122,7 +142,7 @@ TableRow table(
   required List<String> headers,
   required List<TableRow> rows,
 }) =>
-    ZooConsole.instance.table(prompt, rows: rows, headers: headers);
+    Console.instance.table(prompt, rows: rows, headers: headers);
 
 /// Creates a progress state with the specified parameters.
 ///
@@ -139,7 +159,7 @@ ProgressState progress(
   ProgressFn? startLabel,
   ProgressFn? endLabel,
 }) =>
-    ZooConsole.instance.progress(
+    Console.instance.progress(
       prompt,
       length: length,
       size: size,
@@ -166,7 +186,7 @@ LoaderState processing(
   String? failedMessage,
   bool clear = false,
 }) =>
-    ZooConsole.instance.processing(prompt, successMessage: successMessage, failedMessage: failedMessage, clear: clear);
+    Console.instance.processing(prompt, successMessage: successMessage, failedMessage: failedMessage, clear: clear);
 
 /// Executes a task with a loading spinner and optional success or failure messages.
 ///
@@ -189,14 +209,14 @@ Future<void> task(
   String? failedMessage,
   bool clear = false,
 }) =>
-    ZooConsole.instance
+    Console.instance
         .task(prompt, task: task, successMessage: successMessage, failedMessage: failedMessage, clear: clear);
 
 /// Inserts a spacer line in the console output.
 ///
 /// This method calls the `spacer` method on the singleton instance of
 /// `ZooConsole`, which is responsible for managing console output.
-void spacer() => ZooConsole.instance.spacer();
+void spacer() => Console.instance.spacer();
 
 /// Outputs a line to the console.
 ///
@@ -208,15 +228,40 @@ void spacer() => ZooConsole.instance.spacer();
 /// ```dart
 /// line(message: "Hello, World!");
 /// ```
-void line({String? message}) => ZooConsole.instance.line(message: message);
+void line({String? message, String? prefix}) => Console.instance.line(message: message);
 
 /// Clears the console output by invoking the `clear` method on the
 /// `ZooConsole` instance.
-void clear() => ZooConsole.instance.clear();
-void start(String title, {String? message}) => ZooConsole.instance.start(title, message: message);
-void end(String title, {String? message}) => ZooConsole.instance.end(title, message: message);
+void clear() => Console.instance.clear();
 
-String link(LinkData data) => ZooConsole.instance.link(data);
+/// Starts the console with the given title and an optional message.
+///
+/// This function initializes the console instance with the specified [title].
+/// An optional [message] can also be provided.
+///
+/// Example usage:
+/// ```dart
+/// start('My Console Title', message: 'Welcome to the console!');
+/// ```
+///
+/// - Parameters:
+///   - title: The title to be displayed in the console.
+///   - message: An optional message to be displayed in the console.
+void header(String title, {String? message}) => Console.instance.header(title, message: message);
 
-void write(String message) => ZooConsole.instance.write(message);
-void writeln(String message) => ZooConsole.instance.writeln(message);
+/// Ends the console session with a given title and an optional message.
+///
+/// This function calls the `end` method on the `Console` instance, passing
+/// the provided `title` and `message`.
+///
+/// - Parameters:
+///   - title: The title to display when ending the console session.
+///   - message: An optional message to display when ending the console session.
+void success(String title, {String? message, String? prefix}) => Console.instance.success(title, message: message);
+
+void failure(String title, {String? message, String? prefix}) => Console.instance.failure(title, message: message);
+
+String link(LinkData data) => Console.instance.link(data);
+
+void write(String message) => Console.instance.write(message);
+void writeln(String message) => Console.instance.writeln(message);

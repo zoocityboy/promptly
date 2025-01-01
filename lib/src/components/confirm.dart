@@ -1,7 +1,7 @@
 import 'package:dart_console/dart_console.dart';
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/src/utils/prompt.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/prompt.dart';
 
 /// A confirm component.
 class Confirm extends Component<bool> {
@@ -10,7 +10,7 @@ class Confirm extends Component<bool> {
     required this.prompt,
     this.defaultValue,
     this.enterForConfirm = false,
-  }) : theme = Theme.zooTheme;
+  }) : theme = Theme.defaultTheme;
 
   /// Constructs a [Confirm] component with the supplied theme.
   Confirm.withTheme({
@@ -39,6 +39,7 @@ class Confirm extends Component<bool> {
 
 class _ConfirmState extends State<Confirm> {
   bool? answer;
+  ConfirmTheme get theme => component.theme.confirmTheme;
 
   @override
   void init() {
@@ -53,7 +54,7 @@ class _ConfirmState extends State<Confirm> {
   void dispose() {
     context.writeln(
       promptSuccess(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
         value: answer! ? 'yes' : 'no',
       ),
@@ -68,13 +69,13 @@ class _ConfirmState extends State<Confirm> {
     final line = StringBuffer();
     line.write(
       promptInput(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
         hint: 'y/n',
       ),
     );
     if (answer != null) {
-      line.write(component.theme.defaultStyle(answer! ? 'yes' : 'no'));
+      line.write(theme.defaultStyle(answer! ? 'yes' : 'no'));
     }
     context.writeln(line.toString());
   }

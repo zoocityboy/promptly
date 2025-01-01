@@ -1,7 +1,6 @@
-import 'dart:collection';
-import 'dart:io' as io;
+part of 'framework.dart';
 
-enum ZooLogLevel {
+enum LogLevel {
   verbose,
   info,
   warning,
@@ -10,7 +9,7 @@ enum ZooLogLevel {
 }
 
 /// A function that outputs a log message.
-typedef ZooLogPrinter = void Function(ZooLogLevel level, String message);
+typedef LogPrinter = void Function(LogLevel level, String message);
 
 /// Default printer that prints to stdout.
 /// A default printer function for logging messages.
@@ -21,18 +20,18 @@ typedef ZooLogPrinter = void Function(ZooLogLevel level, String message);
 /// - Parameters:
 ///   - level: The log level of the message.
 ///   - message: The message to be logged.
-void defaultPrinter(ZooLogLevel level, String message) =>
-    [ZooLogLevel.error, ZooLogLevel.fatal].contains(level) ? io.stderr.writeln(message) : io.stdout.writeln(message);
+void defaultPrinter(LogLevel level, String message) =>
+    [LogLevel.error, LogLevel.fatal].contains(level) ? stderr.writeln(message) : stdout.writeln(message);
 
 /// A simple logger that logs to stdout.
-class ZooLogger {
-  static final ZooLogger _instance = ZooLogger._internal();
+class Logger {
+  static final Logger _instance = Logger._internal();
 
   /// Access to singleton instance
-  static ZooLogger get instance => _instance;
-  factory ZooLogger({
-    ZooLogPrinter printer = defaultPrinter,
-    ZooLogLevel level = ZooLogLevel.info,
+  static Logger get instance => _instance;
+  factory Logger({
+    LogPrinter printer = defaultPrinter,
+    LogLevel level = LogLevel.info,
     int maxQueueSize = 100,
   }) {
     _instance._printer = printer;
@@ -40,30 +39,30 @@ class ZooLogger {
     _instance._maxQueueSize = maxQueueSize;
     return _instance;
   }
-  ZooLogger._internal()
-      : _level = ZooLogLevel.info,
+  Logger._internal()
+      : _level = LogLevel.info,
         _printer = defaultPrinter,
         _maxQueueSize = 100;
 
-  final Queue<MapEntry<ZooLogLevel, String>> _queue = Queue();
+  final Queue<MapEntry<LogLevel, String>> _queue = Queue();
 
   /// The logging level for the logger.
   ///
   /// This determines the severity of the messages that will be logged.
   /// Only messages with a severity equal to or higher than this level will be logged.
-  ZooLogLevel _level;
+  LogLevel _level;
 
   /// The logging level for the logger.
   // ignore: avoid_setters_without_getters
-  set level(ZooLogLevel level) {
+  set level(LogLevel level) {
     _level = level;
   }
 
   /// A printer instance used to handle the log output.
   ///
-  /// This is an instance of [ZooLogPrinter] which is responsible for formatting
+  /// This is an instance of [LogPrinter] which is responsible for formatting
   /// and printing log messages.
-  ZooLogPrinter _printer;
+  LogPrinter _printer;
 
   int _maxQueueSize;
 
@@ -71,8 +70,10 @@ class ZooLogger {
   ///
   /// The `level.index >= _level.index` check ensures that only messages with a log level
   /// equal to or higher than the current log level are logged.
-  void log(String message, {ZooLogLevel level = ZooLogLevel.info, bool delayed = false}) {
-    if (level.index >= _level.index) {
+  void log(String message, {LogLevel level = LogLevel.info, bool delayed = false}) {
+    // stdout.writeln('[${level.name}${level.index} >= ${_level.index}] $message');
+    // stdout.writeln('-> ${LogLevel.values.map((e) => '${e.index} ${e.name},').toList()}');
+    if (_level.index >= level.index) {
       if (delayed) {
         _delayed(message, level: level);
       } else {
@@ -85,31 +86,34 @@ class ZooLogger {
   void info(String message, {bool delayed = false}) => log(message, delayed: delayed);
 
   /// Log a warning message.
-  void warning(String message, {bool delayed = false}) => log(message, level: ZooLogLevel.warning, delayed: delayed);
+  void warning(String message, {bool delayed = false}) => log(message, level: LogLevel.warning, delayed: delayed);
 
   /// Log an error message.
-  void error(String message, {bool delayed = false}) => log(message, level: ZooLogLevel.error, delayed: delayed);
+  void error(String message, {bool delayed = false}) => log(message, level: LogLevel.error, delayed: delayed);
 
   /// Log a fatal message.
-  void fatal(String message, {bool delayed = false}) => log(message, level: ZooLogLevel.fatal, delayed: delayed);
+  void fatal(String message, {bool delayed = false}) => log(message, level: LogLevel.fatal, delayed: delayed);
 
   /// Logs a message with a delay.
   ///
   /// The message will be logged at the specified [level], which defaults to
-  /// [ZooLogLevel.info].
+  /// [LogLevel.info].
   ///
   /// [message] The message to be logged.
   /// [level] The level at which the message should be logged. Defaults to
-  /// [ZooLogLevel.info].
-  void _delayed(String message, {ZooLogLevel level = ZooLogLevel.info}) {
+  /// [LogLevel.info].
+  void _delayed(String message, {LogLevel level = LogLevel.info}) {
+    stdout.writeln('Delaying log ${_queue.length} ${_queue.length >= _maxQueueSize}');
     if (_queue.length >= _maxQueueSize) {
       _queue.removeFirst();
     }
     _queue.add(MapEntry(level, message));
+    stdout.writeln('Delaying log ${_queue.length}  :${level.name} $message');
   }
 
   /// Flushes the logger, ensuring that all buffered log messages are written out.
   void flush() {
+    stdout.writeln('Flushing log messages [${_queue.length}]...');
     while (_queue.isNotEmpty) {
       final item = _queue.removeFirst();
       log(item.value, level: item.key);

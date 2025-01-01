@@ -1,6 +1,6 @@
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/src/utils/prompt.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/prompt.dart';
 
 /// A password input component.
 class Password extends Component<String> {
@@ -10,7 +10,7 @@ class Password extends Component<String> {
     this.confirmation = false,
     this.confirmPrompt,
     this.confirmError,
-  }) : theme = Theme.zooTheme;
+  }) : theme = Theme.defaultTheme;
 
   /// Constructs a [Password] component with the supplied theme.
   Password.withTheme({
@@ -55,9 +55,9 @@ class _PasswordState extends State<Password> {
   void dispose() {
     context.writeln(
       promptSuccess(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
-        value: component.theme.hiddenPrefix,
+        value: component.theme.passwordTheme.passwordPlaceholder * 4,
       ),
     );
 
@@ -69,7 +69,7 @@ class _PasswordState extends State<Password> {
     if (hasError) {
       context.writeln(
         promptError(
-          theme: component.theme,
+          theme: component.theme.promptTheme,
           message: component.confirmError ?? 'Passwords do not match',
         ),
       );
@@ -82,7 +82,7 @@ class _PasswordState extends State<Password> {
       hasError = false;
       context.write(
         promptInput(
-          theme: component.theme,
+          theme: component.theme.promptTheme,
           message: component.prompt,
         ),
       );
@@ -92,7 +92,7 @@ class _PasswordState extends State<Password> {
       if (component.confirmation) {
         context.write(
           promptInput(
-            theme: component.theme,
+            theme: component.theme.promptTheme,
             message: component.confirmPrompt ?? component.prompt,
           ),
         );

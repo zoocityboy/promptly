@@ -1,7 +1,7 @@
-import 'package:zoo_console/zoo_console.dart' show EmailValidator, end, line, prompt, start;
+import 'package:promptly/promptly.dart' show EmailValidator, line, prompt, header, success;
 
 void main() {
-  start('Input', message: 'Please provide the following information:');
+  header('Input', message: 'Please provide the following information:');
   final name = prompt('Your name');
   line();
 
@@ -23,5 +23,5 @@ void main() {
   );
   line();
 
-  end('end', message: '$name, $email, $planet, $galaxy');
+  success('end', message: '$name, $email, $planet, $galaxy');
 }

@@ -1,7 +1,7 @@
 import 'package:dart_console/dart_console.dart';
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/src/utils/prompt.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/prompt.dart';
 
 /// A multiple select or checkbox input component.
 class MultiSelect extends Component<List<int>> {
@@ -10,7 +10,7 @@ class MultiSelect extends Component<List<int>> {
     required this.prompt,
     required this.choices,
     this.defaults,
-  }) : theme = Theme.zooTheme;
+  }) : theme = Theme.defaultTheme;
 
   /// Constructs a [MultiSelect] component with the supplied theme.
   MultiSelect.withTheme({
@@ -41,6 +41,8 @@ class _MultiSelectState extends State<MultiSelect> {
   late List<int> selection;
   late int index;
 
+  SelectTheme get theme => component.theme.selectTheme;
+
   @override
   void init() {
     super.init();
@@ -67,7 +69,7 @@ class _MultiSelectState extends State<MultiSelect> {
 
     context.writeln(
       promptInput(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
       ),
     );
@@ -76,11 +78,11 @@ class _MultiSelectState extends State<MultiSelect> {
 
   @override
   void dispose() {
-    final values = selection.map((x) => component.choices[x]).map(component.theme.valueStyle).join('☃︎ ');
+    final values = selection.map((x) => component.choices[x]).map(theme.inactiveStyle).join('☃︎ ');
 
     context.writeln(
       promptSuccess(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
         value: values,
       ),
@@ -98,25 +100,25 @@ class _MultiSelectState extends State<MultiSelect> {
 
       if (component.theme.showActiveCursor) {
         if (i == index) {
-          line.write(component.theme.activeItemPrefix);
+          line.write(theme.activeLabel);
         } else {
-          line.write(component.theme.inactiveItemPrefix);
+          line.write(theme.inactiveLabel);
         }
         line.write(' ');
       }
 
       if (selection.contains(i)) {
-        line.write(component.theme.checkedItemPrefix);
+        line.write(theme.checkedLabel);
       } else {
-        line.write(component.theme.uncheckedItemPrefix);
+        line.write(theme.uncheckedLabel);
       }
 
       line.write(' ');
 
       if (i == index) {
-        line.write(component.theme.activeItemStyle(option));
+        line.write(theme.activeStyle(option));
       } else {
-        line.write(component.theme.inactiveItemStyle(option));
+        line.write(theme.inactiveStyle(option));
       }
       context.writeln(line.toString());
     }

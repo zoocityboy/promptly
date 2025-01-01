@@ -1,10 +1,10 @@
 import 'dart:convert' show JsonEncoder;
 import 'dart:io' show exit, stderr, stdout;
 
-import 'package:zoo_console/zoo_console.dart';
+import 'package:promptly/promptly.dart';
 
 void main() {
-  start('npm', message: 'This utility will walk you through creating a package.json file.');
+  header('npm', message: 'This utility will walk you through creating a package.json file.');
 
   console.writelnStyled('Press ^C at any time to quit.');
 

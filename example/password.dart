@@ -1,7 +1,7 @@
-import 'package:zoo_console/zoo_console.dart';
+import 'package:promptly/promptly.dart';
 
 void main() {
-  start('Password', message: 'Enter your password');
+  header('Password', message: 'Enter your password');
   final value = password(
     'Password',
     confirmation: true,
@@ -9,5 +9,5 @@ void main() {
   );
   spacer();
   line();
-  end('Password', message: 'Password `$value` entered');
+  success('Password', message: 'Password `$value` entered');
 }

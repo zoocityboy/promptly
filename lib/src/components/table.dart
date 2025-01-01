@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:dart_console/dart_console.dart' as dc;
-import 'package:zoo_console/src/framework/framework.dart';
-import 'package:zoo_console/src/theme/theme.dart';
-import 'package:zoo_console/src/utils/prompt.dart';
+import 'package:promptly/src/framework/framework.dart';
+import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/prompt.dart';
 
 typedef TableRow = List<Object>;
 
@@ -12,7 +12,7 @@ class Table extends Component<int> {
     this.prompt, {
     required this.headers,
     required this.rows,
-  }) : theme = Theme.zooTheme;
+  }) : theme = Theme.defaultTheme;
 
   Table.withTheme(
     this.prompt, {
@@ -36,6 +36,8 @@ class _TableState extends State<Table> {
 
   int tableRenderCount = 0;
 
+  TableTheme get theme => component.theme.tableTheme;
+
   // create a function for render json as pretty print
   String prettyJson(Map json) {
     const encoder = JsonEncoder.withIndent('  ');
@@ -54,7 +56,7 @@ class _TableState extends State<Table> {
     ///
     context.writeln(
       promptInput(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: 'Select a row:',
       ),
     );
@@ -69,12 +71,12 @@ class _TableState extends State<Table> {
     final rowItem = component.rows[index];
     final item = {};
     for (var i = 0; i < component.headers.length; i++) {
-      item[component.headers[i]] = rowItem[i];
+      item[component.headers[i]] = theme.headerStyle(rowItem[i].toString());
     }
 
     context.writeln(
       promptSuccess(
-        theme: component.theme,
+        theme: component.theme.promptTheme,
         message: component.prompt,
         value: prettyJson(item),
       ),
@@ -92,14 +94,14 @@ class _TableState extends State<Table> {
 
     for (var i = 0; i < component.rows.length; i++) {
       final data = i == index
-          ? component.rows[i].map((e) => component.theme.activeItemStyle(e.toString())).toList()
-          : component.rows[i];
+          ? component.rows[i].map((e) => theme.activeItemStyle(e.toString())).toList()
+          : component.rows[i].map((e) => theme.inactiveItemStyle(e.toString())).toList();
       table.insertRow(data);
     }
-    table.borderStyle = dc.BorderStyle.rounded;
+    table.borderStyle = dc.BorderStyle.square;
     table.borderColor = dc.ConsoleColor.white;
     table.borderType = dc.BorderType.vertical;
-    table.headerStyle = dc.FontStyle.bold;
+
     final rndr = table.render();
     tableRenderCount = rndr.split('\n').length;
     context.writeln(rndr);

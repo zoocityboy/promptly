@@ -1,8 +1,8 @@
 part of 'framework.dart';
 
-final _defaultConsole = Console();
+final _defaultConsole = dc.Console();
 
-Console get defaultConsole => _defaultConsole;
+dc.Console get defaultConsole => _defaultConsole;
 
 /// [Context] is used by [Component] and [State] to actually render
 /// things to the console, and to act as a state store during rendering,
@@ -79,7 +79,7 @@ class Context {
   /// Reads a key press, same as dart_console library's
   /// `readKey()` function but this function handles the `Ctrl+C` key
   /// press to immediately exit from the process.
-  Key readKey() => _handleKey(_console.readKey());
+  dc.Key readKey() => _handleKey(_console.readKey());
 
   /// Reads a line, same as dart_console library's `readLine()` function,
   /// and it's partially taken from the source code of it and modified
@@ -106,43 +106,43 @@ class Context {
 
       if (key.isControl) {
         switch (key.controlChar) {
-          case ControlCharacter.enter:
+          case dc.ControlCharacter.enter:
             writeln();
             return buffer;
-          case ControlCharacter.backspace:
-          case ControlCharacter.ctrlH:
+          case dc.ControlCharacter.backspace:
+          case dc.ControlCharacter.ctrlH:
             if (index > 0) {
               buffer = buffer.substring(0, index - 1) + buffer.substring(index);
               index--;
             }
-          case ControlCharacter.delete:
-          case ControlCharacter.ctrlD:
+          case dc.ControlCharacter.delete:
+          case dc.ControlCharacter.ctrlD:
             if (index < buffer.length - 1) {
               buffer = buffer.substring(0, index) + buffer.substring(index + 1);
             }
 
-          case ControlCharacter.ctrlU:
+          case dc.ControlCharacter.ctrlU:
             buffer = '';
             index = 0;
-          case ControlCharacter.ctrlK:
+          case dc.ControlCharacter.ctrlK:
             buffer = buffer.substring(0, index);
-          case ControlCharacter.arrowLeft:
-          case ControlCharacter.ctrlB:
+          case dc.ControlCharacter.arrowLeft:
+          case dc.ControlCharacter.ctrlB:
             index = index > 0 ? index - 1 : index;
-          case ControlCharacter.arrowRight:
-          case ControlCharacter.ctrlF:
+          case dc.ControlCharacter.arrowRight:
+          case dc.ControlCharacter.ctrlF:
             index = index < buffer.length ? index + 1 : index;
-          case ControlCharacter.wordLeft:
+          case dc.ControlCharacter.wordLeft:
             if (index > 0) {
               final bufferLeftOfCursor = buffer.substring(0, index - 1);
               final lastSpace = bufferLeftOfCursor.lastIndexOf(' ');
               index = lastSpace != -1 ? lastSpace + 1 : 0;
             }
-          case ControlCharacter.home:
-          case ControlCharacter.ctrlA:
+          case dc.ControlCharacter.home:
+          case dc.ControlCharacter.ctrlA:
             index = 0;
-          case ControlCharacter.end:
-          case ControlCharacter.ctrlE:
+          case dc.ControlCharacter.end:
+          case dc.ControlCharacter.ctrlE:
             index = buffer.length;
           default:
             break;
@@ -161,17 +161,17 @@ class Context {
 
       if (!noRender) {
         _console.hideCursor(); // Prevents the cursor jumping being seen
-        _console.cursorPosition = Coordinate(screenRow, screenColOffset);
+        _console.cursorPosition = dc.Coordinate(screenRow, screenColOffset);
         _console.eraseCursorToEnd();
         write(buffer);
-        _console.cursorPosition = Coordinate(screenRow, screenColOffset + index);
+        _console.cursorPosition = dc.Coordinate(screenRow, screenColOffset + index);
         _console.showCursor();
       }
     }
   }
 
-  Key _handleKey(Key key) {
-    if (key.isControl && key.controlChar == ControlCharacter.ctrlC) {
+  dc.Key _handleKey(dc.Key key) {
+    if (key.isControl && key.controlChar == dc.ControlCharacter.ctrlC) {
       reset();
       exit(1);
     }
@@ -207,3 +207,6 @@ class BufferContext extends Context {
     setState();
   }
 }
+
+/// Resets the Terminal to default values.
+void Function() reset = Context.reset;
