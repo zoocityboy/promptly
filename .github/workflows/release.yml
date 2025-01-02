@@ -25,8 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-    
-     
       - name: Generate Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
@@ -40,29 +38,9 @@ jobs:
             NEW_VERSION=${{ github.event.inputs.version }}
             sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
           
-    #   - name: Commit Changes
-    #     run: |
-    #       git add pubspec.yaml CHANGELOG.md
-    #       git commit -m "chore(release): prepare release ${{ github.event.inputs.version }}"
-          
       - uses: avakar/tag-and-release@v1
         with:
           tag_name: v${{ github.event.inputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Push Changes
-        run: |
-          git push
-          git push --tags
-          
-    #   - name: Create Release
-    #     uses: softprops/action-gh-release@v1
-    #     with:
-    #       tag_name: v${{ github.event.inputs.version }}
-    #       name: Release v${{ github.event.inputs.version }}
-    #       body: ${{ steps.changelog.outputs.clean_changelog }}
-    #       draft: false
-    #       prerelease: false
-    #     env:
-    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
