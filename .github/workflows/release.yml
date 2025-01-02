@@ -66,13 +66,13 @@ jobs:
           git push
           git push --tags
           
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ github.event.inputs.version }}
-          name: Release v${{ github.event.inputs.version }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   - name: Create Release
+    #     uses: softprops/action-gh-release@v1
+    #     with:
+    #       tag_name: v${{ github.event.inputs.version }}
+    #       name: Release v${{ github.event.inputs.version }}
+    #       body: ${{ steps.changelog.outputs.clean_changelog }}
+    #       draft: false
+    #       prerelease: false
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
