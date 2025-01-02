@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:args/args.dart';
 import 'package:promptly/src/framework/framework.dart';
 
 /// create pretty print json
@@ -36,6 +37,12 @@ class TraceSpan {
     attributes[key] = value;
   }
 
+  void addArguments(Map<String, Option> options, ArgResults? argResults) {
+    for (final attr in options.keys) {
+      attributes[attr] = argResults![attr];
+    }
+  }
+
   /// Vrátí informace o spanu
   Map<String, dynamic> toMap() {
     return {
@@ -65,14 +72,14 @@ class PerformanceTracer {
     final span = TraceSpan(name0);
     span.attributes = attributes;
     _spans.add(span);
-    logger.info('Start span: $name', delayed: true);
+    logger.verbose('Start span: $name', delayed: true);
     return span;
   }
 
   /// Ukončí span a zaznamená jeho data
   void endSpan(TraceSpan span) {
     span.end();
-    logger.info(
+    logger.verbose(
       '''
 Finish span: ${span.name}, duration: ${span.duration.inMilliseconds} ms
 ${prettyJson(span.toMap())}

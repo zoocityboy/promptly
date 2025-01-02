@@ -8,8 +8,7 @@ import 'package:promptly/src/theme/theme.dart';
 class Promptly<T> {
   Promptly._();
   void addCommand(Command<T> command) {
-    io.stdout.writeln('Add command: ${command.name} ${sl.hashCode}');
-    sl.get<CommandRunner<T>>().addCommand(command);
+    sl.get<PromptlyRunner<T>>().addCommand(command);
   }
 
   static Future<Promptly<T>> init<T>(
@@ -18,19 +17,16 @@ class Promptly<T> {
     String? version,
     Theme? theme,
   }) async {
+    final console = Console(theme: theme);
+    final logger = Logger(printer: consolePrinter);
+    final pl = PerformanceTracer(logger: logger);
+    final slSpan = pl.startSpan(name: 'Promptly.init');
     sl
-      ..registerSingleton<Console>(Console(theme: theme))
-      ..registerSingleton<Logger>(
-        Logger(
-          printer: (level, value) => sl.get<Console>().style(
-                value,
-                prefix: (console) => console.theme.colors.prefix(console.theme.symbols.vLine),
-              ),
-        ),
-      )
-      ..registerSingleton<PerformanceTracer>(PerformanceTracer(logger: sl.get<Logger>()))
-      ..registerSingleton<CommandRunner<T>>(
-        CommandRunner<T>(
+      ..registerSingleton<Console>(console)
+      ..registerSingleton<Logger>(logger)
+      ..registerSingleton<PerformanceTracer>(pl)
+      ..registerSingleton<PromptlyRunner<T>>(
+        PromptlyRunner<T>(
           executableName,
           description ?? '',
           version: version ?? '',
@@ -38,36 +34,47 @@ class Promptly<T> {
         ),
       );
     await sl.allReady();
+    pl.endSpan(slSpan);
     return Promptly<T>._();
   }
 
   X get<X extends Object>() {
-    io.stdout.writeln('get<$X>:  ${sl.hashCode}');
     return sl.get<X>();
   }
 
   Future<dynamic> flushThenExit(T? status) {
-    return Future.wait<void>([io.stdout.close(), io.stderr.close()]).then<void>((_) {
-      get<Logger>().flush();
-      if (status is int) {
-        io.exit(status);
-      }
-      io.exit(0);
-    });
+    final logger = get<Logger>();
+    logger.info('flushThenExit: $status');
+    return Future.wait<void>([io.stdout.close(), io.stderr.close()]).then<void>(
+      (_) {
+        logger.flush();
+        logger.info('Exit: $status ');
+        if (status is int) {
+          io.exit(status);
+        }
+        io.exit(0);
+      },
+      onError: (e) {
+        logger.error('Error flushing stdout/stderr: $e');
+        io.exit(1);
+      },
+    );
   }
 
   Future<dynamic> run(
     Iterable<String> args,
   ) async {
-    final runner = get<CommandRunner<T>>();
+    final runner = get<PromptlyRunner<T>>();
     try {
       await flushThenExit(await runner.run(args));
     } on UsageException catch (e) {
       runner.printUsage();
       return null;
     } on Exception catch (e) {
+      print(e);
       return 64;
     } catch (e) {
+      print(e);
       return null;
     }
   }

@@ -18,9 +18,11 @@ extension StringBufferX on StringBuffer {
   }
 }
 
-typedef LinkData = ({Uri uri, String? message});
+class LinkData {
+  const LinkData({required this.uri, this.message});
+  final Uri uri;
+  final String? message;
 
-extension LinkX on LinkData {
   String link() {
     const leading = '\x1B]8;;';
     const trailing = '\x1B\\';

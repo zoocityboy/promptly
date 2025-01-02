@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/command/zoo_app.dart';
+import 'package:promptly/src/command/promptly.dart';
 import 'package:promptly/src/framework/performance_tracer.dart';
 import 'package:promptly/src/theme/theme.dart';
 
@@ -26,7 +24,7 @@ class TestCommand extends Command<int> {
   PerformanceTracer get tracer => get<PerformanceTracer>();
   @override
   Future<int> run() async {
-    _span.attributes = argParser.options;
+    // _span.addArguments(argResults.options, argResults);
     header(name, message: description);
 
     line();
@@ -42,11 +40,9 @@ class TestCommand extends Command<int> {
 
     line();
     success(name, message: 'Done');
-    _span.end();
-    console.writeStyled('Span: ${_span.name}');
-    console.writeStyled('Span: ${_span.toMap()}');
-
-    return exitCode;
+    tracer.endSpan(_span);
+    get<Logger>().flush();
+    return 0;
   }
 }
 
@@ -59,7 +55,7 @@ class SecondCommand extends Command<int> {
   @override
   Future<int> run() async {
     header(name, message: description);
-    return exitCode;
+    return 0;
   }
 }
 
@@ -72,6 +68,6 @@ class ThirdCommand extends Command<int> {
   @override
   Future<int> run() async {
     header(name, message: description);
-    return exitCode;
+    return 0;
   }
 }

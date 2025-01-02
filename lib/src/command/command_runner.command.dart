@@ -114,7 +114,6 @@ abstract class Command<T> extends cr.OriginalCommand<T> {
   }
 
   X get<X extends Object>() {
-    stdout.writeln('get<$X>:  ${sl.hashCode}');
     return sl.get<X>();
   }
 }

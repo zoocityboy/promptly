@@ -22,6 +22,10 @@ typedef LogPrinter = void Function(LogLevel level, String message);
 ///   - message: The message to be logged.
 void defaultPrinter(LogLevel level, String message) =>
     [LogLevel.error, LogLevel.fatal].contains(level) ? stderr.writeln(message) : stdout.writeln(message);
+void consolePrinter(LogLevel level, String message) => Console.instance.message(
+      message,
+      style: [LogLevel.error, LogLevel.fatal].contains(level) ? MessageStyle.error : MessageStyle.verbose,
+    );
 
 /// A simple logger that logs to stdout.
 class Logger {
@@ -37,6 +41,7 @@ class Logger {
     _instance._printer = printer;
     _instance._level = level;
     _instance._maxQueueSize = maxQueueSize;
+
     return _instance;
   }
   Logger._internal()
@@ -44,7 +49,7 @@ class Logger {
         _printer = defaultPrinter,
         _maxQueueSize = 100;
 
-  final Queue<MapEntry<LogLevel, String>> _queue = Queue();
+  final List<MapEntry<LogLevel, String>> _queue = [];
 
   /// The logging level for the logger.
   ///
@@ -73,14 +78,15 @@ class Logger {
   void log(String message, {LogLevel level = LogLevel.info, bool delayed = false}) {
     // stdout.writeln('[${level.name}${level.index} >= ${_level.index}] $message');
     // stdout.writeln('-> ${LogLevel.values.map((e) => '${e.index} ${e.name},').toList()}');
-    if (_level.index >= level.index) {
-      if (delayed) {
-        _delayed(message, level: level);
-      } else {
-        _printer(level, message);
-      }
+    if (_level.index >= level.index) {}
+    if (delayed) {
+      _delayed(message, level: level);
+    } else {
+      _printer(level, message);
     }
   }
+
+  void verbose(String message, {bool delayed = false}) => log(message, level: LogLevel.verbose, delayed: delayed);
 
   /// Log an info message.
   void info(String message, {bool delayed = false}) => log(message, delayed: delayed);
@@ -103,20 +109,20 @@ class Logger {
   /// [level] The level at which the message should be logged. Defaults to
   /// [LogLevel.info].
   void _delayed(String message, {LogLevel level = LogLevel.info}) {
-    stdout.writeln('Delaying log ${_queue.length} ${_queue.length >= _maxQueueSize}');
-    if (_queue.length >= _maxQueueSize) {
-      _queue.removeFirst();
-    }
     _queue.add(MapEntry(level, message));
-    stdout.writeln('Delaying log ${_queue.length}  :${level.name} $message');
+    if (_queue.length > _maxQueueSize) {
+      // _queue.removeFirst();
+    }
   }
 
   /// Flushes the logger, ensuring that all buffered log messages are written out.
   void flush() {
-    stdout.writeln('Flushing log messages [${_queue.length}]...');
-    while (_queue.isNotEmpty) {
-      final item = _queue.removeFirst();
-      log(item.value, level: item.key);
+    _printer(
+      LogLevel.verbose,
+      'Flushing log messages [${_queue.length}]...',
+    );
+    for (final item in _queue) {
+      _printer(item.key, item.value);
     }
     _queue.clear();
   }

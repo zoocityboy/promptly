@@ -261,7 +261,7 @@ void success(String title, {String? message, String? prefix}) => Console.instanc
 
 void failure(String title, {String? message, String? prefix}) => Console.instance.failure(title, message: message);
 
-String link(LinkData data) => Console.instance.link(data);
+String link(String url, {String? label}) => Console.instance.link(LinkData(uri: Uri.parse(url), message: label));
 
 void write(String message) => Console.instance.write(message);
 void writeln(String message) => Console.instance.writeln(message);

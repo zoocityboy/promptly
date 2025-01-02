@@ -1,7 +1,9 @@
-![alt text](https://raw.githubusercontent.com/zoocityboy/promptly/main/assets/promptly.png "Resoure")
+![alt text](./assets/promptly.png "Resoure")
 
 Developed by 🦏 [zoocityboy][zoocityboy_link]
-# Promptly
+# Promptly 
+
+> Create a terminal apps great again!
 
 [![Pub](https://img.shields.io/pub/v/promptly.svg?style=flat-square)](https://pub.dev/packages/promptly)
 [![pub points](https://img.shields.io/pub/points/mason_coder?style=flat-square&color=2E8B57&label=pub%20points)](https://pub.dev/packages/promptly/score)

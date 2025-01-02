@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:promptly/promptly.dart';
@@ -15,7 +14,7 @@ export 'package:args/src/usage_exception.dart';
 part 'command_runner.command.dart';
 part 'command_runner.runner.dart';
 
-/// The built-in help command that's added to every [CommandRunner].
+/// The built-in help command that's added to every [PromptlyRunner].
 ///
 /// This command displays help information for the various subcommands.
 class HelpCommand<T> extends Command<T> {

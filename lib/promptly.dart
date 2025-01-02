@@ -1,7 +1,7 @@
 export 'package:args/src/utils.dart';
 export 'package:tint/tint.dart' show Tint;
 
-export 'src/command/command_runner.dart' show Command, CommandRunner, UsageException;
+export 'src/command/command_runner.dart' show Command, PromptlyRunner, UsageException;
 export 'src/components/components.dart';
 export 'src/console.dart'
     show

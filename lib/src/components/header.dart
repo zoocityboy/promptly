@@ -1,5 +1,6 @@
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/string_buffer.dart';
 
 class Header extends Component<String> {
   Header({
@@ -29,17 +30,36 @@ class _HeaderState extends State<Header> {
   HeaderTheme get theme => component.theme.headerTheme;
 
   String header(String title, {String? message}) {
-    final pr = component.theme.colors.prefix(component.prefix.padRight(component.theme.spacing - 1));
-    return '$pr${theme.title(' $title ')}${message != null ? theme.message(message) : ''}';
+    final sb = StringBuffer();
+    sb.write(component.theme.colors.prefix(component.prefix.padRight(component.theme.spacing - 1)));
+    sb.write(theme.title(' $title '));
+    if (message != null) {
+      sb.write(' ');
+      sb.write(theme.message(message));
+    }
+    sb.write('\n');
+    sb.verticalLine();
+    return sb.toString();
+  }
+
+  @override
+  void dispose() {
+    value ??= header(
+      component.title,
+      message: component.message,
+    );
+    context.write(value!);
+    super.dispose();
   }
 
   @override
   String interact() {
+    final val = header(
+      component.title,
+      message: component.message,
+    );
     setState(() {
-      value = header(
-        component.title,
-        message: component.message,
-      );
+      value = val;
     });
     return value!;
   }

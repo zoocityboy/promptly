@@ -224,9 +224,9 @@ class Console {
 
   void line({String? message}) {
     if (message == null) {
-      _ctx.writeln(_theme.colors.prefix(_theme.symbols.hLine).padRight(_theme.spacing));
+      _ctx.writeln(_theme.colors.prefix(_theme.symbols.vLine).padRight(_theme.spacing));
     } else {
-      _ctx.writeln(_theme.colors.prefix(_theme.symbols.hLine).padRight(_theme.spacing));
+      _ctx.writeln(_theme.colors.prefix(_theme.symbols.vLine).padRight(_theme.spacing));
       _ctx.write(_theme.promptTheme.messageStyle(message));
       _ctx.writeln();
     }
@@ -243,7 +243,7 @@ class Console {
 
   /// Writes a message to the console with the specified style.
   String message(String message, {String? prefix, MessageStyle? style}) =>
-      Message.withTheme(theme: _theme, message: message, style: style, prefix: prefix).interect();
+      Message.withTheme(theme: _theme, message: message, style: style, prefix: prefix).interact();
 
   /// Starts the console with the given title and an optional message.
   ///
@@ -266,7 +266,7 @@ class Console {
   //   line();
   // }
   String header(String title, {String? message, String? prefix}) =>
-      Header.withTheme(theme: _theme, prefix: prefix, title: title).interact();
+      Header.withTheme(theme: _theme, prefix: prefix, title: title, message: message).interact();
 
   /// Constructs an [Prompt] component with the supplied_theme.
   String prompt(

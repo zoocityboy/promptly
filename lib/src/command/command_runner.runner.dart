@@ -19,8 +19,8 @@ part of 'command_runner.dart';
 ///
 /// The `CommandRunner` class is typically used in command-line applications
 /// to handle various commands and their respective options and arguments.
-class CommandRunner<T> extends cr.OriginalCommandRunner<T> {
-  CommandRunner(
+class PromptlyRunner<T> extends cr.OriginalCommandRunner<T> {
+  PromptlyRunner(
     super.executableName,
     super.description, {
     required this.version,
@@ -48,7 +48,6 @@ class CommandRunner<T> extends cr.OriginalCommandRunner<T> {
   @override
   Future<T?> run(Iterable<String> args) {
     final logger = sl.get<Logger>();
-    console.clear();
     final p = parse(args);
     p.flag('debug') ? logger.level = LogLevel.verbose : logger.level = LogLevel.error;
     return super.run(args);
@@ -67,11 +66,10 @@ class CommandRunner<T> extends cr.OriginalCommandRunner<T> {
     final buffer = StringBuffer();
     buffer
       ..writeln(console.theme.prefixLine(wrap(invocation)))
-      ..verticalLine();
-    buffer.write(
-      getCommandUsage(commands, lineLength: argParser.usageLineLength),
-    );
-    buffer
+      ..verticalLine()
+      ..write(
+        getCommandUsage(commands, lineLength: argParser.usageLineLength),
+      )
       ..verticalLine()
       ..writeln(console.theme.prefixLine(console.theme.colors.sectionBlock(wrap(' Flags '))))
       ..verticalLine();
@@ -88,7 +86,6 @@ class CommandRunner<T> extends cr.OriginalCommandRunner<T> {
   }
 
   X get<X extends Object>() {
-    stdout.writeln('get<$X>:  ${sl.hashCode}');
     return sl.get<X>();
   }
 }

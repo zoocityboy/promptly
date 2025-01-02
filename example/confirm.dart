@@ -1,7 +1,9 @@
-import 'package:promptly/promptly.dart';
+import 'package:promptly/src/console.dart';
 
 void main() {
-  header('Confirm', message: 'Please confirm the following:');
+  Console();
+  header('Confirm', message: 'Please confirm the following');
+  message('Are you sure you want to continue?');
   final x = confirm('Does it work?');
   line(message: x ? 'Awesome!' : 'Wait what! Check again.');
 
