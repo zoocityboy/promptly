@@ -31,17 +31,12 @@ jobs:
       
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
-      
-      - name: Configure Git
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
 
       - name: Update version in pubspec.yaml
         run: |
           NEW_VERSION=${{ github.event.inputs.version }}
           sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
-          
+     
       - name: Generate Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
@@ -57,9 +52,11 @@ jobs:
           git add pubspec.yaml CHANGELOG.md
           git commit -m "chore(release): prepare release ${{ github.event.inputs.version }}"
           
-      - name: Create Tag
-        run: |
-          git tag -a v${{ github.event.inputs.version }} -m "Release v${{ github.event.inputs.version }}"
+      - uses: avakar/tag-and-release@v1
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Push Changes
         run: |
