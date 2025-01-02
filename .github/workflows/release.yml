@@ -1,14 +1,6 @@
 name: Release
 
-permissions:
-    # Security level for all scopes
-    security-events: write
-    # Repository permissions
-    contents: write      # for creating releases and tags
-    issues: write       # for creating release issues
-    pull-requests: write # for creating release PRs
-    id-token: write    # for publishing to pub.dev
-    actions: write     # for managing workflow runs
+
 on:
   workflow_dispatch:
     inputs:
@@ -27,6 +19,9 @@ on:
 
 jobs:
   release:
+    permissions:
+        security-events: write
+        contents: write      # for creating releases and tags
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
