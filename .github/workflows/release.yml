@@ -25,10 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Update version in pubspec.yaml
-        run: |
-          NEW_VERSION=${{ github.event.inputs.version }}
-          sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
+    
      
       - name: Generate Changelog
         id: changelog
