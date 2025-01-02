@@ -44,13 +44,16 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './pubspec.yaml'
           skip-version-file: true
-          skip-git-pull: true
-          skip-commit: true
+          skip-git-pull: false
+          skip-commit: false
+          pre-commit: |
+            NEW_VERSION=${{ github.event.inputs.version }}
+            sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
           
-      - name: Commit Changes
-        run: |
-          git add pubspec.yaml CHANGELOG.md
-          git commit -m "chore(release): prepare release ${{ github.event.inputs.version }}"
+    #   - name: Commit Changes
+    #     run: |
+    #       git add pubspec.yaml CHANGELOG.md
+    #       git commit -m "chore(release): prepare release ${{ github.event.inputs.version }}"
           
       - uses: avakar/tag-and-release@v1
         with:
