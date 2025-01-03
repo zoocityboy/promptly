@@ -23,18 +23,18 @@ class PromptTheme {
     required this.hintStyle,
     required this.errorStyle,
   });
-  factory PromptTheme.fromDefault() => PromptTheme.fromColors(ThemeColors.defaultColors);
-  factory PromptTheme.fromColors(ThemeColors colors) {
+  factory PromptTheme.fromDefault() => PromptTheme.fromColors(ThemeColors.defaultColors, ThemeSymbols.defaultSymbols);
+  factory PromptTheme.fromColors(ThemeColors colors, ThemeSymbols symbols) {
     return PromptTheme._(
       promptPrefix: '?'.padRight(3).brightGreen().dim(),
       promptSuffix: '›'.padLeft(2).darkGray(),
       successPrefix: '◆'.padRight(3).brightGreen().dim(),
       successSuffix: '✔'.padRight(3).brightGreen().dim(),
       errorPrefix: '■'.padRight(3).brightRed().dim(),
-      messageStyle: (x) => colors.value(x),
+      messageStyle: (x) => colors.text(x),
       valueStyle: (x) => colors.value(x),
-      hintStyle: (x) => colors.value(x),
-      errorStyle: (x) => colors.value(x),
+      hintStyle: (x) => colors.hint(x),
+      errorStyle: (x) => colors.error(x),
     );
   }
 
@@ -62,15 +62,15 @@ class PromptTheme {
     );
   }
 
-  static final PromptTheme defaultTheme = PromptTheme._(
-    promptPrefix: '?'.padRight(3).brightGreen().dim(),
-    promptSuffix: '›'.padLeft(2).darkGray(),
-    successPrefix: '◆'.padRight(3).brightGreen().dim(),
-    successSuffix: '✔'.padRight(3).brightGreen().dim(),
-    errorPrefix: '■'.padRight(3).brightRed().dim(),
-    messageStyle: (x) => x.white().dim(),
-    valueStyle: (x) => x.green(),
-    hintStyle: (x) => x.gray(),
-    errorStyle: (p0) => p0.brightRed(),
-  );
+  // static final PromptTheme defaultTheme = PromptTheme._(
+  //   promptPrefix: '?'.padRight(3).brightGreen().dim(),
+  //   promptSuffix: '›'.padLeft(2).darkGray(),
+  //   successPrefix: '◆'.padRight(3).brightGreen().dim(),
+  //   successSuffix: '✔'.padRight(3).brightGreen().dim(),
+  //   errorPrefix: '■'.padRight(3).brightRed().dim(),
+  //   messageStyle: (x) => x.white().dim(),
+  //   valueStyle: (x) => x.green(),
+  //   hintStyle: (x) => x.gray(),
+  //   errorStyle: (p0) => p0.brightRed(),
+  // );
 }

@@ -9,12 +9,15 @@ class ConfirmTheme {
     this.promptTheme,
   });
   factory ConfirmTheme.fromDefault() {
-    return ConfirmTheme.fromColors(ThemeColors.defaultColors);
+    return ConfirmTheme.fromColors(
+      ThemeColors.defaultColors,
+      ThemeSymbols.defaultSymbols,
+    );
   }
-  factory ConfirmTheme.fromColors(ThemeColors colors) {
+  factory ConfirmTheme.fromColors(ThemeColors colors, ThemeSymbols symbols) {
     return ConfirmTheme._(
       defaultStyle: (x) => colors.value(x),
-      promptTheme: PromptTheme.fromColors(colors),
+      promptTheme: PromptTheme.fromColors(colors, symbols),
     );
   }
 
@@ -24,12 +27,7 @@ class ConfirmTheme {
   }) {
     return ConfirmTheme._(
       defaultStyle: defaultStyle ?? this.defaultStyle,
-      promptTheme: promptTheme ?? this.promptTheme,
+      promptTheme: promptTheme ?? promptTheme,
     );
   }
-
-  static final ConfirmTheme defaultTheme = ConfirmTheme._(
-    defaultStyle: (x) => ThemeColors.defaultColors.value(x),
-    promptTheme: PromptTheme.defaultTheme,
-  );
 }

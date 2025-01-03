@@ -69,7 +69,7 @@ class _MultiSelectState extends State<MultiSelect> {
 
     context.writeln(
       promptInput(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
       ),
     );
@@ -82,7 +82,7 @@ class _MultiSelectState extends State<MultiSelect> {
 
     context.writeln(
       promptSuccess(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
         value: values,
       ),

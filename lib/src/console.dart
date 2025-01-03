@@ -384,6 +384,21 @@ class Console {
         clear: clear,
       ).interact();
 
+  MultiLoaderState multiProcessing(String? prompt, List<Loader> tasks) {
+    // final spinners = tasks.map((task) {
+    //   final spinner = Loader.withTheme(
+    //     prompt: prompt ?? 'Processing...',
+    //     theme: _theme,
+    //     icon: _theme.loaderTheme.successStyle(_theme.loaderTheme.successPrefix),
+    //     failedIcon: _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
+    //   ).interact();
+    //   return task(spinner);
+    // }).toList();
+    final MultiLoader multiLoader = MultiLoader();
+    final result = multiLoader.addAll(tasks);
+    return result;
+  }
+
   /// Executes a task asynchronously.
   ///
   /// This function performs an asynchronous operation. The specific details

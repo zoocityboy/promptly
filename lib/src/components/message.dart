@@ -40,11 +40,14 @@ class _MessageState extends State<Message> {
     };
     final StringBuffer buffer = StringBuffer();
     final prefixValue = prefix ?? messageTheme.prefix;
-    for (final line in message.split('\n')) {
+    final lines = message.split('\n');
+    for (final line in lines) {
       buffer.write(
         '${messageTheme.messageStyle(prefixValue.padRight(component.theme.spacing))}${messageTheme.messageStyle(line)}',
       );
-      // buffer.write('\n');
+      if (line != lines.last) {
+        buffer.write('\n');
+      }
     }
     return buffer.toString();
   }

@@ -55,7 +55,7 @@ class _PasswordState extends State<Password> {
   void dispose() {
     context.writeln(
       promptSuccess(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
         value: component.theme.passwordTheme.passwordPlaceholder * 4,
       ),
@@ -69,7 +69,7 @@ class _PasswordState extends State<Password> {
     if (hasError) {
       context.writeln(
         promptError(
-          theme: component.theme.promptTheme,
+          theme: component.theme,
           message: component.confirmError ?? 'Passwords do not match',
         ),
       );
@@ -82,7 +82,7 @@ class _PasswordState extends State<Password> {
       hasError = false;
       context.write(
         promptInput(
-          theme: component.theme.promptTheme,
+          theme: component.theme,
           message: component.prompt,
         ),
       );
@@ -92,7 +92,7 @@ class _PasswordState extends State<Password> {
       if (component.confirmation) {
         context.write(
           promptInput(
-            theme: component.theme.promptTheme,
+            theme: component.theme,
             message: component.confirmPrompt ?? component.prompt,
           ),
         );
