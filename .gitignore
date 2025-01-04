@@ -11,4 +11,4 @@ build/
 
 # Directory created by dartdoc
 doc/api/
-docs/node_modules/
+**/node_modules/
