@@ -12,7 +12,7 @@ void main() {
   line();
   console.style('Language selected: ${x.bold().green()}', prefix: (xx) => xx.message('', style: MessageStyle.verbose));
 
-  final _ = select<String>(
+  final selcted = select<String>(
     'Favorite superhero',
     choices: heroes,
     display: (p0) => p0,
@@ -20,6 +20,6 @@ void main() {
   );
   line();
   // ignore: no_wildcard_variable_uses
-  success('Superhero', message: 'selected: ${_.bold()}');
-  failure('Superhero', message: 'selected: ${_.bold()}');
+  success('Superhero', message: 'selected: ${selcted.bold()}');
+  failure('Superhero', message: 'selected: ${selcted.bold()}');
 }

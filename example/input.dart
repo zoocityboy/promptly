@@ -1,4 +1,4 @@
-import 'package:promptly/promptly.dart' show EmailValidator, line, prompt, header, success;
+import 'package:promptly/promptly.dart' show EmailValidator, header, line, prompt, success;
 
 void main() {
   header('Input', message: 'Please provide the following information:');

@@ -24,6 +24,7 @@ class PromptTheme {
     required this.errorStyle,
   });
   factory PromptTheme.fromDefault() => PromptTheme.fromColors(ThemeColors.defaultColors, ThemeSymbols.defaultSymbols);
+  // ignore: avoid_unused_constructor_parameters
   factory PromptTheme.fromColors(ThemeColors colors, ThemeSymbols symbols) {
     return PromptTheme._(
       promptPrefix: '?'.padRight(3).brightGreen().dim(),
