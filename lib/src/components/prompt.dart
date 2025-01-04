@@ -60,7 +60,7 @@ class _PromptState extends State<Prompt> {
     if (value != null) {
       context.writeln(
         promptSuccess(
-          theme: component.theme.promptTheme,
+          theme: component.theme,
           message: component.prompt,
           value: value!,
         ),
@@ -74,7 +74,7 @@ class _PromptState extends State<Prompt> {
     if (error != null) {
       context.writeln(
         promptError(
-          theme: component.theme.promptTheme,
+          theme: component.theme,
           message: error!,
         ),
       );
@@ -86,7 +86,7 @@ class _PromptState extends State<Prompt> {
     while (true) {
       context.write(
         promptInput(
-          theme: component.theme.promptTheme,
+          theme: component.theme,
           message: component.prompt,
           hint: component.defaultValue,
         ),

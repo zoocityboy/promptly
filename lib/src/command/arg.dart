@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: implementation_imports, use_string_buffers, parameter_assignments
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
@@ -10,14 +12,6 @@ import 'package:args/args.dart';
 import 'package:args/src/usage_exception.dart';
 import 'package:args/src/utils.dart';
 import 'package:promptly/src/console.dart';
-// import 'src/arg_parser.dart';
-// import 'src/arg_parser_exception.dart';
-// import 'src/arg_results.dart';
-// import 'package:args/src/help_command.dart';
-// import 'src/usage_exception.dart';
-// import 'src/utils.dart';
-
-// export 'src/usage_exception.dart';
 
 /// A class for invoking [OriginalCommand]s based on raw command-line arguments.
 ///

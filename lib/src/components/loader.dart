@@ -46,7 +46,7 @@ class Loader extends Component<LoaderState> {
   final bool clear;
 
   @override
-  _SpinnerState createState() => _SpinnerState();
+  _LoaderState createState() => _LoaderState();
 
   @override
   void disposeState(State state) {}
@@ -81,7 +81,7 @@ class LoaderState {
   void Function() Function(String? message) failed;
 }
 
-class _SpinnerState extends State<Loader> {
+class _LoaderState extends State<Loader> {
   late LoaderStateType stateType;
   late String message;
   late int index;
@@ -110,20 +110,20 @@ class _SpinnerState extends State<Loader> {
   @override
   void render() {
     final line = StringBuffer();
-    if (stateType == LoaderStateType.success) {
-      line.write(component.icon.padRight(component.theme.spacing));
-    } else if (stateType == LoaderStateType.failed) {
-      line.write(component.failedIcon.padRight(component.theme.spacing));
-    } else {
-      line.write(theme.defaultStyle(theme.spinners[index].padRight(component.theme.spacing)));
-    }
+    final icon = switch (stateType) {
+      LoaderStateType.inProgress => theme.processingStyle(theme.spinners[index].padRight(component.theme.spacing)),
+      LoaderStateType.success => theme.successStyle(component.icon.padRight(component.theme.spacing)),
+      LoaderStateType.failed => theme.errorStyle(component.failedIcon.padRight(component.theme.spacing)),
+    };
 
-    final x = switch (stateType) {
-      LoaderStateType.inProgress => theme.defaultStyle(message),
+    final formatedMessage = switch (stateType) {
+      LoaderStateType.inProgress => theme.processingStyle(message),
       LoaderStateType.success => theme.successStyle(message),
       LoaderStateType.failed => theme.errorStyle(message),
     };
-    line.write(x);
+    // ignore: unnecessary_string_interpolations
+    line.write(icon);
+    line.write(formatedMessage);
     context.writeln(line.toString());
   }
 

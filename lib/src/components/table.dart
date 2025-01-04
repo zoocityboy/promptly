@@ -56,7 +56,7 @@ class _TableState extends State<Table> {
     ///
     context.writeln(
       promptInput(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: 'Select a row:',
       ),
     );
@@ -76,7 +76,7 @@ class _TableState extends State<Table> {
 
     context.writeln(
       promptSuccess(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
         value: prettyJson(item),
       ),

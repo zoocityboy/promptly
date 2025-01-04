@@ -57,7 +57,7 @@ class _SortState extends State<Sort> {
 
     context.writeln(
       promptInput(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
       ),
     );
@@ -68,7 +68,7 @@ class _SortState extends State<Sort> {
   void dispose() {
     context.writeln(
       promptSuccess(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
         value: component.showOutput ? options.map((i) => component.options[i]).join(', ') : '',
       ),

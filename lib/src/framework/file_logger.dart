@@ -22,7 +22,8 @@ class FileLogger {
   void logSpan(Map<String, dynamic> span) {
     final timestamp = DateTime.now().toIso8601String();
     _sink.writeln(
-        '[$timestamp] Span: ${span['name']}, Duration: ${span['durationMs']}ms, Attributes: ${span['attributes']}');
+      '[$timestamp] Span: ${span['name']}, Duration: ${span['durationMs']}ms, Attributes: ${span['attributes']}',
+    );
     _sink.flush();
   }
 

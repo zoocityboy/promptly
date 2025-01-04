@@ -1,3 +1,5 @@
+// ignore_for_file: use_string_buffers
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;

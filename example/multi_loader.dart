@@ -1,28 +1,24 @@
-import 'package:promptly/src/components/loader.dart';
-import 'package:promptly/src/components/multi_spinner.dart';
+import 'package:promptly/promptly.dart';
 
 Future<void> main() async {
-  final spinners = MultiSpinner();
+  header('Multi Loader', message: 'Showcase of multi loader');
+  final loaders = MultiLoader();
 
-  final horse = spinners.add(
+  final horse = loaders.add(
     Loader(
       prompt: 'Processing horse',
-      icon: '🐴',
     ),
   );
 
-  final rabbit = spinners.add(
+  final rabbit = loaders.add(
     Loader(
       prompt: 'Processing rabbit',
-      icon: '🐇',
     ),
   );
 
-  final turtle = spinners.add(
+  final turtle = loaders.add(
     Loader(
       prompt: 'Processing turtle',
-      icon: '🐢',
-      failedIcon: '✘',
     ),
   );
 
@@ -34,4 +30,5 @@ Future<void> main() async {
 
   await Future.delayed(const Duration(seconds: 2));
   turtle.success('Done');
+  line();
 }

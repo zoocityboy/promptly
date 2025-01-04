@@ -1,7 +1,7 @@
 part of 'theme.dart';
 
 class LoaderTheme {
-  final StyleFunction defaultStyle;
+  final StyleFunction processingStyle;
   final StyleFunction errorStyle;
   final StyleFunction successStyle;
 
@@ -12,7 +12,7 @@ class LoaderTheme {
   final String errorPrefix;
 
   const LoaderTheme({
-    required this.defaultStyle,
+    required this.processingStyle,
     required this.errorStyle,
     required this.successStyle,
     required this.spinners,
@@ -21,31 +21,30 @@ class LoaderTheme {
     required this.errorPrefix,
   });
 
-  factory LoaderTheme.fromDefault() => LoaderTheme.fromColors(ThemeColors.defaultColors);
-  factory LoaderTheme.fromColors(ThemeColors colors) {
+  factory LoaderTheme.fromDefault() => LoaderTheme.fromColors(ThemeColors.defaultColors, ThemeSymbols.defaultSymbols);
+  factory LoaderTheme.fromColors(ThemeColors colors, ThemeSymbols symbols) {
     return LoaderTheme(
-      defaultStyle: (x) => colors.active(x),
+      processingStyle: (x) => colors.active(x),
       errorStyle: (x) => colors.error(x),
       successStyle: (x) => colors.success(x),
-      spinners: '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'.split(''),
+      spinners: symbols.spinners,
       interval: 80,
-      successPrefix: '✔',
-      errorPrefix: '✖',
+      successPrefix: symbols.successStep,
+      errorPrefix: symbols.errorStep,
     );
   }
 
   LoaderTheme copyWith({
-    StyleFunction? defaultStyle,
+    StyleFunction? processingStyle,
     StyleFunction? errorStyle,
     StyleFunction? successStyle,
-    StyleFunction? spinnerStyle,
     List<String>? spinners,
     int? interval,
     String? successPrefix,
     String? errorPrefix,
   }) {
     return LoaderTheme(
-      defaultStyle: defaultStyle ?? this.defaultStyle,
+      processingStyle: processingStyle ?? this.processingStyle,
       errorStyle: errorStyle ?? this.errorStyle,
       successStyle: successStyle ?? this.successStyle,
       spinners: spinners ?? this.spinners,
@@ -54,14 +53,4 @@ class LoaderTheme {
       errorPrefix: errorPrefix ?? this.errorPrefix,
     );
   }
-
-  static final LoaderTheme defaultTheme = LoaderTheme(
-    defaultStyle: (x) => ThemeColors.defaultColors.active(x),
-    errorStyle: (x) => ThemeColors.defaultColors.error(x),
-    successStyle: (x) => ThemeColors.defaultColors.success(x),
-    spinners: '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'.split(''),
-    interval: 80,
-    successPrefix: '✔',
-    errorPrefix: '✖',
-  );
 }

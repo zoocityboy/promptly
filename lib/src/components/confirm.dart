@@ -54,7 +54,7 @@ class _ConfirmState extends State<Confirm> {
   void dispose() {
     context.writeln(
       promptSuccess(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
         value: answer! ? 'yes' : 'no',
       ),
@@ -69,7 +69,7 @@ class _ConfirmState extends State<Confirm> {
     final line = StringBuffer();
     line.write(
       promptInput(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
         hint: 'y/n',
       ),

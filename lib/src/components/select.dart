@@ -58,7 +58,7 @@ class _SelectState extends State<Select> {
 
     context.writeln(
       promptInput(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
       ),
     );
@@ -69,7 +69,7 @@ class _SelectState extends State<Select> {
   void dispose() {
     context.writeln(
       promptSuccess(
-        theme: component.theme.promptTheme,
+        theme: component.theme,
         message: component.prompt,
         value: component.choices[index],
       ),

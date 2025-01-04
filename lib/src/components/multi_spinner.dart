@@ -2,7 +2,7 @@ import 'package:promptly/src/components/loader.dart';
 import 'package:promptly/src/framework/framework.dart';
 
 /// A shared context and handler for rendering multiple [Loader]s.
-class MultiSpinner {
+class MultiLoader {
   final Context _context = Context();
   final List<StringBuffer> _lines = [];
   final List<LoaderState> _spinners = [];
@@ -31,7 +31,7 @@ class MultiSpinner {
     _context.increaseRenderCount();
   }
 
-  /// Adds a new [Loader] to current [MultiSpinner].
+  /// Adds a new [Loader] to current [MultiLoader].
   LoaderState add(Loader spinner) {
     final index = _spinners.length;
 
@@ -64,4 +64,16 @@ class MultiSpinner {
 
     return state;
   }
+
+  MultiLoaderState addAll(List<Loader> spinners) {
+    final states = <LoaderState>[];
+
+    for (final spinner in spinners) {
+      states.add(add(spinner));
+    }
+
+    return states;
+  }
 }
+
+typedef MultiLoaderState = List<LoaderState>;

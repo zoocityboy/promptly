@@ -1,10 +1,10 @@
 import 'dart:async' show StreamSubscription;
 import 'dart:io' show ProcessSignal;
 
-import 'package:tint/tint.dart';
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/utils.dart';
+import 'package:tint/tint.dart';
 
 String _startLabel(ProgressData x) {
   int numDigits(int n) => n.toString().length;

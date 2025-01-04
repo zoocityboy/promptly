@@ -1,0 +1,40 @@
+---
+title: Installation
+description: A guide in my new Starlight docs site.
+slug: 1.installation
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+How to install the `promptly` package in your Dart project.
+
+## Steps
+<Steps>
+
+1. Check if you have installed Dart
+
+   ```dart title="Check Dart version" 
+   dart --version
+   ```
+   > If you don't have Dart installed, follow the [official installation guide](https://dart.dev/get-dart).
+
+2. Create a new `cli-app` project.
+
+   ```dart title="Create a new project"
+   dart create -t package 
+   ```
+3. Add the `promptly` package to your `pubspec.yaml` file.
+
+   ```bash title="Add package to the project"
+   dart pub dev:add promptly
+   ```
+</Steps>
+
+<kbd class=".astro-v37mnknz">space</kbd>
+Guides lead a user through a specific task they want to accomplish, often with a sequence of steps.
+Writing a good guide requires thinking about what your users are trying to do.
+
+## Further reading
+
+- Read [about how-to guides](https://diataxis.fr/how-to-guides/) in the Diátaxis framework
+

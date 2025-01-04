@@ -40,33 +40,6 @@ class Console {
   /// Returns the current [Theme] object.
   Theme get theme => _theme;
 
-  // /// Returns a styled vertical line prefix with padding and gray color.
-  // String get prefixVerticalStyled => theme.colors.prefix('│').padRight(spacing);
-
-  // /// Returns a styled start line prefix with padding and gray color.
-  // String get prefixStartStyled => theme.colors.prefix('┌').padRight(spacing);
-
-  // /// Returns a styled end line prefix with padding and gray color.
-  // String get prefixEndStyled => theme.colors.prefix('└').padRight(spacing);
-
-  // /// Returns a styled diamond prefix with padding and green color.
-  // String get prefixDiamondStyled => theme.colors.success('◇').padRight(spacing);
-
-  // /// Returns a styled usage prefix with padding and green color.
-  // String get prefixUsageStyled => theme.colors.success('◇').padRight(spacing);
-
-  // /// Returns a styled error prefix with padding and red color.
-  // String get prefixErrorStyled => theme.promptTheme.errorStyle('■').padRight(spacing);
-
-  // /// Returns a styled trace start prefix with padding and cyan color.
-  // String get prefixTraceStartStyled => theme.colors.value('•').padRight(spacing);
-
-  // /// Returns a styled trace item prefix with padding, cyan color, and dim effect.
-  // String get prefixTraceItemStyled => theme.colors.value('▹').padRight(spacing);
-
-  // /// Returns a styled T-shaped prefix with padding and gray color.
-  // String get prefixTStyled => theme.colors.prefix('├').padRight(spacing);
-
   /// Writes a message to the console.
   ///
   /// This method takes a [message] as a string and writes it to the console
@@ -114,38 +87,11 @@ class Console {
     if (text == null) return;
     final x = message(text, style: MessageStyle.info);
     _ctx.writeln(x);
-    // final sb = StringBuffer();
-    // final lines = message.split('\n');
-    // for (final line in lines) {
-    //   if (lines.indexOf(line) == 0) {
-    //     sb.write(prefixDiamondStyled);
-    //     sb.write(line.gray());
-    //   } else {
-    //     sb.write(prefixVerticalStyled);
-    //     sb.write(line.grey());
-    //   }
-    //   sb.write('\n');
-    // }
-    // _ctx.write(sb.toString());
   }
 
   /// Logs an error message to the console.
   void error(String text) {
-    // final sb = StringBuffer();
-    // final lines = message.split('\n');
-    // for (final line in lines) {
-    //   if (lines.indexOf(line) == 0) {
-    //     sb.write(prefixErrorStyled);
-    //     sb.write(line.red());
-    //   } else {
-    //     sb.write(prefixVerticalStyled);
-    //     sb.write(line.grey());
-    //   }
-    //   sb.write('\n');
-    // }
-    // _ctx.write(sb.toString());
-    final x = message(text, style: MessageStyle.error);
-    _ctx.writeln(x);
+    _ctx.writeln(message(text, style: MessageStyle.error));
   }
 
   /// Logs a fatal error message.
@@ -158,15 +104,17 @@ class Console {
   /// [error] An optional error object associated with the fatal error.
   /// [stackTrace] An optional stack trace associated with the fatal error.
   void fatal(String? text, {Object? error, StackTrace? stackTrace}) {
-    // final sb = StringBuffer();
-    // sb.write('$message');
-    // if (error != null) {
-    //   sb.write(' $error');
-    // }
-    // _ctx.write(prefixErrorStyled);
-    // _ctx.write(sb.toString().red());
-    final x = message('$text', style: MessageStyle.info);
-    _ctx.writeln(x);
+    final buffer = StringBuffer();
+    buffer.write(message(text ?? 'Fatal error', style: MessageStyle.error));
+    if (error != null) {
+      buffer.write('\n');
+      buffer.write(message(error.toString(), style: MessageStyle.error));
+    }
+    if (stackTrace != null) {
+      buffer.write('\n');
+      buffer.write(message(stackTrace.toString(), style: MessageStyle.error));
+    }
+    _ctx.writeln(buffer.toString());
   }
 
   /// Clears the console screen.
@@ -383,6 +331,21 @@ class Console {
         failedIcon: _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
         clear: clear,
       ).interact();
+
+  MultiLoaderState multiProcessing(String? prompt, List<Loader> tasks) {
+    // final spinners = tasks.map((task) {
+    //   final spinner = Loader.withTheme(
+    //     prompt: prompt ?? 'Processing...',
+    //     theme: _theme,
+    //     icon: _theme.loaderTheme.successStyle(_theme.loaderTheme.successPrefix),
+    //     failedIcon: _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
+    //   ).interact();
+    //   return task(spinner);
+    // }).toList();
+    final MultiLoader multiLoader = MultiLoader();
+    final result = multiLoader.addAll(tasks);
+    return result;
+  }
 
   /// Executes a task asynchronously.
   ///

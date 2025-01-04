@@ -188,6 +188,8 @@ LoaderState processing(
 }) =>
     Console.instance.processing(prompt, successMessage: successMessage, failedMessage: failedMessage, clear: clear);
 
+void multiProcessing(String prompt, List<Loader> tasks) => Console.instance.multiProcessing(prompt, tasks);
+
 /// Executes a task with a loading spinner and optional success or failure messages.
 ///
 /// This function displays a prompt and executes the provided task function while showing a loading spinner.
