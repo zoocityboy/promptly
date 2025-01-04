@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:args/command_runner.dart';
+import 'package:promptly_args/command_runner.dart';
 
 void main(List<String> args) async {
   final runner = CommandRunner<String>('draw', 'Draws shapes')
@@ -124,7 +124,11 @@ class IsoscelesTriangleCommand extends Command<String> {
 }
 
 String draw(
-    int width, int height, String char, bool Function(double, double) pixel) {
+  int width,
+  int height,
+  String char,
+  bool Function(double, double) pixel,
+) {
   final out = StringBuffer();
   for (var y = 0; y <= height; ++y) {
     final ty = 2 * y / height - 1;

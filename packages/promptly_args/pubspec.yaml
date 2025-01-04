@@ -9,7 +9,7 @@ topics:
   - cli
 
 environment:
-  sdk: ^3.3.0
+  sdk: ">=3.6.0"
 
 dependencies: 
   promptly_ansi:
@@ -17,4 +17,4 @@ dependencies:
 
 dev_dependencies:
   dart_flutter_team_lints: ^3.0.0
-  test: ^1.16.0
+  test: ^1.25.14

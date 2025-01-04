@@ -11,7 +11,7 @@ class Promptly<T> {
     sl.get<PromptlyRunner<T>>().addCommand(command);
   }
 
-  static Future<Promptly<T>> init<T>(
+  static Future<Promptly<T>> start<T>(
     String executableName, {
     String? description,
     String? version,

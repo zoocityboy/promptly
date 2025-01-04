@@ -4,7 +4,7 @@ import 'package:promptly/src/framework/performance_tracer.dart';
 import 'package:promptly_ansi/promptly_ansi.dart';
 
 Future<void> main(List<String> args) async {
-  final app = await Promptly.init<int>(
+  final app = await Promptly.start<int>(
     'promptly',
     description: 'Runner test',
     version: '0.0.1',

@@ -5,6 +5,7 @@ homepage: https://zoocityboy.github.io/promptly
 documentation: https://pub.dev/documentation/promptly/latest/
 repository: https://github.com/zoocityboy/promptly
 issue_tracker: https://github.com/zoocityboy/promptly/issues
+publish_to: none
 topics:
   - command-line
   - interactive
@@ -16,20 +17,20 @@ screenshots:
   - description: A prompt with a single option.
     path: assets/promptly.png
 environment:
-  sdk: ">=3.6.0 <4.0.0"
+  sdk: ">=3.6.0"
 
 dependencies:
-  args: ^2.3.0
   dart_console: ^4.1.0
   get_it: ^8.0.3
   meta: ^1.15.0
-  tint: ^2.0.0
-  version: ^3.0.2
   promptly_ansi:
     path: packages/promptly_ansi
+  promptly_args:
+    path: packages/promptly_args
+  version: ^3.0.2
 
 dev_dependencies:
   lint: ^2.0.1
+  melos: ^6.3.0
   test: ^1.25.14
   test_coverage_badge: ^0.3.2
-

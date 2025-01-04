@@ -9,7 +9,7 @@ import 'package:promptly/src/command/arg.dart' as cr;
 import 'package:promptly/src/command/global.dart';
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
-import 'package:promptly_ansi/theme/theme.dart';
+import 'package:promptly_ansi/promptly_ansi.dart';
 
 export 'package:args/src/usage_exception.dart';
 

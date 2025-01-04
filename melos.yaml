@@ -1,0 +1,9 @@
+name: promptly_workspace
+ide:
+  intellij: false
+packages:
+  - .
+  - packages/**
+
+  
+  

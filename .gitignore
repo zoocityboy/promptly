@@ -12,3 +12,5 @@ build/
 # Directory created by dartdoc
 doc/api/
 **/node_modules/
+**/pubspec_overrides.yaml
+pubspec_overrides.yaml
