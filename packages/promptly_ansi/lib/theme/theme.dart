@@ -4,7 +4,8 @@
 // it's too much.
 // But I did use expressive names, so it should be good.
 
-import 'package:promptly/promptly.dart';
+import 'package:promptly_ansi/extensions/tint_colors.dart';
+import 'package:tint/tint.dart';
 
 part 'theme.confirm.dart';
 part 'theme.header.dart';

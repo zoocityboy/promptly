@@ -44,10 +44,9 @@ export default defineConfig({
 			],
 			expressiveCode: {
 				useStarlightUiThemeColors: true,
-				styleOverrides: { borderRadius: '0rem' },
 				plugins: [
 					pluginLineNumbers(),
-					pluginCodeOutput(),
+					// pluginCodeOutput(),
 				],
 				defaultProps: {
 					showLineNumbers: false,
@@ -55,7 +54,7 @@ export default defineConfig({
 				themes: ['github-dark-default', 'github-light-default'],
 			},
 			components: {
-				Hero: './src/components/Hero.astro',
+				// Hero: './src/components/Hero.astro',
 			},
 		}),
 	],

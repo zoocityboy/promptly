@@ -1,7 +1,7 @@
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/command/promptly.dart';
 import 'package:promptly/src/framework/performance_tracer.dart';
-import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly_ansi/promptly_ansi.dart';
 
 Future<void> main(List<String> args) async {
   final app = await Promptly.init<int>(

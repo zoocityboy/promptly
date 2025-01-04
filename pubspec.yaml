@@ -25,6 +25,8 @@ dependencies:
   meta: ^1.15.0
   tint: ^2.0.0
   version: ^3.0.2
+  promptly_ansi:
+    path: packages/promptly_ansi
 
 dev_dependencies:
   lint: ^2.0.1

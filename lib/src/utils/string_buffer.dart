@@ -1,5 +1,5 @@
 import 'package:promptly/src/console.dart';
-import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly_ansi/theme/theme.dart';
 
 extension StringBufferX on StringBuffer {
   void verticalLine() {

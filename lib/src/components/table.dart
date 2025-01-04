@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:dart_console/dart_console.dart' as dc;
 import 'package:promptly/src/framework/framework.dart';
-import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/prompt.dart';
+import 'package:promptly_ansi/promptly_ansi.dart';
 
 typedef TableRow = List<Object>;
 

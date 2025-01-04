@@ -2,8 +2,8 @@ import 'dart:async' show StreamSubscription, Timer;
 import 'dart:io' show ProcessSignal;
 
 import 'package:promptly/src/framework/framework.dart';
-import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/utils.dart';
+import 'package:promptly_ansi/promptly_ansi.dart';
 
 enum LoaderStateType { inProgress, success, failed }
 
