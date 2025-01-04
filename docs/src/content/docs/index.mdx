@@ -1,0 +1,94 @@
+---
+title: Promptly
+description: Create a dart cli apps.
+template: splash
+hero:
+  title: "❯ promptly"
+  tagline: Congrats on setting up a new Starlight project!
+  image:
+    file: ../../assets/promptly_text_logo.svg
+  actions:
+    - text: Get Started
+      link: /getting-started
+      icon: right-arrow
+
+---
+import { Card, CardGrid, Aside, Code, Image } from '@astrojs/starlight/components';
+import importedCode from '../example/samples/runner.dart?raw';
+import AboutAstro from './src/components/about-astro.astro';
+import YoutubeGrid from './src/components/youtube-grid.astro';
+
+
+{/* <YoutubeGrid
+	videos={[
+		{
+			href: 'https://www.youtube.com/watch?v=sF6UcV3moZg',
+			title: 'Building docs with Starlight and Astro',
+			description:
+				'Watch Chris and Alex dive into Starlight on Code with CodingCat.dev',
+		},
+		{
+			href: 'https://www.youtube.com/watch?v=sWkkHbwDeQc',
+			title: 'Astro Starlight',
+			description: 'Introduction to Starlight in under a minute.',
+		},
+		{
+			href: 'https://www.youtube.com/watch?v=-Ki-1E5gNCk',
+			title: 'Astro Starlight Documentation Template (build custom app docs!)',
+			description: 'Get a new Starlight site up and running in about 5 minutes',
+		},
+		{
+			href: 'https://www.youtube.com/watch?v=12o7WxjAxjM',
+			title: 'Include Starlight docs in a Next.js project with proxies',
+			description:
+				'Set up Starlight as a sub-directory project inside a Next.js website',
+		},
+		{
+			href: 'https://www.youtube.com/watch?v=5pq80drDrNs',
+			title: "I Recreated Shadcn's Docs In 30 Minutes With This Amazing Tool",
+			description:
+				'In this video I go over what makes Starlight so cool and why you may want to give it a try on your next project.',
+		},
+		{
+			href: 'https://www.youtube.com/watch?v=Q1E4Gkt63ko',
+			title: 'Astro Starlight and emoji-blast with Chris Swithinbank',
+			description:
+				"Wherein Chris, the creator of Astro's Starlight framework-on-a-framework, walks me through setting it up for a new emoji-blast website. 🌟 🎇",
+		},
+	]}
+/> */}
+
+<CardGrid stagger>
+	<Card title="Documentation, der begejstrer" icon="open-book">
+		Inkluderer: Sidenavigation, søg, internationalisering, SEO, nem at læse
+		typografi, kodefremhævning, mørk tilstand og mere.
+	</Card>
+	<Card title="Drevet af Astro" icon="lightning-bolt">
+		Udnyt den fulde kraft og udevne af Astro. Udvid Starlight med dine yndlings
+		Astro integrationer og biblioteker
+	</Card>
+	<Card title="Markdown, Markdoc og MDX" icon="document">
+		Anvend dit yndlings markup sprog. Starlight giver dig indbygget
+		Frontmatter-validering med TypeScript type-sikkerhed.
+	</Card>
+	<Card title="Anvend dine egne UI-komponenter" icon="puzzle">
+		Starlight ships as a framework-agnostic, complete docs solution. Extend with
+		React, Vue, Svelte, Solid, and more. Starlight bliver leveret som en fuldent
+		dokumentations-løsning, der er ligeglad, med hvilket framework du bruger.
+		Udvid med React, Vue, Svelte, Solid, og mere.
+	</Card>
+</CardGrid>
+
+<AboutAstro title="Bragt til dig af">
+Astro er et all-in-one web framework, der er bygget til udevne.
+Hiv dit indhold ned fra hvor som helst og indsæt det hvor som helst, alt sammen drevet af dine yndlings UI-komponenter og biblioteker.
+
+
+</AboutAstro>
+<div className="bg-grid relative">
+	<div className="grid-container">
+		<h1>Promptly</h1>
+		<p>Create a terminal apps great again!</p>
+	</div>
+</div>
+<Code code={importedCode} lang="dart" title="runner.dart" />

@@ -7,10 +7,9 @@ Developed by 🦏 [zoocityboy][zoocityboy_link]
 
 [![Pub](https://img.shields.io/pub/v/promptly.svg?style=flat-square)](https://pub.dev/packages/promptly)
 [![pub points](https://img.shields.io/pub/points/mason_coder?style=flat-square&color=2E8B57&label=pub%20points)](https://pub.dev/packages/promptly/score)
-[![ci](https://github.com/zoocityboy/promptly/actions/workflows/ci.yaml/badge.svg?style=flat-square)](https://github.com/zoocityboy/promptly/actions/workflows/ci.yaml)
-[![coverage](https://raw.githubusercontent.com/zoocityboy/promptly/main/coverage_badge.svg?style=flat-square)](https://github.com/zoocityboy/promptly/actions)
+[![release](https://github.com/zoocityboy/promptly/actions/workflows/release.yaml/badge.svg?style=flat-square)](https://github.com/zoocityboy/promptly/actions/workflows/release.yaml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![style: zoo lints](https://img.shields.io/badge/style-zoo_lints-3EB489.svg?style=flat-square)](https://pub.dev/packages/zoo_lints)
+
 
 ![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=flat-square&logo=dart&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=flat-square&logo=githubactions&logoColor=white)
@@ -21,8 +20,10 @@ Developed by 🦏 [zoocityboy][zoocityboy_link]
 
 - [x] Argument parser
 - [x] CommandRunner, Command definition
-- [x] Command flow customizable [components](#components)
+- [x] Command flow [components](#components)
 - [x] Process helpers (executors) 
+- [x] Tracing, Logging
+- [x] Themable 
 
 ### Command Runner
 
@@ -30,7 +31,11 @@ A simple way to write command-line applications in Dart with styling and command
 
 ```dart
 Future<void> main(List<String> args) async {
-  await Promptly('app','MyAppDescription', theme: Theme.make(Theme.defaultColors)).run(args);
+  (await Promptly.init('app','MyAppDescription', theme: Theme.make(Theme.defaultColors)))
+    ..addCommand(TestCommand())
+    ..addCommand(SecondCommand())
+    ..addCommand(ThirdCommand());
+  .run(args);
 }
 ```
 
@@ -266,38 +271,6 @@ p1.done();
 ```
 
 <br>
-
-### Handling Exceptions
-
-If your program throw exceptions and exit midway, interact's components won't be able to finish their tasks and gracefully quit therefore causing certain problems like cursors not showing up, terminal colors got modified etc. To fix these problems you should always try to catch exceptions and reset to terminal defaults using `reset` function.
-
-```dart
-try {
-  Spinner(icon: '🚨').interact();
-  throw Exception(); // spinner couldn't finished
-} catch (e) {
-  reset(); // Reset everything to terminal defaults
-  rethrow;
-}
-```
-
-<br>
-
-## Forked from [payam-zahedi/interact](https://github.com/payam-zahedi/interact)
-
-This repository is a fork of the original [interact](https://github.com/payam-zahedi/interact) created by [payam-zahedi](https://github.com/payam-zahedi/), which was licensed under the MIT License.
-
-##### Intent and Purpose
-
-I want to open source my improvements and custom implementations based on [payam-zahedi/interact](https://github.com/payam-zahedi/interact)
-
-
-<br>
-
-## Acknowledgement
-
-This library is mostly inspired by [dialouger](https://github.com/mitsuhiko/dialoguer) library from Rust. The lack of a properly maintained library for Dart with a well-made API is what pushed me into making this library.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE) as provided in the original repository.

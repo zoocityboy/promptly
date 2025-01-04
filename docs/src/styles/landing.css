@@ -1,0 +1,31 @@
+:root {
+	--purple-hsl: 240, 98%, 24%;
+	--overlay-blurple: hsla(var(--purple-hsl), .12);
+}
+
+:root[data-theme='light'] {
+	--purple-hsl: 255, 85%, 65%;
+}
+
+[data-has-hero] .page {
+	background:
+		linear-gradient(180deg, var(--overlay-blurple), transparent 40%),
+		radial-gradient(var(--overlay-blurple), transparent 40%) no-repeat -70vw -90vh / 100vw 200vh,
+		radial-gradient(var(--overlay-blurple), transparent 35%) no-repeat 50% calc(100% + 30rem) /
+			40rem 20rem;
+}
+
+[data-has-hero] header {
+	border-bottom: 1px solid var(--sl-color-accent-low);
+	background-color: transparent;
+	-webkit-backdrop-filter: blur(16px);
+	backdrop-filter: blur(16px);
+}
+
+[data-has-hero] .hero > img {
+	filter: drop-shadow(0 0 3rem var(--overlay-blurple));
+}
+
+[data-has-hero] .hero > img {
+	filter: drop-shadow(0 0 3rem var(--overlay-blurple));
+}

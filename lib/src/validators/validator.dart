@@ -1,5 +1,3 @@
-import 'package:version/version.dart';
-
 part 'validator.semver.dart';
 part 'validator.string.dart';
 

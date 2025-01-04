@@ -67,14 +67,14 @@ class Promptly<T> {
     final runner = get<PromptlyRunner<T>>();
     try {
       await flushThenExit(await runner.run(args));
-    } on UsageException catch (e) {
+    } on UsageException catch (_) {
       runner.printUsage();
       return null;
     } on Exception catch (e) {
-      print(e);
+      console.error(e.toString());
       return 64;
     } catch (e) {
-      print(e);
+      console.error(e.toString());
       return null;
     }
   }
