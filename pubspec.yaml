@@ -1,7 +1,7 @@
 name: promptly
 description: A collection of customizable interactive command-line components.
 version: 1.0.0-alpha.1
-homepage: https:/zoocityboy.github.io/promptly
+homepage: https://zoocityboy.github.io/promptly
 documentation: https://pub.dev/documentation/promptly/latest/
 repository: https://github.com/zoocityboy/promptly
 issue_tracker: https://github.com/zoocityboy/promptly/issues
