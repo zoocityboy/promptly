@@ -1,0 +1,46 @@
+name: Release
+
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'New version (x.y.z)'
+        required: true
+      type:
+        description: 'Release type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  release:
+    permissions:
+        security-events: write
+        contents: write      # for creating releases and tags
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate Changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version-file: './pubspec.yaml'
+          skip-version-file: true
+          skip-git-pull: true
+          skip-commit: false
+          pre-commit: |
+            NEW_VERSION=${{ github.event.inputs.version }}
+            sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
+          
+      - uses: avakar/tag-and-release@v1
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    

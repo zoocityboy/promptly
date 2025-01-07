@@ -1,0 +1,45 @@
+---
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import Hero from '../components/Hero.astro';
+
+const heroData = {
+  entry: {
+    data: {
+      hero: {
+        title: "Welcome to <span class='gradient'>Zoo Console</span>",
+        tagline: "A modern CLI framework for Dart applications",
+        actions: [
+          {
+            link: "/docs",
+            text: "Get Started",
+            variant: "primary",
+          },
+          {
+            link: "/docs",
+            text: "Learn More",
+            variant: "secondary",
+          },
+        ],
+
+      },
+
+    }
+  }
+}
+
+---
+
+
+<StarlightPage
+    frontmatter={{
+        title: 'About Astro',
+        description: 'Astro is a new kind of static site builder that delivers lightning-fast performance with a modern developer experience.',
+        template: 'splash',    
+    }}
+    hasSidebar={false}
+    >
+    <Hero {...heroData} /> 
+        
+    <iframe src="https://dartpad.dev/embed-inline.html?id=5d70bc1889d055c7a18d35d77874af88"></iframe>
+</StarlightPage>

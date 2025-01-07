@@ -1,0 +1,41 @@
+---
+title: Messages
+description: My messages
+---
+
+import { Card } from '@astrojs/starlight/components';
+
+
+
+This article cover how to log simple messages to the console.
+
+<Card title="Check this out">Interesting content you want to highlight.</Card>
+
+## Verbose message
+
+basic info message with a prefix of `Verbose` icon
+
+```dart
+Future<void> main() async {
+  messages('This is an info message', style: MessageStyle.verbose);
+}
+```
+
+## Info message
+
+basic info message with a prefix of `INFO` icon
+
+```dart
+Future<void> main() async {
+  messages('This is an info message', style: MessageStyle.info);
+}
+```
+## Warning message
+
+basic info message with a prefix of `Warning` icon
+
+```dart
+Future<void> main() async {
+  messages('This is an warning message', style: MessageStyle.warning);
+}
+```
