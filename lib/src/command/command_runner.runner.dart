@@ -156,11 +156,11 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   @override
   Future<int?> runCommand(args.ArgResults topLevelResults) async {
-    logger.trace('~ run command ${topLevelResults.command?.name}', commandName: topLevelResults.command?.name);
     if (topLevelResults.command?.name == 'completion') {
       await super.runCommand(topLevelResults);
       return ExitCode.success.code;
     }
+    logger.trace('~ run command ${topLevelResults.command?.name}', commandName: topLevelResults.command?.name);
     final exitCode = await super.runCommand(topLevelResults);
     return exitCode;
   }

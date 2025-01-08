@@ -111,11 +111,13 @@ class Logger {
   void log(String message, {LogLevel level = LogLevel.info, bool delayed = false, String? commandName}) {
     // stdout.writeln('[${level.name}${level.index} >= ${_level.index}] $message');
     // stdout.writeln('-> ${LogLevel.values.map((e) => '${e.index} ${e.name},').toList()}');
-    if (_level.index >= level.index) {}
+
     if (delayed) {
       _delayed(message, level: level, commandName: commandName);
     } else {
-      _printer(LogItem(dateTime: DateTime.now().toUtc(), level: level, message: message, command: commandName));
+      if (_level.index >= level.index) {
+        _printer(LogItem(dateTime: DateTime.now().toUtc(), level: level, message: message, command: commandName));
+      }
     }
   }
 
