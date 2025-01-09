@@ -1,6 +1,6 @@
-import 'dart:math' as math;
-
+import 'package:cli_table/cli_table.dart' as cli_table;
 import 'package:meta/meta.dart';
+import 'package:promptly/promptly.dart';
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
 
@@ -70,12 +70,12 @@ class Table extends TypeComponent<String> {
   final int columnPadding;
 
   Table({
-    this.columnPadding = 2,
+    this.columnPadding = 0,
     required List<Column> columns,
   })  : _columns = columns,
         _theme = Theme.defaultTheme;
   Table.withTheme({
-    this.columnPadding = 2,
+    this.columnPadding = 0,
     required List<Column> columns,
     required Theme theme,
   })  : _columns = columns,
@@ -87,6 +87,12 @@ class Table extends TypeComponent<String> {
     _rows.add(values);
   }
 
+  void addAll(List<List<String>> rows) {
+    for (final row in rows) {
+      addRow(row);
+    }
+  }
+
   @override
   void render({Context? context}) {
     (context ?? Context()).writeln(_formated);
@@ -94,70 +100,54 @@ class Table extends TypeComponent<String> {
 
   String get _formated {
     final buffer = StringBuffer();
-    // Print header if text in all columns is not empty
-
-    // Calculate the width of each column
-    final columnWidths = List.generate(_columns.length, (index) {
-      final column = _columns[index];
-      if (column.width != null && column.width! > 0) {
-        return column.width!;
-      } else {
-        return _rows.map((row) => row[index].length).reduce(math.max);
-      }
-    });
-    if (_columns.every((column) => column.text != null && column.text!.isNotEmpty)) {
-      for (var i = 0; i < _columns.length; i++) {
-        final column = _columns[i];
-        final width = columnWidths[i];
-        final headerText = column.text!;
-
-        String formattedHeader;
-        switch (column.alignment) {
-          case ColumnAlignment.left:
-            formattedHeader = headerText.padRight(width);
-          case ColumnAlignment.right:
-            formattedHeader = headerText.padLeft(width);
-          case ColumnAlignment.center:
-            final padding = (width - headerText.length) ~/ 2;
-            formattedHeader = headerText.padLeft(padding + headerText.length).padRight(width);
-        }
-
-        formattedHeader = (column.style ?? _theme.tableTheme.headerTextStyle)(formattedHeader);
-
-        buffer.write(formattedHeader);
-        if (i < _columns.length - 1) {
-          buffer.write(' ' * columnPadding);
-        }
-      }
-      buffer.write('\n');
-    }
-    // Generate the formatted table
+    final table = cli_table.Table(
+      truncateChar: _theme.promptTheme.hintStyle(' ').dim(),
+      columnWidths: _columns.map((column) => column.width ?? 0).toList(),
+      columnAlignment: [
+        ..._columns.map(
+          (column) => switch (column.alignment) {
+            ColumnAlignment.left => cli_table.HorizontalAlign.left,
+            ColumnAlignment.right => cli_table.HorizontalAlign.right,
+            ColumnAlignment.center => cli_table.HorizontalAlign.center,
+          },
+        ),
+      ],
+      style: const cli_table.TableStyle(
+        compact: true,
+        border: [],
+        header: [],
+        paddingLeft: 0,
+        paddingRight: 2,
+      ),
+      tableChars: const cli_table.TableChars(
+        top: '',
+        topMid: '',
+        topLeft: '',
+        topRight: '',
+        bottom: '',
+        bottomMid: '',
+        bottomLeft: '',
+        bottomRight: '',
+        left: '',
+        leftMid: '',
+        mid: '',
+        midMid: '',
+        right: '',
+        rightMid: '',
+        middle: '',
+      ),
+    );
+    final List<List<String>> styledRows = [];
     for (final row in _rows) {
-      for (var i = 0; i < row.length; i++) {
-        final column = _columns[i];
-        final value = row[i];
-        final width = columnWidths[i];
-
-        String formattedValue;
-        switch (column.alignment) {
-          case ColumnAlignment.left:
-            formattedValue = value.padRight(width);
-          case ColumnAlignment.right:
-            formattedValue = value.padLeft(width);
-          case ColumnAlignment.center:
-            final padding = (width - value.length) ~/ 2;
-            formattedValue = value.padLeft(padding + value.length).padRight(width);
-        }
-
-        formattedValue = (column.style ?? _theme.tableTheme.rowTextStyle)(formattedValue);
-
-        buffer.write(formattedValue);
-        if (i < row.length - 1) {
-          buffer.write(' ' * columnPadding);
-        }
-      }
-      buffer.write('\n');
+      final styledRow = row.indexed.map((data) {
+        final column = _columns.elementAtOrNull(data.$1) ?? const Column();
+        final style = column.style ?? _theme.tableTheme.rowTextStyle;
+        return style(data.$2);
+      }).toList();
+      styledRows.add(styledRow);
     }
+    table.addAll(styledRows);
+    buffer.write(table.toString());
     return buffer.toString();
   }
 

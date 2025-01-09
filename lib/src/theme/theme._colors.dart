@@ -18,9 +18,6 @@ class ThemeColors {
   StyleFunction inactive;
   StyleFunction prefix;
 
-  StyleFunction successBlock;
-  StyleFunction sectionBlock;
-
   ThemeColors({
     required this.info,
     required this.warning,
@@ -32,8 +29,6 @@ class ThemeColors {
     required this.active,
     required this.inactive,
     required this.prefix,
-    required this.successBlock,
-    required this.sectionBlock,
   });
 
   ThemeColors copyWith({
@@ -47,8 +42,6 @@ class ThemeColors {
     StyleFunction? active,
     StyleFunction? inactive,
     StyleFunction? prefix,
-    StyleFunction? successBlock,
-    StyleFunction? sectionBlock,
   }) {
     return ThemeColors(
       info: info ?? this.info,
@@ -61,8 +54,6 @@ class ThemeColors {
       active: active ?? this.active,
       inactive: inactive ?? this.inactive,
       prefix: prefix ?? this.prefix,
-      successBlock: successBlock ?? this.successBlock,
-      sectionBlock: sectionBlock ?? this.sectionBlock,
     );
   }
 
@@ -77,8 +68,6 @@ class ThemeColors {
     active: (x) => x.brightGreen(),
     inactive: (x) => x.grey(),
     prefix: (x) => x.darkGray(),
-    successBlock: (x) => x.onGreen().white(),
-    sectionBlock: (x) => x.onWhite().black(),
   );
 
   static final ThemeColors testColors = ThemeColors(
@@ -92,7 +81,5 @@ class ThemeColors {
     active: (x) => x.brightGreen(),
     inactive: (x) => x.grey().dim(),
     prefix: (x) => x.brightCyan(),
-    successBlock: (x) => x.onBlue().black(),
-    sectionBlock: (x) => x.onBrightBlue().black(),
   );
 }

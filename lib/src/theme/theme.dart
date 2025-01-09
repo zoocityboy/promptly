@@ -137,7 +137,7 @@ class Theme {
   /// An alias to [colorfulTheme].
   static Theme defaultTheme = _theme;
   static final _theme = Theme._(
-    spacing: 3,
+    spacing: 2,
     colors: ThemeColors.defaultColors,
     symbols: ThemeSymbols.defaultSymbols,
     showActiveCursor: false,
@@ -177,10 +177,14 @@ class Theme {
 }
 
 extension ThemeStyledExtension on Theme {
-  String prefixQuestion(String message) {
+  String prefixRun(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.write(colors.active('❯'));
-    buffer.write(colors.active('❯'.dim()));
+    // buffer.write(colors.active('?'.padRight(spacing)));
+    buffer.write(colors.prefix('❯'));
+    buffer.write(colors.success('❯').dim());
+    // buffer.write(colors.success('❯'));
+    buffer.write(colors.success('\$'));
+
     buffer.write(' ');
     buffer.write(message);
     return buffer.toString();
@@ -188,37 +192,37 @@ extension ThemeStyledExtension on Theme {
 
   String prefixLine(String message, {StyleFunction? style}) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix((style ?? colors.prefix)(symbols.vLine), message, spacing);
+    buffer.withPrefix((style ?? colors.prefix)(symbols.vLine), message);
     return buffer.toString();
   }
 
   String prefixSectionLine(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.vLine), message, spacing - 1);
+    buffer.withPrefix(colors.prefix(symbols.vLine), message, spacing: spacing - 1);
     return buffer.toString();
   }
 
   String prefixHeaderLine(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.header), message, spacing - 1);
+    buffer.withPrefix(colors.prefix(symbols.header), message, spacing: spacing - 1);
     return buffer.toString();
   }
 
   String prefixError(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.errorStep), message, spacing);
+    buffer.withPrefix(colors.prefix(symbols.errorStep), message);
     return buffer.toString();
   }
 
   String prefixWarning(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.warningStep), message, spacing);
+    buffer.withPrefix(colors.prefix(symbols.warningStep), message);
     return buffer.toString();
   }
 
   String prefixInfo(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.infoStep), message, spacing);
+    buffer.withPrefix(colors.prefix(symbols.infoStep), message);
     return buffer.toString();
   }
 }

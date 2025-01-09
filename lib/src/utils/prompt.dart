@@ -9,7 +9,7 @@ String promptInput({
   String? hint,
 }) {
   final buffer = StringBuffer();
-  buffer.withPrefix(theme.promptTheme.promptPrefix, theme.promptTheme.messageStyle(message), theme.spacing);
+  buffer.withPrefix(theme.promptTheme.promptPrefix, theme.promptTheme.messageStyle(message));
 
   if (hint != null) {
     buffer.write(' ');
@@ -33,7 +33,6 @@ String promptSuccess(
   buffer.withPrefix(
     theme.promptTheme.successPrefix,
     theme.promptTheme.hintStyle(message.removeAnsi()),
-    theme.spacing,
   );
   buffer.write('\n');
   for (final part in parts) {
@@ -53,11 +52,6 @@ String promptError(
   required Theme theme,
 }) =>
     Message.withTheme(text: message, style: MessageStyle.error, theme: theme).interact();
-// {
-//   final buffer = StringBuffer();
-//   buffer.withPrefix(theme.promptTheme.errorPrefix, theme.promptTheme.errorStyle(message), theme.spacing);
-//   return buffer.toString();
-// }
 
 String promptMessage(
   String message, {
@@ -65,38 +59,3 @@ String promptMessage(
   MessageStyle style = MessageStyle.info,
 }) =>
     Message.withTheme(text: message, style: style, theme: theme).interact();
-
-// String promptHeader(
-//   String title, {
-//   String? message,
-//   String? prefix,
-//   required Theme theme,
-//   required int windowWidth,
-// }) {
-//   final titleBuffer = StringBuffer(theme.prefixHeaderLine(''))
-//     ..write(theme.colors.successBlock(' $title '))
-//     ..write(' ');
-//   final strippedMessage = titleBuffer.toString().replaceAll(RegExp(r'\x1B\[[0-9;]*[a-zA-Z]'), '');
-//   final currentLng = strippedMessage.length;
-
-//   ///
-//   final buffer = StringBuffer()..write(titleBuffer.toString());
-//   final maxLength = windowWidth - buffer.length;
-//   final msg = (message ?? '').replaceAll('\n', '');
-//   if (msg.length >= maxLength - currentLng) {
-//     buffer.write('\n');
-//     final lines = wrapText(msg, length: maxLength - currentLng, hangingIndent: 0).split('\n');
-//     buffer.writeLine(console.theme.prefixLine(''));
-//     for (final line in lines) {
-//       buffer.writeln(console.theme.prefixLine(console.theme.colors.hint(line)));
-//     }
-//   } else {
-//     buffer.write(console.theme.colors.hint(msg));
-//   }
-
-//   buffer
-//     ..newLine()
-//     ..write(console.theme.prefixLine(''))
-//     ..newLine();
-//   return buffer.toString();
-// }

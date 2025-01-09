@@ -9,10 +9,8 @@ import 'package:args/args.dart' as args;
 import 'package:args/command_runner.dart' as args_command_runner;
 import 'package:cli_completion/cli_completion.dart' as completion;
 import 'package:io/io.dart';
-import 'package:meta/meta.dart';
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/command/global.dart';
-import 'package:promptly/src/components/table.dart';
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
@@ -69,14 +67,14 @@ String getStyledCommandUsage(
 
   if (!hasCategories) {
     buffer
-      ..write(console.theme.prefixSectionLine(console.theme.colors.sectionBlock(' $title ')))
+      ..write(console.theme.prefixSectionLine(console.theme.colors.text(' $title ').inverse()))
       ..newLine();
   }
   final columnStart = length + 4;
   for (final category in categories) {
     if (category.isNotEmpty) {
       buffer
-        ..write(console.theme.prefixSectionLine(console.theme.colors.sectionBlock(' $category ')))
+        ..write(console.theme.prefixSectionLine(console.theme.colors.text(' $category ').inverse()))
         ..newLine();
     }
     final ansiTable = Table(
@@ -86,7 +84,9 @@ String getStyledCommandUsage(
           width: length,
           style: (p0) => console.theme.colors.text(p0),
         ),
-        const Column(),
+        Column(
+          width: console.windowWidth - columnStart,
+        ),
       ],
     );
     for (final command in commandsByCategory[category]!) {

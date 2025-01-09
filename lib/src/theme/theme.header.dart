@@ -10,7 +10,7 @@ class HeaderTheme {
   factory HeaderTheme.fromDefault() => HeaderTheme.fromColors(ThemeColors.defaultColors);
   factory HeaderTheme.fromColors(ThemeColors colors) {
     return HeaderTheme(
-      title: (x) => colors.successBlock(x),
+      title: (x) => colors.success(x).inverse(),
       message: (x) => colors.hint(x),
     );
   }

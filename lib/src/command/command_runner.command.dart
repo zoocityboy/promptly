@@ -78,7 +78,7 @@ abstract class Command<T> extends args_command_runner.Command<T> {
 
   String get descriptionStyled {
     final sb = StringBuffer()
-      ..write(console.headerLine(name, message: description))
+      ..header(name, message: description)
       ..newLine();
     return sb.toString();
   }
@@ -102,7 +102,7 @@ abstract class Command<T> extends args_command_runner.Command<T> {
 
     if (usegeLines.isNotEmpty) {
       buffer
-        ..write(console.theme.prefixSectionLine(console.theme.colors.sectionBlock(' Flags ')))
+        ..write(console.theme.prefixSectionLine(console.theme.colors.text(' Flags ').inverse()))
         ..newLine();
     }
     for (final line in usegeLines) {
@@ -120,7 +120,7 @@ abstract class Command<T> extends args_command_runner.Command<T> {
 
     buffer
       ..verticalLine()
-      ..writeln(console.theme.prefixQuestion(invocation))
+      ..writeln(console.theme.prefixRun(invocation))
       ..newLine();
 
     return buffer.toString();

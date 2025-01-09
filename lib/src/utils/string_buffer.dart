@@ -2,6 +2,10 @@ import 'package:promptly/src/console.dart';
 import 'package:promptly/src/theme/theme.dart';
 
 extension StringBufferX on StringBuffer {
+  void prefixLine() {
+    this.write(console.theme.prefixLine(''));
+  }
+
   void verticalLine() {
     this
       ..write(console.theme.prefixLine(''))
@@ -17,12 +21,16 @@ extension StringBufferX on StringBuffer {
     this.write('\n');
   }
 
-  void withPrefix(String prefix, String text, int spacing) {
-    // this.write('$spacing');
-    if (spacing > 0) {
-      this.write(prefix.padRight(spacing));
+  void withPrefix(String prefix, String text, {int? spacing}) {
+    final spc = spacing ?? console.theme.spacing;
+    if (spc > 0) {
+      this.write(console.theme.colors.prefix(prefix.removeAnsi().padRight(spc)));
     }
     this.write(text);
+  }
+
+  void header(String name, {String? message}) {
+    write(console.headerLine(name, message: message));
   }
 }
 

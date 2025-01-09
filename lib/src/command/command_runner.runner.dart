@@ -38,7 +38,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       ..level = logLevel ?? LogLevel.error
       ..printer = (item) {
         if (item.level.allowed(_promptlyLogger.level)) {
-          _promptlyConsole.writeMessage(item.withTime());
+          _promptlyConsole.writeMessage(item.withTime(), prefix: '');
         }
       };
   }
@@ -48,14 +48,14 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
   @override
   bool get enableAutoInstall => true;
 
-  @override
-  String? get usageFooter => '... Run `$executableName help` for more information.';
+  // @override
+  // String? get usageFooter => '... Run `$executableName help` for more information.';
 
   Theme get theme => console.theme;
 
   String get appDescription {
     final StringBuffer buffer = StringBuffer();
-    buffer.write(theme.prefixHeaderLine(console.theme.colors.successBlock(' $executableName ')));
+    buffer.write(theme.prefixHeaderLine(console.theme.colors.success(' $executableName ').inverse()));
     if (version != null) {
       buffer.write(' ');
       buffer.write(theme.colors.success('v$version'.bold()));
@@ -89,7 +89,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       ..verticalLine();
     if (usegeLines.isNotEmpty) {
       buffer
-        ..write(console.theme.prefixSectionLine(console.theme.colors.sectionBlock(' Flags ')))
+        ..write(console.theme.prefixSectionLine(console.theme.colors.text(' Flags ').inverse()))
         ..newLine();
     }
     for (final line in usegeLines) {
@@ -98,16 +98,18 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
         ..write(line)
         ..newLine();
     }
-    buffer
-      ..writeln(console.theme.prefixQuestion(invocation))
-      ..newLine();
-
     if (usageFooter != null) {
       buffer
         ..verticalLine()
-        ..write(console.theme.prefixLine(console.theme.colors.hint(usageFooter!)))
-        ..newLine();
+        ..prefixLine()
+        ..write(console.theme.colors.hint(usageFooter!))
+        ..newLine()
+        ..verticalLine();
     }
+    buffer
+      ..writeln(console.theme.prefixRun(invocation))
+      ..newLine();
+
     return buffer.toString();
   }
 
@@ -151,7 +153,6 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       exitCode = ExitCode.software.code;
     }
     logger.flush();
-    print('exitCode: $exitCode');
     return exitCode;
   }
 
@@ -167,21 +168,20 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
     return exitCode;
   }
 
-  Future<void> safeRun(List<String> args) {
-    return flushThenExit(() => run(args));
+  Future<void> safeRun(List<String> args) async {
+    return flushThenExit(await run(args));
   }
 
   @override
   Never usageException(String message) => throw UsageException(message, publicUsageWithoutDescription);
 }
 
-Future<dynamic> flushThenExit(Future<int> Function() status) {
-  return Future.wait<void>([
-    stdout.close(),
-    stderr.close(),
-  ]).then<void>((_) async {
-    final result = await status();
-    print('status: $result');
-    exit(result);
-  });
+/// Flushes the stdout and stderr streams, then exits the program with the given
+/// status code.
+///
+/// This returns a Future that will never complete, since the program will have
+/// exited already. This is useful to prevent Future chains from proceeding
+/// after you've decided to exit.
+Future flushThenExit(int status) {
+  return Future.wait([stdout.close(), stderr.close()]).then((_) => exit(status));
 }

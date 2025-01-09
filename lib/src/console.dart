@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:io/io.dart';
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/components/table.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
 
@@ -97,9 +96,7 @@ class Console {
     sb.write(_theme.colors.success('❯').dim());
     sb.write(_theme.colors.success('❯'));
     sb.write(' ');
-    // sb.write(_theme.colors.prefix('❯' * (_theme.spacing - 1)));
-    // sb.write(' ');
-    sb.write(_theme.colors.successBlock(' $title '));
+    sb.write(_theme.colors.success(' $title ').inverse());
     if (message != null) {
       sb.write(' ');
       sb.write(_theme.colors.success(message));

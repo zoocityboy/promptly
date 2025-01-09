@@ -31,7 +31,7 @@ class Header extends TypeComponent<String> {
 
   String get _formated {
     final titleBuffer = StringBuffer(theme.prefixHeaderLine(''))
-      ..write(theme.colors.successBlock(' $title '))
+      ..write(theme.colors.success(' $title ').inverse())
       ..write(' ');
     final currentLng = titleBuffer.toString().wcwidth();
 
@@ -40,9 +40,9 @@ class Header extends TypeComponent<String> {
     final maxLength = _context.windowWidth - buffer.length;
     final msg = (message ?? '').replaceAll('\n', '');
     if (msg.length >= maxLength - currentLng) {
-      buffer.write('\n');
+      buffer.newLine();
       final lines = wrapText(msg, length: maxLength - currentLng, hangingIndent: 0).split('\n');
-      buffer.writeLine(console.theme.prefixLine(''));
+      buffer.prefixLine();
       for (final line in lines) {
         buffer.writeln(console.theme.prefixLine(console.theme.colors.hint(line)));
       }
@@ -52,7 +52,7 @@ class Header extends TypeComponent<String> {
 
     buffer
       ..newLine()
-      ..write(console.theme.prefixLine(''))
+      ..prefixLine()
       ..newLine();
     return buffer.toString();
   }
