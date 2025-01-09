@@ -4,16 +4,16 @@ import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/prompt.dart';
 
 /// A multiple select or checkbox input component.
-class MultiSelect extends StateComponent<List<int>> {
-  /// Constructs a [MultiSelect] component with the default theme.
-  MultiSelect({
+class SelectAny extends StateComponent<List<int>> {
+  /// Constructs a [SelectAny] component with the default theme.
+  SelectAny({
     required this.prompt,
     required this.choices,
     this.defaults,
   }) : theme = Theme.defaultTheme;
 
-  /// Constructs a [MultiSelect] component with the supplied theme.
-  MultiSelect.withTheme({
+  /// Constructs a [SelectAny] component with the supplied theme.
+  SelectAny.withTheme({
     required this.prompt,
     required this.choices,
     required this.theme,
@@ -34,10 +34,10 @@ class MultiSelect extends StateComponent<List<int>> {
   final List<bool>? defaults;
 
   @override
-  _MultiSelectState createState() => _MultiSelectState();
+  _SelectAnyState createState() => _SelectAnyState();
 }
 
-class _MultiSelectState extends State<MultiSelect> {
+class _SelectAnyState extends State<SelectAny> {
   late List<int> selection;
   late int index;
 
@@ -62,7 +62,11 @@ class _MultiSelectState extends State<MultiSelect> {
         );
       } else {
         selection.addAll(
-          component.defaults!.asMap().entries.where((entry) => entry.value).map((entry) => entry.key),
+          component.defaults!
+              .asMap()
+              .entries
+              .where((entry) => entry.value)
+              .map((entry) => entry.key),
         );
       }
     }
@@ -78,7 +82,10 @@ class _MultiSelectState extends State<MultiSelect> {
 
   @override
   void dispose() {
-    final values = selection.map((x) => component.choices[x]).map(theme.inactiveStyle).join('☃︎ ');
+    final values = selection
+        .map((x) => component.choices[x])
+        .map(theme.inactiveStyle)
+        .join('☃︎ ');
 
     context.writeln(
       promptSuccess(

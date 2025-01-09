@@ -1,17 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:args/command_runner.dart' as argscr;
 import 'package:io/io.dart';
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/command/global.dart';
 
-class MyRunner extends CommandRunner {
-  MyRunner(
-    super.executableName,
-    super.description, {
-    super.version,
-    super.theme,
-    super.logLevel,
-  }) {
+class MyRunner extends argscr.CommandRunner<int> {
+  MyRunner(super.executableName, super.description) {
+    GlobalArgs(argParser).addLogLevel();
     addCommand(TestCommand());
     addCommand(SecondCommand());
     addCommand(ThirdCommand());
@@ -19,59 +16,38 @@ class MyRunner extends CommandRunner {
 }
 
 Future<void> main(List<String> args) async {
-  flushThenExit(
-    await MyRunner(
-      'promptly',
-      'Runner test',
-      version: '0.0.1',
-      theme: Theme.defaultTheme,
-    ).run(args),
+  final runner = MyRunner(
+    'promptly',
+    'Runner test',
   );
+  await runner.run(args);
 }
 
-class TestCommand extends Command<int> {
-  TestCommand()
-      : super(
-          'test',
-          'Test command',
-          category: 'Basic',
-        );
+class TestCommand extends argscr.Command<int> {
+  TestCommand();
 
   @override
+  String get name => 'test';
+  @override
+  String get description => 'Test command';
+  @override
+  String get category => 'basic';
+  @override
   Future<int> run() async {
-    trace('Running test command');
-    // header(name, message: description);
+    stdout.writeln('Running test command');
+    stdout.writeln('Hello world');
+    stdout.writeln('Downloading started');
 
-    line();
-    info('Hello world');
-    line();
-    trace('Downloading started');
-    final pg = console.progress('Downloading', length: 1000);
-    for (var i = 0; i < 500; i++) {
-      await Future.delayed(const Duration(milliseconds: 1));
-      pg.increase(2);
-    }
-    pg.finish();
-
-    line();
-    finishSuccesfuly(name, message: 'Done');
-
-    logger.flush();
     return 0;
   }
 }
 
-class SecondCommand extends Command<int> {
-  SecondCommand()
-      : super(
-          'second',
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-              'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
-              'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. '
-              'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
-              'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-          // category: 'Studio',
-        ) {
+class SecondCommand extends argscr.Command<int> {
+  @override
+  String get name => 'second';
+  @override
+  String get description => 'Second command';
+  SecondCommand() {
     argParser.addOption(
       'customName',
       help: 'Name of the person',
@@ -90,13 +66,12 @@ class SecondCommand extends Command<int> {
   }
 }
 
-class ThirdCommand extends Command<int> {
-  ThirdCommand()
-      : super(
-          'third',
-          'Third command',
-          // category: 'Studio',
-        ) {
+class ThirdCommand extends argscr.Command<int> {
+  @override
+  String get name => 'third';
+  @override
+  String get description => 'Third command';
+  ThirdCommand() {
     addSubcommand(FourthCommand());
     argParser
       ..addOption(
@@ -185,13 +160,12 @@ class ThirdCommand extends Command<int> {
   }
 }
 
-class FourthCommand extends Command<int> {
-  FourthCommand()
-      : super(
-          'fourth',
-          'Manage people',
-          // category: 'Studio',
-        ) {
+class FourthCommand extends argscr.Command<int> {
+  @override
+  String get name => 'fourth';
+  @override
+  String get description => 'Manage people';
+  FourthCommand() {
     argParser.addOption('name', help: 'Name of the person');
     argParser.addOption('age', help: 'Age of the person');
     argParser

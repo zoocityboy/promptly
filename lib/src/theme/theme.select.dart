@@ -1,5 +1,40 @@
 part of 'theme.dart';
 
+/// A class that defines the theme for selection components.
+///
+/// The `SelectTheme` class contains various labels and styles for different
+/// states of a selection component, such as active, inactive, selected,
+/// checked, unchecked, and picked.
+///
+/// The class provides two factory constructors:
+/// - `SelectTheme.fromDefault()`: Creates a `SelectTheme` instance with default colors.
+/// - `SelectTheme.fromColors(ThemeColors colors)`: Creates a `SelectTheme` instance with the specified colors.
+///
+/// The `copyWith` method allows creating a copy of the current `SelectTheme` instance
+/// with some properties replaced by new values.
+///
+/// The `defaultTheme` static property provides a default theme instance.
+///
+/// Properties:
+/// - `activeLabel`: The label for the active state.
+/// - `activeStyle`: The style function for the active state.
+/// - `inactiveLabel`: The label for the inactive state.
+/// - `inactiveStyle`: The style function for the inactive state.
+/// - `selectedLabel`: The label for the selected state.
+/// - `selectedStyle`: The style function for the selected state.
+/// - `checkedLabel`: The label for the checked state.
+/// - `checkedStyle`: The style function for the checked state.
+/// - `uncheckedLabel`: The label for the unchecked state.
+/// - `uncheckedStyle`: The style function for the unchecked state.
+/// - `pickedLabel`: The label for the picked state.
+/// - `pickedStyle`: The style function for the picked state.
+///
+/// Example usage:
+/// ```dart
+/// final theme = SelectTheme.fromDefault();
+/// final customTheme = theme.copyWith(activeLabel: '>>');
+/// ```
+
 class SelectTheme {
   final String activeLabel;
   final StyleFunction activeStyle;
@@ -34,21 +69,21 @@ class SelectTheme {
     required this.pickedStyle,
   });
   factory SelectTheme.fromDefault() {
-    return SelectTheme.fromColors(ThemeColors.defaultColors);
+    return SelectTheme.fromColors(ThemeColors.defaultColors, ThemeSymbols.defaultSymbols);
   }
-  factory SelectTheme.fromColors(ThemeColors colors) {
+  factory SelectTheme.fromColors(ThemeColors colors, ThemeSymbols symbols) {
     return SelectTheme(
-      activeLabel: '❯'.padLeft(4),
+      activeLabel: symbols.select.padLeft(4),
       activeStyle: (x) => colors.active(x),
-      inactiveLabel: ' '.padLeft(4),
+      inactiveLabel: symbols.unselect.padLeft(4),
       inactiveStyle: (x) => colors.inactive(x),
-      selectedLabel: '❯'.padLeft(4),
+      selectedLabel: symbols.select.padLeft(4),
       selectedStyle: (x) => colors.success(x),
-      checkedLabel: '◉'.padLeft(4),
+      checkedLabel: symbols.checked.padLeft(4),
       checkedStyle: (x) => colors.success(x),
-      uncheckedLabel: '◯'.padLeft(4),
+      uncheckedLabel: symbols.unchecked.padLeft(4),
       uncheckedStyle: (x) => colors.inactive(x),
-      pickedLabel: '❯'.padLeft(4),
+      pickedLabel: symbols.select.padLeft(4),
       pickedStyle: (x) => colors.success(x),
     );
   }
@@ -82,19 +117,4 @@ class SelectTheme {
       pickedStyle: pickedStyle ?? this.pickedStyle,
     );
   }
-
-  static final SelectTheme defaultTheme = SelectTheme(
-    activeLabel: '❯'.padLeft(4),
-    activeStyle: (x) => ThemeColors.defaultColors.active(x),
-    inactiveLabel: ' '.padLeft(4),
-    inactiveStyle: (x) => ThemeColors.defaultColors.inactive(x),
-    selectedLabel: '❯'.padLeft(4),
-    selectedStyle: (x) => ThemeColors.defaultColors.success(x),
-    checkedLabel: '◉'.padLeft(4),
-    checkedStyle: (x) => ThemeColors.defaultColors.success(x),
-    uncheckedLabel: '◯'.padLeft(4),
-    uncheckedStyle: (x) => ThemeColors.defaultColors.inactive(x),
-    pickedLabel: '❯'.padLeft(4),
-    pickedStyle: (x) => ThemeColors.defaultColors.success(x),
-  );
 }

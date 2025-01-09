@@ -63,14 +63,14 @@ abstract class StateComponent<T extends dynamic> {
 }
 
 /// An abstract class representing a component that can be rendered and interacted with.
-/// 
+///
 /// This class is parameterized with a type [T] which extends [Object].
-/// 
+///
 /// The [TypeComponent] class defines two methods:
-/// 
+///
 /// - `render({Context? context})`: Renders the component, optionally using a [Context].
 /// - `interact()`: Allows interaction with the component and returns a value of type [T].
-/// 
+///
 /// Type Parameters:
 /// - `T`: The type of the value returned by the `interact` method.
 abstract class TypeComponent<T extends Object> {

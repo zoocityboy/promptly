@@ -3,20 +3,36 @@ import 'package:promptly/promptly.dart';
 class ExampleCommand extends Command<int> {
   ExampleCommand() : super('example', 'An example command.') {
     argParser.addOption(
-      'name',
+      'title',
       abbr: 'n',
-      help: 'The name of the person to greet.',
+      help: 'The title of the person to greet.',
     );
   }
 
   @override
   Future<int> run() async {
-    final name = argResults!['name'] as String?;
-    if (name != null) {
-      writeln('Hello, $name!');
+    final title = option('title');
+    if (title != null) {
+      success('Hello, $title!');
     } else {
-      writeln('Hello, world!');
+      warning('Hello, world!');
     }
-    return 0;
+    line();
+    line();
+    verbose('Verbose message');
+    line();
+    info('Info message');
+    line();
+    warning('Warning message');
+    line();
+    error('Error message');
+    line();
+    success('Success message');
+
+    line();
+    line();
+
+    return finishSuccesfuly('Done',
+        message: 'This is the end of the example command.');
   }
 }

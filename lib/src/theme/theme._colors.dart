@@ -6,6 +6,35 @@
 
 part of 'theme.dart';
 
+/// A class that defines a set of theme colors using `StyleFunction`.
+/// 
+/// The `ThemeColors` class provides a way to define and manage a set of colors
+/// for different UI elements such as info, warning, success, error, hint, value,
+/// text, active, inactive, and prefix. Each color is represented by a `StyleFunction`.
+/// 
+/// The class also provides a `copyWith` method to create a copy of the current
+/// `ThemeColors` instance with some properties replaced by new values.
+/// 
+/// Additionally, it includes two static instances, `defaultColors` and `testColors`,
+/// which provide predefined sets of colors for default and test environments.
+/// 
+/// Example usage:
+/// 
+/// ```dart
+/// ThemeColors themeColors = ThemeColors.defaultColors;
+/// ```
+/// 
+/// Properties:
+/// - `info`: Color for informational messages.
+/// - `warning`: Color for warning messages.
+/// - `success`: Color for success messages.
+/// - `error`: Color for error messages.
+/// - `hint`: Color for hint text.
+/// - `value`: Color for values.
+/// - `text`: Color for general text.
+/// - `active`: Color for active elements.
+/// - `inactive`: Color for inactive elements.
+/// - `prefix`: Color for prefix text.
 class ThemeColors {
   StyleFunction info;
   StyleFunction warning;
@@ -18,9 +47,6 @@ class ThemeColors {
   StyleFunction inactive;
   StyleFunction prefix;
 
-  StyleFunction successBlock;
-  StyleFunction sectionBlock;
-
   ThemeColors({
     required this.info,
     required this.warning,
@@ -32,8 +58,6 @@ class ThemeColors {
     required this.active,
     required this.inactive,
     required this.prefix,
-    required this.successBlock,
-    required this.sectionBlock,
   });
 
   ThemeColors copyWith({
@@ -47,8 +71,6 @@ class ThemeColors {
     StyleFunction? active,
     StyleFunction? inactive,
     StyleFunction? prefix,
-    StyleFunction? successBlock,
-    StyleFunction? sectionBlock,
   }) {
     return ThemeColors(
       info: info ?? this.info,
@@ -61,8 +83,6 @@ class ThemeColors {
       active: active ?? this.active,
       inactive: inactive ?? this.inactive,
       prefix: prefix ?? this.prefix,
-      successBlock: successBlock ?? this.successBlock,
-      sectionBlock: sectionBlock ?? this.sectionBlock,
     );
   }
 
@@ -77,8 +97,6 @@ class ThemeColors {
     active: (x) => x.brightGreen(),
     inactive: (x) => x.grey(),
     prefix: (x) => x.darkGray(),
-    successBlock: (x) => x.onGreen().white(),
-    sectionBlock: (x) => x.onWhite().black(),
   );
 
   static final ThemeColors testColors = ThemeColors(
@@ -92,7 +110,5 @@ class ThemeColors {
     active: (x) => x.brightGreen(),
     inactive: (x) => x.grey().dim(),
     prefix: (x) => x.brightCyan(),
-    successBlock: (x) => x.onBlue().black(),
-    sectionBlock: (x) => x.onBrightBlue().black(),
   );
 }

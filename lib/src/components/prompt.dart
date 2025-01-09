@@ -58,7 +58,7 @@ class _PromptState extends State<Prompt> {
   @override
   void dispose() {
     if (value != null) {
-      context.writeln(
+      context.write(
         promptSuccess(
           component.prompt,
           theme: component.theme,
@@ -72,7 +72,7 @@ class _PromptState extends State<Prompt> {
   @override
   void render() {
     if (error != null) {
-      context.writeln(
+      context.write(
         promptError(
           error ?? 'An error occurred',
           theme: component.theme,
@@ -92,7 +92,9 @@ class _PromptState extends State<Prompt> {
         ),
       );
       final input = context.readLine(initialText: component.initialText);
-      final line = input.isEmpty && component.defaultValue != null ? component.defaultValue! : input;
+      final line = input.isEmpty && component.defaultValue != null
+          ? component.defaultValue!
+          : input;
       final validator = component.validator;
 
       if (validator != null) {

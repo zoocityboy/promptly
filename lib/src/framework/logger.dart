@@ -1,11 +1,23 @@
 part of 'framework.dart';
 
-enum LogLevel {
-  verbose,
-  info,
-  warning,
-  error,
-  fatal,
+enum LogLevel implements Comparable<LogLevel> {
+  verbose(0),
+  info(1),
+  warning(2),
+  error(3),
+  fatal(4);
+
+  final int severity;
+  const LogLevel(this.severity);
+
+  @override
+  int compareTo(LogLevel other) => severity.compareTo(other.severity);
+  bool operator <(LogLevel other) => severity < other.severity;
+  bool operator >(LogLevel other) => severity > other.severity;
+  bool operator <=(LogLevel other) => severity <= other.severity;
+  bool operator >=(LogLevel other) => severity >= other.severity;
+
+  bool allowed(LogLevel level) => level <= this;
 }
 
 /// A function that outputs a log message.
@@ -20,9 +32,10 @@ typedef LogPrinter = void Function(LogItem item);
 /// - Parameters:
 ///   - level: The log level of the message.
 ///   - message: The message to be logged.
-void defaultPrinter(LogItem item) => [LogLevel.error, LogLevel.fatal].contains(item.level)
-    ? stderr.writeln(item.withTime())
-    : stdout.writeln(item.withTime());
+void defaultPrinter(LogItem item) =>
+    [LogLevel.error, LogLevel.fatal].contains(item.level)
+        ? stderr.writeln(item.withTime())
+        : stdout.writeln(item.withTime());
 
 @immutable
 class LogItem {
@@ -46,7 +59,8 @@ class LogItem {
     return '[$command] ';
   }
 
-  String withTime() => '${dateTime.hour}:${dateTime.minute}:${dateTime.second} $commandName$message';
+  String withTime() =>
+      '${dateTime.hour}:${dateTime.minute}:${dateTime.second} $commandName$message';
   String withoutTime() => '$commandName$message';
 }
 
@@ -91,10 +105,12 @@ class Logger {
   LogLevel _level;
 
   /// The logging level for the logger.
-  // ignore: avoid_setters_without_getters
   set level(LogLevel level) {
     _level = level;
   }
+
+  // ignore: unnecessary_getters_setters
+  LogLevel get level => _level;
 
   /// A printer instance used to handle the log output.
   ///
@@ -108,7 +124,12 @@ class Logger {
   ///
   /// The `level.index >= _level.index` check ensures that only messages with a log level
   /// equal to or higher than the current log level are logged.
-  void log(String message, {LogLevel level = LogLevel.info, bool delayed = false, String? commandName}) {
+  void log(
+    String message, {
+    LogLevel level = LogLevel.info,
+    bool delayed = false,
+    String? commandName,
+  }) {
     // stdout.writeln('[${level.name}${level.index} >= ${_level.index}] $message');
     // stdout.writeln('-> ${LogLevel.values.map((e) => '${e.index} ${e.name},').toList()}');
 
@@ -116,24 +137,36 @@ class Logger {
       _delayed(message, level: level, commandName: commandName);
     } else {
       if (_level.index >= level.index) {
-        _printer(LogItem(dateTime: DateTime.now().toUtc(), level: level, message: message, command: commandName));
+        _printer(
+          LogItem(
+            dateTime: DateTime.now().toUtc(),
+            level: level,
+            message: message,
+            command: commandName,
+          ),
+        );
       }
     }
   }
 
-  void verbose(String message, {bool delayed = false}) => log(message, level: LogLevel.verbose, delayed: delayed);
+  void verbose(String message, {bool delayed = false}) =>
+      log(message, level: LogLevel.verbose, delayed: delayed);
 
   /// Log an info message.
-  void info(String message, {bool delayed = false}) => log(message, delayed: delayed);
+  void info(String message, {bool delayed = false}) =>
+      log(message, delayed: delayed);
 
   /// Log a warning message.
-  void warning(String message, {bool delayed = false}) => log(message, level: LogLevel.warning, delayed: delayed);
+  void warning(String message, {bool delayed = false}) =>
+      log(message, level: LogLevel.warning, delayed: delayed);
 
   /// Log an error message.
-  void error(String message, {bool delayed = false}) => log(message, level: LogLevel.error, delayed: delayed);
+  void error(String message, {bool delayed = false}) =>
+      log(message, level: LogLevel.error, delayed: delayed);
 
   /// Log a fatal message.
-  void fatal(String message, {bool delayed = false}) => log(message, level: LogLevel.fatal, delayed: delayed);
+  void fatal(String message, {bool delayed = false}) =>
+      log(message, level: LogLevel.fatal, delayed: delayed);
 
   void trace(String message, {String? commandName}) => log(
         message,
@@ -150,11 +183,22 @@ class Logger {
   /// [message] The message to be logged.
   /// [level] The level at which the message should be logged. Defaults to
   /// [LogLevel.info].
-  void _delayed(String message, {LogLevel level = LogLevel.info, String? commandName}) {
+  void _delayed(
+    String message, {
+    LogLevel level = LogLevel.info,
+    String? commandName,
+  }) {
     if (_queue.length > _maxQueueSize) {
       _queue.removeFirst();
     }
-    _queue.add(LogItem(dateTime: DateTime.now().toUtc(), level: level, message: message, command: commandName));
+    _queue.add(
+      LogItem(
+        dateTime: DateTime.now().toUtc(),
+        level: level,
+        message: message,
+        command: commandName,
+      ),
+    );
   }
 
   /// Flushes the logger, ensuring that all buffered log messages are written out.

@@ -1,7 +1,5 @@
 part of 'command_runner.dart';
 
-typedef ServiceLocator = GetIt;
-
 /// A command runner that extends the `cr.CommandRunner` class with an integer
 /// return type. This class is used to manage and execute a set of commands
 /// within the application.
@@ -31,15 +29,63 @@ final _promptlyConsole = Console();
 /// - `message`: The log message to be written to the console.
 final _promptlyLogger = Logger();
 
+/// A command runner that extends the `CompletionCommandRunner` to provide
+/// additional functionality for running commands with completion support.
+///
+/// The `CommandRunner` class is responsible for initializing the logger,
+/// setting up the console theme, and managing the execution of commands.
+/// It also provides methods for adding commands, running commands, and
+/// handling usage exceptions.
+///
+/// The class includes the following features:
+/// - Logger initialization and configuration
+/// - Console theme setup
+/// - Command execution with error handling
+/// - Custom usage and invocation messages
+/// - Support for command completion
+///
+/// Example usage:
+/// ```dart
+/// final runner = CommandRunner('myapp', 'A sample command-line application');
+/// runner.addCommand(MyCommand());
+/// runner.run(args);
+/// ```
+///
+/// Properties:
+/// - `version`: The version of the application.
+/// - `enableAutoInstall`: Indicates whether auto-install is enabled.
+/// - `theme`: The console theme used for styling output.
+/// - `appDescription`: A formatted description of the application.
+/// - `invocation`: The command invocation message.
+/// - `usage`: The usage message for the application.
+/// - `getUsagePrefixLength`: The length of the usage prefix.
+/// - `publicUsageWithoutDescription`: The public usage message without the description.
+/// - `logger`: The logger instance used for logging purposes.
+///
+/// Methods:
+/// - `addCommand`: Adds a command to the runner.
+/// - `run`: Runs the command with the given arguments.
+/// - `runCommand`: Runs the specified command.
+/// - `safeRun`: Runs the command safely and exits after flushing the logger.
+/// - `usageException`: Throws a usage exception with the given message.
+
 class CommandRunner extends completion.CompletionCommandRunner<int> {
-  CommandRunner(super.executableName, super.description, {this.version, Theme? theme, LogLevel? logLevel}) {
+  CommandRunner(
+    super.executableName,
+    super.description, {
+    this.version,
+    Theme? theme,
+    LogLevel? logLevel,
+  }) {
     logger.trace('Runner [$executableName] initialized');
     GlobalArgs(argParser).addLogLevel();
     _promptlyConsole.theme = theme ?? Theme.defaultTheme;
     _promptlyLogger
       ..level = logLevel ?? LogLevel.error
       ..printer = (item) {
-        _promptlyConsole.message(item.withTime());
+        if (item.level.allowed(_promptlyLogger.level)) {
+          _promptlyConsole.writeMessage(item.withTime(), prefix: '');
+        }
       };
   }
 
@@ -48,17 +94,20 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
   @override
   bool get enableAutoInstall => true;
 
-  @override
-  String? get usageFooter => '... Run `$executableName help` for more information.';
+  // @override
+  // String? get usageFooter => '... Run `$executableName help` for more information.';
 
   Theme get theme => console.theme;
-
-  String get appDescription {
+  String _appDescription(StyleFunction style) {
     final StringBuffer buffer = StringBuffer();
-    buffer.write(theme.prefixHeaderLine(console.theme.colors.successBlock(' $executableName ')));
+    buffer.write(
+      theme.prefixHeaderLine(
+        style(' $executableName ').inverse(),
+      ),
+    );
     if (version != null) {
       buffer.write(' ');
-      buffer.write(theme.colors.success('v$version'.bold()));
+      buffer.write(style('v$version'.bold()));
     }
     buffer.write(theme.colors.hint(' • '));
     buffer.writeln(theme.colors.hint(description));
@@ -66,9 +115,13 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
     return buffer.toString();
   }
 
+  String get appDescription => _appDescription(theme.colors.success);
+
+  String get errorAppDescription => _appDescription(theme.colors.error);
+
   @override
   String get invocation =>
-      '${console.theme.colors.active(executableName)} ${console.theme.colors.active('[command]')} ${console.theme.colors.hint('[...flags]')}';
+      '${console.theme.colors.active('$executableName [command]')} ${console.theme.colors.hint('[...flags]')}';
 
   @override
   String get usage => appDescription + publicUsageWithoutDescription;
@@ -89,7 +142,11 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       ..verticalLine();
     if (usegeLines.isNotEmpty) {
       buffer
-        ..write(console.theme.prefixSectionLine(console.theme.colors.sectionBlock(' Flags ')))
+        ..write(
+          console.theme.prefixSectionLine(
+            console.theme.colors.text(' Flags ').inverse(),
+          ),
+        )
         ..newLine();
     }
     for (final line in usegeLines) {
@@ -98,16 +155,18 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
         ..write(line)
         ..newLine();
     }
-    buffer
-      ..writeln(console.theme.prefixQuestion(invocation))
-      ..newLine();
-
     if (usageFooter != null) {
       buffer
         ..verticalLine()
-        ..write(console.theme.prefixLine(console.theme.colors.hint(usageFooter!)))
-        ..newLine();
+        ..prefixLine()
+        ..write(console.theme.colors.hint(usageFooter!))
+        ..newLine()
+        ..verticalLine();
     }
+    buffer
+      ..writeln(console.theme.prefixRun(invocation))
+      ..newLine();
+
     return buffer.toString();
   }
 
@@ -133,19 +192,23 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       exitCode = result;
     } on FormatException catch (e) {
       console
-        ..message(e.message, style: MessageStyle.error)
+        ..write(errorAppDescription)
+        ..writeMessage(e.message, style: MessageStyle.error)
         ..writeln('')
         ..write(usage);
       logger.trace(e.toString());
-      exitCode = ExitCode.usage.code;
+      exitCode = ExitCode.software.code;
     } on UsageException catch (e) {
       console
-        ..message(e.message, style: MessageStyle.error)
+        ..write(errorAppDescription)
+        ..writeMessage(e.message, style: MessageStyle.error)
         ..write(e.usage);
       logger.trace(e.toString());
-      exitCode = ExitCode.usage.code;
+      exitCode = ExitCode.software.code;
     } catch (e) {
-      console.message(e.toString(), style: MessageStyle.error);
+      console
+        ..write(errorAppDescription)
+        ..writeMessage(e.toString(), style: MessageStyle.error);
       logger.trace(e.toString());
 
       exitCode = ExitCode.software.code;
@@ -160,15 +223,29 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       await super.runCommand(topLevelResults);
       return ExitCode.success.code;
     }
-    logger.trace('~ run command ${topLevelResults.command?.name}', commandName: topLevelResults.command?.name);
+
+    logger.trace(
+      '~ run command ${topLevelResults.command?.name}',
+      commandName: topLevelResults.command?.name,
+    );
     final exitCode = await super.runCommand(topLevelResults);
     return exitCode;
+  }
+
+  Future<void> safeRun(List<String> args) async {
+    return flushThenExit(await run(args));
   }
 
   @override
   Never usageException(String message) => throw UsageException(message, publicUsageWithoutDescription);
 }
 
-Future<dynamic> flushThenExit(Future<int> Function() status) {
-  return Future.wait<void>([stdout.close(), stderr.close()]).then<void>((_) async => exit(await status()));
+/// Flushes the stdout and stderr streams, then exits the program with the given
+/// status code.
+///
+/// This returns a Future that will never complete, since the program will have
+/// exited already. This is useful to prevent Future chains from proceeding
+/// after you've decided to exit.
+Future flushThenExit(int status) {
+  return Future.wait([stdout.close(), stderr.close()]).then((_) => exit(status));
 }

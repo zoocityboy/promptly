@@ -1,5 +1,4 @@
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/console.dart';
 
 void main() {
   header('Messages', message: 'Showcase of message styles');
@@ -27,7 +26,8 @@ Nam at tortor in tellus interdum sagittis. Suspendisse potenti. Sed lectus. Inte
   line();
 
   final githubLink = link('https://github.com', label: 'GitHub');
-  final promptlyLink = link('https://github.com/zoocityboy/promptly', label: 'promptly');
+  final promptlyLink =
+      link('https://github.com/zoocityboy/promptly', label: 'promptly');
 
   finishSuccesfuly(
     'This is a success message',

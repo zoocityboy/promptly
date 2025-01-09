@@ -4,16 +4,16 @@ import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/prompt.dart';
 
 /// A selector component.
-class Select extends StateComponent<int> {
-  /// Constructs a [Select] component with the default theme.
-  Select({
+class SelectOne extends StateComponent<int> {
+  /// Constructs a [SelectOne] component with the default theme.
+  SelectOne({
     required this.prompt,
     required this.choices,
     this.initialIndex = 0,
   }) : theme = Theme.defaultTheme;
 
-  /// Constructs a [Select] component with the supplied theme.
-  Select.withTheme({
+  /// Constructs a [SelectOne] component with the supplied theme.
+  SelectOne.withTheme({
     required this.prompt,
     required this.choices,
     required this.theme,
@@ -36,10 +36,10 @@ class Select extends StateComponent<int> {
   final List<String> choices;
 
   @override
-  _SelectState createState() => _SelectState();
+  _SelectOneState createState() => _SelectOneState();
 }
 
-class _SelectState extends State<Select> {
+class _SelectOneState extends State<SelectOne> {
   int index = 0;
   SelectTheme get theme => component.theme.selectTheme;
   @override

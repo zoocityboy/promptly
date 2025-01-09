@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:io/io.dart';
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/theme/theme.dart';
-import 'package:promptly/src/utils/prompt.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
 
 part 'console.direct.dart';
@@ -73,55 +72,6 @@ class Console {
     ..write(message)
     ..write('\n');
 
-  // /// Writes a message to the console with the specified style.
-  // void writeStyled(String message) {
-  //   if (theme.spacing > 0) {
-  //     _ctx.write(theme.prefixLine(theme.promptTheme.messageStyle(message)));
-  //   } else {
-  //     _ctx.write(theme.promptTheme.messageStyle(message));
-  //   }
-  // }
-
-  // void writelnStyled(String message) {
-  //   final lines = message.split('\n');
-  //   for (final line in lines) {
-  //     if (theme.spacing > 0) {
-  //       _ctx.write(theme.prefixLine(theme.promptTheme.messageStyle(line)));
-  //     } else {
-  //       _ctx.write(theme.promptTheme.messageStyle(line));
-  //     }
-  //     _ctx.write('\n');
-  //   }
-  // }
-
-  // void style(String message, {String Function(Console)? prefix, bool newLine = true}) => _ctx
-  //   ..write(prefix != null ? prefix.call(this) : theme.prefixLine(''))
-  //   ..write(theme.promptTheme.messageStyle(message))
-  //   ..write(newLine ? '\n${theme.prefixLine('')}\n' : '');
-
-  // /// Logs a fatal error message.
-  // ///
-  // /// This method is used to log a message indicating a fatal error that
-  // /// cannot be recovered from. It can also include an optional error object
-  // /// and stack trace for more detailed debugging information.
-  // ///
-  // /// [message] The fatal error message to log. This can be `null`.
-  // /// [error] An optional error object associated with the fatal error.
-  // /// [stackTrace] An optional stack trace associated with the fatal error.
-  // void fatal(String? text, {Object? error, StackTrace? stackTrace}) {
-  //   final buffer = StringBuffer();
-  //   buffer.write(promptMessage(text ?? 'Fatal error', style: MessageStyle.error, theme: _theme));
-  //   if (error != null) {
-  //     buffer.write('\n');
-  //     buffer.write(theme.promptTheme.(error.toString(), style: MessageStyle.error));
-  //   }
-  //   if (stackTrace != null) {
-  //     buffer.write('\n');
-  //     buffer.write(message(stackTrace.toString(), style: MessageStyle.error));
-  //   }
-  //   _ctx.writeln(buffer.toString());
-  // }
-
   /// Clears the console screen.
   void clear() {
     Context.reset();
@@ -146,9 +96,7 @@ class Console {
     sb.write(_theme.colors.success('❯').dim());
     sb.write(_theme.colors.success('❯'));
     sb.write(' ');
-    // sb.write(_theme.colors.prefix('❯' * (_theme.spacing - 1)));
-    // sb.write(' ');
-    sb.write(_theme.colors.successBlock(' $title '));
+    sb.write(_theme.colors.success(' $title ').inverse());
     if (message != null) {
       sb.write(' ');
       sb.write(_theme.colors.success(message));
@@ -187,21 +135,38 @@ class Console {
       _ctx.write(line);
       _ctx.write('\n');
     } else {
-      final line = theme.spacing > 0 ? theme.prefixLine(_theme.symbols.vLine) : '';
+      final line =
+          theme.spacing > 0 ? theme.prefixLine(_theme.symbols.vLine) : '';
       _ctx.write(line);
       _ctx.write(_theme.promptTheme.messageStyle(message));
       _ctx.write('\n');
     }
   }
 
-  String link(LinkData data) => data.link();
+  Link _link(LinkData data) => Link.withTheme(
+        theme: theme,
+        uri: data.uri,
+        message: data.message,
+        context: _ctx,
+      );
+  String linkLine(String url, {String? label}) =>
+      _link(LinkData(uri: Uri.parse(url), message: label)).interact();
+  void writeLink(String url, {String? label}) =>
+      _link(LinkData(uri: Uri.parse(url), message: label)).render();
 
   /// Writes a message to the console with the specified style.
-  void message(String message, {String? prefix, MessageStyle? style}) => Message(
+  Message _message(String message, {String? prefix, MessageStyle? style}) =>
+      Message.withTheme(
         text: message,
+        prefix: prefix,
         theme: _theme,
         style: style ?? MessageStyle.verbose,
-      ).render(context: _ctx);
+        context: _ctx,
+      );
+  String messageLine(String message, {String? prefix, MessageStyle? style}) =>
+      _message(message, prefix: prefix, style: style).interact();
+  void writeMessage(String message, {String? prefix, MessageStyle? style}) =>
+      _message(message, prefix: prefix, style: style).render();
 
   /// Starts the console with the given title and an optional message.
   ///
@@ -212,9 +177,24 @@ class Console {
   /// ```dart
   /// start('Welcome', message: 'Hello, user!');
   /// ```
-  void header(String title, {String? message, String? prefix}) {
-    _ctx.write(promptHeader(title, theme: _theme, windowWidth: _ctx.windowWidth, message: message, prefix: prefix));
-  }
+  Header _header(String title, {String? message, String? prefix}) =>
+      Header.withTheme(
+        theme: _theme,
+        title: title,
+        message: message,
+        prefix: prefix,
+        context: _ctx,
+      );
+  String headerLine(String title, {String? message, String? prefix}) => _header(
+        title,
+        message: message,
+        prefix: prefix,
+      ).interact();
+  void writeHeader(String title, {String? message, String? prefix}) => _header(
+        title,
+        message: message,
+        prefix: prefix,
+      ).render();
 
   /// Constructs an [Prompt] component with the supplied_theme.
   String prompt(
@@ -252,17 +232,21 @@ class Console {
     bool? defaultValue,
     bool enterForConfirm = false,
   }) =>
-      Confirm.withTheme(theme: _theme, prompt: prompt, defaultValue: defaultValue, enterForConfirm: enterForConfirm)
-          .interact();
+      Confirm.withTheme(
+        theme: _theme,
+        prompt: prompt,
+        defaultValue: defaultValue,
+        enterForConfirm: enterForConfirm,
+      ).interact();
 
-  /// Constructs a [Select] component with the supplied_theme.
+  /// Constructs a [SelectOne] component with the supplied_theme.
   T selectOne<T>(
     String prompt, {
     required List<T> choices,
     T? defaultValue,
     required String Function(T)? display,
   }) {
-    final result = Select.withTheme(
+    final result = SelectOne.withTheme(
       theme: _theme,
       prompt: prompt,
       choices: choices.map((e) => display?.call(e) ?? e.toString()).toList(),
@@ -271,28 +255,30 @@ class Console {
     return choices[result];
   }
 
-  /// Constructs a [MultiSelect] component with the supplied_theme.
+  /// Constructs a [SelectAny] component with the supplied_theme.
   List<T> selectAny<T>(
     String prompt, {
     required List<T> choices,
     List<T>? defaultValues,
     String Function(T)? display,
   }) {
-    final result = MultiSelect.withTheme(
+    final result = SelectAny.withTheme(
       theme: _theme,
       prompt: prompt,
       choices: choices.map((e) => display?.call(e) ?? e.toString()).toList(),
-      defaults: defaultValues != null ? choices.map((e) => defaultValues.contains(e)).toList() : null,
+      defaults: defaultValues != null
+          ? choices.map((e) => defaultValues.contains(e)).toList()
+          : null,
     ).interact();
     return result.map((index) => choices[index]).toList();
   }
 
-  TableRow table(
+  TableRow selectTable(
     String prompt, {
     required List<String> headers,
     required List<TableRow> rows,
   }) {
-    final result = Table.withTheme(
+    final result = SelectTable.withTheme(
       prompt,
       theme: _theme,
       headers: headers,
@@ -300,6 +286,17 @@ class Console {
     ).interact();
     return rows[result];
   }
+
+  Table table({
+    required List<Column> columns,
+    required List<TableRow> rows,
+    int columnSpacing = 2,
+  }) =>
+      Table.withTheme(
+        columns: columns,
+        theme: _theme,
+        columnPadding: columnSpacing,
+      );
 
   ProgressState progress(
     String prompt, {
@@ -328,7 +325,8 @@ class Console {
         prompt: prompt,
         theme: _theme,
         icon: _theme.loaderTheme.successStyle(_theme.loaderTheme.successPrefix),
-        failedIcon: _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
+        failedIcon:
+            _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
         clear: clear,
       ).interact();
 

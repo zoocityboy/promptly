@@ -5,11 +5,11 @@ Developed by 🦏 [zoocityboy](https://zoocityboy.github.io/)
 [![Pub](https://img.shields.io/pub/v/promptly.svg?style=flat-square)](https://pub.dev/packages/promptly)
 [![pub points](https://img.shields.io/pub/points/mason_coder?style=flat-square&color=2E8B57&label=pub%20points)](https://pub.dev/packages/promptly/score)
 [![release](https://github.com/zoocityboy/promptly/actions/workflows/release.yaml/badge.svg?style=flat-square)](https://github.com/zoocityboy/promptly/actions/workflows/release.yaml)
+[![Coverage](https://raw.githubusercontent.com/zoocityboy/promptly/main/coverage_badge.svg)](https://github.com/zoocityboy/promptly/actions/workflows/pull-request.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 
 ![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=flat-square&logo=dart&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=flat-square&logo=githubactions&logoColor=white)
 
 [Documentation](https://zoocityboy.github.io/promptly/)
 

@@ -16,15 +16,99 @@ String _endLabel(ProgressData x) {
   return '${x.percentage.toString().padLeft(numDigits(x.length), '')}%';
 }
 
+/// A typedef representing the data for progress tracking.
+///
+/// The `ProgressData` typedef is a record type that contains two fields:
+/// - `filled`: An integer representing the amount of progress that has been completed.
+/// - `length`: An integer representing the total length or goal of the progress.
 typedef ProgressData = ({int filled, int length});
 
+/// An extension on the `ProgressData` class to calculate the percentage of progress.
+///
+/// This extension adds a `percentage` getter to the `ProgressData` class, which
+/// calculates the percentage of progress based on the `filled` and `length`
+/// properties of the `ProgressData` instance.
+///
+/// The percentage is calculated as:
+/// ```
+/// ((filled / length) * 100).toInt()
+/// ```
+///
+/// Example usage:
+/// ```dart
+/// ProgressData progressData = ProgressData(filled: 50, length: 100);
+/// int progressPercentage = progressData.percentage; // 50
+/// ```
 extension ProgressDataPercentage on ProgressData {
   int get percentage => ((filled / length) * 100).toInt();
 }
 
+/// A typedef for a function that takes a [ProgressData] object and returns a [String].
+///
+/// This function can be used to process or format progress data in a custom way.
+///
+/// Example:
+/// ```dart
+/// String myProgressFormatter(ProgressData progress) {
+///   return 'Progress: ${progress.percentage}%';
+/// }
+/// 
+/// ProgressFn progressFn = myProgressFormatter;
+/// ```
 typedef ProgressFn = String Function(ProgressData progress);
 
 /// A progress bar component.
+/// A [Progress] component that displays a progress bar with customizable
+/// start and end labels, length, and size. It can be constructed with a
+/// default theme or a supplied theme.
+///
+/// The [Progress] component is a stateful component that extends
+/// [StateComponent<ProgressState>].
+///
+/// Example usage:
+/// ```dart
+/// Progress(
+///   'Loading...',
+///   length: 100,
+///   size: 1.5,
+///   startLabel: (progress) => 'Start',
+///   endLabel: (progress) => 'End',
+/// );
+/// ```
+///
+/// Example usage with a custom theme:
+/// ```dart
+/// Progress.withTheme(
+///   'Loading...',
+///   theme: customTheme,
+///   length: 100,
+///   size: 1.5,
+///   startLabel: (progress) => 'Start',
+///   endLabel: (progress) => 'End',
+/// );
+/// ```
+///
+/// The [prompt] parameter is a string that represents the prompt to be
+/// displayed with the progress bar.
+///
+/// The [length] parameter specifies the length of the progress bar.
+///
+/// The [size] parameter is a multiplier used when rendering the progress
+/// bar. It defaults to `1.0`.
+///
+/// The [startLabel] and [endLabel] parameters are functions that return
+/// the labels to be displayed on the left and right sides of the progress
+/// bar, respectively. If not provided, default functions will be used.
+///
+/// The [theme] parameter specifies the theme of the component. It is
+/// required when using the [Progress.withTheme] constructor.
+///
+/// The [setContext] method sets the context to a new one, to be used
+/// internally by [MultiProgress].
+///
+/// The [pipeState] method sets the context of the state if it is not null.
+///
+/// The [disposeState] method is called when the state is disposed.
 class Progress extends StateComponent<ProgressState> {
   /// Constructs a [Progress] component with the default theme.
   Progress(
@@ -142,10 +226,14 @@ class _ProgressState extends State<Progress> {
   @override
   void render() {
     final line = StringBuffer();
-    final startLabel = component.startLabel((filled: current, length: component.length));
-    final endLabel = component.endLabel((filled: current, length: component.length));
-    final occupied =
-        theme.prefix.strip().length + theme.suffix.strip().length + startLabel.strip().length + endLabel.strip().length;
+    final startLabel =
+        component.startLabel((filled: current, length: component.length));
+    final endLabel =
+        component.endLabel((filled: current, length: component.length));
+    final occupied = theme.prefix.strip().length +
+        theme.suffix.strip().length +
+        startLabel.strip().length +
+        endLabel.strip().length;
     final available = (context.windowWidth * component.size).round() - occupied;
 
     line.write(startLabel);

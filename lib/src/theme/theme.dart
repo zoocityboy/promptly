@@ -38,6 +38,7 @@ class Theme {
     required this.selectTheme,
     required this.linkTheme,
     required this.passwordTheme,
+    required this.selectTableTheme,
     required this.tableTheme,
     required this.loaderTheme,
     required this.headerTheme,
@@ -52,6 +53,7 @@ class Theme {
   final SelectTheme selectTheme;
   final LinkTheme linkTheme;
   final PasswordTheme passwordTheme;
+  final SelectTableTheme selectTableTheme;
   final TableTheme tableTheme;
   final LoaderTheme loaderTheme;
   final HeaderTheme headerTheme;
@@ -67,9 +69,10 @@ class Theme {
       confirmTheme: ConfirmTheme.fromColors(colors, useSymbols),
       promptTheme: PromptTheme.fromColors(colors, useSymbols),
       progressTheme: ProgressTheme.fromColors(colors),
-      selectTheme: SelectTheme.fromColors(colors),
+      selectTheme: SelectTheme.fromColors(colors, useSymbols),
       linkTheme: LinkTheme.fromColors(colors),
       passwordTheme: PasswordTheme.fromColors(colors),
+      selectTableTheme: SelectTableTheme.fromColors(colors),
       tableTheme: TableTheme.fromColors(colors),
       loaderTheme: LoaderTheme.fromColors(colors, useSymbols),
       headerTheme: HeaderTheme.fromColors(colors),
@@ -85,9 +88,10 @@ class Theme {
       confirmTheme: ConfirmTheme.fromColors(colors, useSymbols),
       promptTheme: PromptTheme.fromColors(colors, useSymbols),
       progressTheme: ProgressTheme.fromColors(colors),
-      selectTheme: SelectTheme.fromColors(colors),
+      selectTheme: SelectTheme.fromColors(colors, useSymbols),
       linkTheme: LinkTheme.fromColors(colors),
       passwordTheme: PasswordTheme.fromColors(colors),
+      selectTableTheme: SelectTableTheme.fromColors(colors),
       tableTheme: TableTheme.fromColors(colors),
       loaderTheme: LoaderTheme.fromColors(colors, useSymbols),
       headerTheme: HeaderTheme.fromColors(colors),
@@ -107,6 +111,7 @@ class Theme {
     SelectTheme? selectTheme,
     LinkTheme? linkTheme,
     PasswordTheme? passwordTheme,
+    SelectTableTheme? selectTableTheme,
     TableTheme? tableTheme,
     LoaderTheme? loaderTheme,
     HeaderTheme? headerTheme,
@@ -122,6 +127,7 @@ class Theme {
       selectTheme: selectTheme ?? this.selectTheme,
       linkTheme: linkTheme ?? this.linkTheme,
       passwordTheme: passwordTheme ?? this.passwordTheme,
+      selectTableTheme: selectTableTheme ?? this.selectTableTheme,
       tableTheme: tableTheme ?? this.tableTheme,
       loaderTheme: loaderTheme ?? this.loaderTheme,
       headerTheme: headerTheme ?? this.headerTheme,
@@ -131,7 +137,7 @@ class Theme {
   /// An alias to [colorfulTheme].
   static Theme defaultTheme = _theme;
   static final _theme = Theme._(
-    spacing: 3,
+    spacing: 2,
     colors: ThemeColors.defaultColors,
     symbols: ThemeSymbols.defaultSymbols,
     showActiveCursor: false,
@@ -141,9 +147,10 @@ class Theme {
     selectTheme: SelectTheme.fromDefault(),
     linkTheme: LinkTheme.fromDefault(),
     passwordTheme: PasswordTheme.fromDefault(),
-    tableTheme: TableTheme.fromDefault(),
+    selectTableTheme: SelectTableTheme.fromDefault(),
     loaderTheme: LoaderTheme.fromDefault(),
     headerTheme: HeaderTheme.fromDefault(),
+    tableTheme: TableTheme.fromDefault(),
   );
   static Theme astroTheme = _astro;
   static final _astro = Theme._(
@@ -162,55 +169,68 @@ class Theme {
     selectTheme: SelectTheme.fromDefault(),
     linkTheme: LinkTheme.fromDefault(),
     passwordTheme: PasswordTheme.fromDefault(),
-    tableTheme: TableTheme.fromDefault(),
+    selectTableTheme: SelectTableTheme.fromDefault(),
     loaderTheme: LoaderTheme.fromDefault(),
     headerTheme: HeaderTheme.fromDefault(),
+    tableTheme: TableTheme.fromDefault(),
   );
 }
 
 extension ThemeStyledExtension on Theme {
-  String prefixQuestion(String message) {
+  String prefixRun(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.write(colors.active('❯'));
-    buffer.write(colors.active('❯'.dim()));
+    // buffer.write(colors.active('?'.padRight(spacing)));
+    buffer.write(colors.prefix('❯'));
+    buffer.write(colors.success('❯').dim());
+    // buffer.write(colors.success('❯'));
+    buffer.write(colors.success('\$'));
+
     buffer.write(' ');
     buffer.write(message);
     return buffer.toString();
   }
 
-  String prefixLine(String message) {
+  String prefixLine(String message, {StyleFunction? style}) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.vLine), message, spacing);
+    buffer.withPrefix((style ?? colors.prefix)(symbols.vLine), message);
     return buffer.toString();
   }
 
   String prefixSectionLine(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.vLine), message, spacing - 1);
+    buffer.withPrefix(
+      colors.prefix(symbols.vLine),
+      message,
+      spacing: spacing - 1,
+    );
     return buffer.toString();
   }
 
   String prefixHeaderLine(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.header), message, spacing - 1);
+    buffer.withPrefix(
+      colors.prefix(symbols.header),
+      message,
+      spacing: spacing - 1,
+    );
     return buffer.toString();
   }
 
   String prefixError(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.errorStep), message, spacing);
+    buffer.withPrefix(colors.prefix(symbols.error), message);
     return buffer.toString();
   }
 
   String prefixWarning(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.warningStep), message, spacing);
+    buffer.withPrefix(colors.prefix(symbols.dotStep), message);
     return buffer.toString();
   }
 
   String prefixInfo(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.infoStep), message, spacing);
+    buffer.withPrefix(colors.prefix(symbols.infoStep), message);
     return buffer.toString();
   }
 }

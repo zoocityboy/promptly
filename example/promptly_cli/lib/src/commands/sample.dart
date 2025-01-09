@@ -11,12 +11,23 @@ class SampleCommand extends Command<int> {
 
   @override
   Future<int> run() async {
-    final name = argResults!['name'] as String?;
-    if (name != null) {
-      writeln('Hello, $name!');
-    } else {
-      writeln('Hello, world!');
-    }
+    header(name, message: description);
+    line();
+
+    final table = Table.withTheme(
+      theme: console.theme,
+      columns: [
+        Column(width: 20, alignment: ColumnAlignment.right),
+        Column(text: 'Age', alignment: ColumnAlignment.right),
+      ],
+    );
+
+    ///
+    table.addRow(['Alice', '30']);
+    table.addRow(['Bob', '25']);
+
+    ///
+    table.render();
     return 0;
   }
 }

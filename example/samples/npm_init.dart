@@ -4,21 +4,29 @@ import 'dart:io' show exit, stderr, stdout;
 import 'package:promptly/promptly.dart';
 
 void main() {
-  header('npm', message: 'This utility will walk you through creating a package.json file.');
+  header(
+    'npm',
+    message: 'This utility will walk you through creating a package.json file.',
+  );
 
-  console.message('Press ^C at any time to quit.');
+  message('Press ^C at any time to quit.');
 
   final name = prompt(
     'package name',
     defaultValue: 'interact',
-    validator: GenericValidator<String>('Contains an invalid character!', (x) => x.contains(RegExp(r'[^a-zA-Z\d]'))),
+    validator: GenericValidator<String>(
+      'Contains an invalid character!',
+      (x) => x.contains(RegExp(r'[^a-zA-Z\d]')),
+    ),
   );
 
   final version = prompt(
     'version',
     defaultValue: '1.0.0',
-    validator:
-        GenericValidator<String>('Not a valid version!', (x) => !RegExp(r'^(\d+\.)?(\d+\.)?(\*|\d+)$').hasMatch(x)),
+    validator: GenericValidator<String>(
+      'Not a valid version!',
+      (x) => !RegExp(r'^(\d+\.)?(\d+\.)?(\*|\d+)$').hasMatch(x),
+    ),
   );
 
   final description = prompt(
@@ -59,7 +67,9 @@ void main() {
       'url': repo,
     },
     'scripts': <String, String>{
-      'test': testCommand.isNotEmpty ? testCommand : 'echo "Error: no test specified" && exit 1',
+      'test': testCommand.isNotEmpty
+          ? testCommand
+          : 'echo "Error: no test specified" && exit 1',
     },
     'keywords': keywords.isEmpty ? [] : keywords.split(' '),
     'license': license,

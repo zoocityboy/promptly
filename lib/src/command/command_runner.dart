@@ -8,14 +8,11 @@ import 'dart:math' as math;
 import 'package:args/args.dart' as args;
 import 'package:args/command_runner.dart' as args_command_runner;
 import 'package:cli_completion/cli_completion.dart' as completion;
-import 'package:get_it/get_it.dart';
 import 'package:io/io.dart';
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/command/global.dart';
-import 'package:promptly/src/components/ansi_table.dart';
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
-import 'package:promptly/src/utils/prompt.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
 
 export 'package:args/src/usage_exception.dart';
@@ -58,37 +55,59 @@ String getStyledCommandUsage(
   for (final name in names) {
     final category = commands[name]!.category;
     final cmd = commands[name];
-    if (cmd != null) commandsByCategory.putIfAbsent(category, () => []).add(cmd);
+    if (cmd != null) {
+      commandsByCategory.putIfAbsent(category, () => []).add(cmd);
+    }
   }
   final categories = commandsByCategory.keys.toList();
   final hasCategories = categories.every((category) => category.isNotEmpty);
 
-  final length = math.max(names.map((name) => name.length).reduce(math.max), helpUsageLength);
+  final length = math.max(
+    names.map((name) => name.length).reduce(math.max),
+    helpUsageLength,
+  );
   final title = '${isSubcommand ? "Subc" : "C"}ommands';
   final buffer = StringBuffer();
   buffer.verticalLine();
 
   if (!hasCategories) {
     buffer
-      ..write(console.theme.prefixSectionLine(console.theme.colors.sectionBlock(' $title ')))
+      ..write(
+        console.theme.prefixSectionLine(console.theme.colors.text(' $title ').inverse()),
+      )
       ..newLine();
   }
   final columnStart = length + 4;
   for (final category in categories) {
     if (category.isNotEmpty) {
       buffer
-        ..write(console.theme.prefixSectionLine(console.theme.colors.sectionBlock(' $category ')))
+        ..write(
+          console.theme.prefixSectionLine(
+            console.theme.colors.text(' $category ').inverse(),
+          ),
+        )
         ..newLine();
     }
-    final ansiTable = AnsiTable(firstColumnWidth: length);
+    final ansiTable = Table(
+      columns: [
+        Column(
+          alignment: ColumnAlignment.right,
+          width: length,
+          style: (p0) => console.theme.colors.text(p0),
+        ),
+        Column(
+          width: console.windowWidth - columnStart,
+        ),
+      ],
+    );
     for (final command in commandsByCategory[category]!) {
       final lines = wrapTextAsLines(command.summary, start: columnStart, length: 80);
-      ansiTable.addRow(command.name, lines.first);
+      ansiTable.addRow([command.name, lines.first]);
       for (final line in lines.skip(1)) {
-        ansiTable.addRow('', line);
+        ansiTable.addRow(['', line]);
       }
     }
-    for (final line in ansiTable.toString().split('\n')) {
+    for (final line in ansiTable.interact().split('\n')) {
       buffer
         ..write(console.theme.prefixLine(''))
         ..write(line)
@@ -98,13 +117,24 @@ String getStyledCommandUsage(
   return buffer.toString();
 }
 
-extension ArgResultsExtension on args.ArgResults {}
-
+/// Extension on `args.ArgParser` to provide custom usage information.
+///
+/// This extension adds the following properties:
+///
+/// - `customUsage`: Returns a custom usage string generated from the parser's options.
+/// - `usg`: Returns a `CustomUsage` object created from the parser's options.
+/// - `getPrefixLength`: Returns the calculated usage prefix length from the parser's options.
 extension ArgParserExtension on args.ArgParser {
   String get customUsage {
-    return generateUsage(options.entries.map((e) => e.value).toList(), lineLength: usageLineLength);
+    return generateUsage(
+      options.entries.map((e) => e.value).toList(),
+      lineLength: usageLineLength,
+    );
   }
 
-  CustomUsage get usg => _createUsage(options.entries.map((e) => e.value).toList(), lineLength: usageLineLength);
+  CustomUsage get usg => _createUsage(
+        options.entries.map((e) => e.value).toList(),
+        lineLength: usageLineLength,
+      );
   int get getPrefixLength => calculateUsage(options.entries.map((e) => e.value).toList());
 }

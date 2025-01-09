@@ -161,7 +161,8 @@ class Context {
             buffer += key.char;
             index++;
           } else {
-            buffer = buffer.substring(0, index) + key.char + buffer.substring(index);
+            buffer =
+                buffer.substring(0, index) + key.char + buffer.substring(index);
             index++;
           }
         }
@@ -172,7 +173,8 @@ class Context {
         _console.cursorPosition = dc.Coordinate(screenRow, screenColOffset);
         _console.eraseCursorToEnd();
         write(buffer);
-        _console.cursorPosition = dc.Coordinate(screenRow, screenColOffset + index);
+        _console.cursorPosition =
+            dc.Coordinate(screenRow, screenColOffset + index);
         _console.showCursor();
       }
     }
@@ -220,8 +222,10 @@ class BufferContext extends Context {
 void Function() reset = Context.reset;
 
 String setColor(int value) => ansi.ansiSetColor(value);
-String setExtendedColor(int color) => ansi.ansiSetExtendedForegroundColor(color);
-String setExtendedBackgroundColor(int color) => ansi.ansiSetExtendedBackgroundColor(color);
+String setExtendedColor(int color) =>
+    ansi.ansiSetExtendedForegroundColor(color);
+String setExtendedBackgroundColor(int color) =>
+    ansi.ansiSetExtendedBackgroundColor(color);
 String resetColor() => ansi.ansiResetColor;
 String setTextStyles({
   bool bold = false,
