@@ -6,12 +6,19 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   quality_check:
     runs-on: ubuntu-latest
+    outputs:
+      success: ${{ steps.check.outputs.success }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup Dart
@@ -29,4 +36,16 @@ jobs:
         run: dart test
       - name: Test coverage
         run: dart test --coverage=coverage -r github
-      
+      - name: Check Results
+        id: check
+        run: |
+          echo "success=true" >> $GITHUB_OUTPUT
+      - name: Comment PR
+        if: github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            ✅ Quality check passed successfully
+            - Analysis: passed
+            - Tests: passed
+          comment_tag: execution
