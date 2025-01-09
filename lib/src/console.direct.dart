@@ -8,7 +8,7 @@ LoaderTheme get loaderTheme => currentTheme.loaderTheme;
 SelectTheme get selectTheme => currentTheme.selectTheme;
 ConfirmTheme get confirmTheme => currentTheme.confirmTheme;
 HeaderTheme get headerTheme => currentTheme.headerTheme;
-TableTheme get tableTheme => currentTheme.tableTheme;
+SelectTableTheme get tableTheme => currentTheme.selectTableTheme;
 
 /// Displays a message on the console with an optional prefix and style.
 ///
@@ -16,22 +16,38 @@ TableTheme get tableTheme => currentTheme.tableTheme;
 /// The [prefix] parameter is an optional string that will be prepended to the message.
 /// The [style] parameter is an optional [MessageStyle] that defines the style of the message.
 ///
-void message(String message, {String? prefix, MessageStyle? style}) => Console.instance.message(
+void message(String message, {String? prefix, MessageStyle? style}) => Console.instance.writeMessage(
       message,
       prefix: prefix,
       style: style,
     );
 
 void verbose(String message, {String? prefix}) =>
-    Console.instance.message(message, prefix: prefix, style: MessageStyle.verbose);
+    Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.verbose);
 void info(String message, {String? prefix}) =>
-    Console.instance.message(message, prefix: prefix, style: MessageStyle.info);
+    Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.info);
 void warning(String message, {String? prefix}) =>
-    Console.instance.message(message, prefix: prefix, style: MessageStyle.warning);
+    Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.warning);
 void error(String message, {String? prefix}) =>
-    Console.instance.message(message, prefix: prefix, style: MessageStyle.error);
+    Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.error);
 void success(String message, {String? prefix}) =>
-    Console.instance.message(message, prefix: prefix, style: MessageStyle.success);
+    Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.success);
+
+/// Starts the console with the given title and an optional message.
+///
+/// This function initializes the console instance with the specified [title].
+/// An optional [message] can also be provided.
+///
+/// Example usage:
+/// ```dart
+/// start('My Console Title', message: 'Welcome to the console!');
+/// ```
+///
+/// - Parameters:
+///   - title: The title to be displayed in the console.
+///   - message: An optional message to be displayed in the console.
+void header(String title, {String? message, String? prefix}) =>
+    Console.instance.writeHeader(title, message: message, prefix: prefix);
 
 /// Prompts the user for input with a given message.
 ///
@@ -153,7 +169,7 @@ TableRow table(
   required List<String> headers,
   required List<TableRow> rows,
 }) =>
-    Console.instance.table(prompt, rows: rows, headers: headers);
+    Console.instance.selectTable(prompt, rows: rows, headers: headers);
 
 /// Creates a progress state with the specified parameters.
 ///
@@ -247,21 +263,6 @@ void line({String? message, String? prefix}) => Console.instance.line(message: m
 /// `ZooConsole` instance.
 void clear() => Console.instance.clear();
 
-/// Starts the console with the given title and an optional message.
-///
-/// This function initializes the console instance with the specified [title].
-/// An optional [message] can also be provided.
-///
-/// Example usage:
-/// ```dart
-/// start('My Console Title', message: 'Welcome to the console!');
-/// ```
-///
-/// - Parameters:
-///   - title: The title to be displayed in the console.
-///   - message: An optional message to be displayed in the console.
-void header(String title, {String? message}) => Console.instance.header(title, message: message);
-
 /// Ends the console session with a given title and an optional message.
 ///
 /// This function calls the `end` method on the `Console` instance, passing
@@ -290,8 +291,7 @@ int finishFailed(String title, {String? message, int? exitCode}) => Console.inst
       exitCode: exitCode,
     );
 
-String link(String url, {String? label}) => Console.instance.link(LinkData(uri: Uri.parse(url), message: label));
+Link link(String url, {String? label}) => Console.instance._link(LinkData(uri: Uri.parse(url), message: label));
 
 void write(String message) => Console.instance.write(message);
 void writeln(String message) => Console.instance.writeln(message);
-

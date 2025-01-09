@@ -63,3 +63,45 @@ class PromptTheme {
     );
   }
 }
+
+class ErrorTheme {
+  final String prefix;
+  final StyleFunction prefixStyle;
+  final StyleFunction messageStyle;
+
+  const ErrorTheme._({
+    required this.prefix,
+    required this.prefixStyle,
+    required this.messageStyle,
+  });
+  factory ErrorTheme.fromDefault() => ErrorTheme.fromColors(ThemeColors.defaultColors, ThemeSymbols.defaultSymbols);
+  // ignore: avoid_unused_constructor_parameters
+  factory ErrorTheme.fromColors(ThemeColors colors, ThemeSymbols symbols) {
+    return ErrorTheme._(
+      prefix: '■'.padRight(3).brightRed().dim(),
+      prefixStyle: (x) => colors.error(x),
+      messageStyle: (x) => colors.text(x),
+    );
+  }
+}
+
+class SuccessTheme {
+  final String prefix;
+  final StyleFunction prefixStyle;
+  final StyleFunction messageStyle;
+
+  const SuccessTheme._({
+    required this.prefix,
+    required this.prefixStyle,
+    required this.messageStyle,
+  });
+  factory SuccessTheme.fromDefault() => SuccessTheme.fromColors(ThemeColors.defaultColors, ThemeSymbols.defaultSymbols);
+  // ignore: avoid_unused_constructor_parameters
+  factory SuccessTheme.fromColors(ThemeColors colors, ThemeSymbols symbols) {
+    return SuccessTheme._(
+      prefix: '✔'.padRight(3).brightGreen().dim(),
+      prefixStyle: (x) => colors.success(x),
+      messageStyle: (x) => colors.text(x),
+    );
+  }
+}

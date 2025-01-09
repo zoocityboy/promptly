@@ -1,7 +1,5 @@
 part of 'command_runner.dart';
 
-typedef ServiceLocator = GetIt;
-
 /// A command runner that extends the `cr.CommandRunner` class with an integer
 /// return type. This class is used to manage and execute a set of commands
 /// within the application.
@@ -39,7 +37,9 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
     _promptlyLogger
       ..level = logLevel ?? LogLevel.error
       ..printer = (item) {
-        _promptlyConsole.message(item.withTime());
+        if (item.level.allowed(_promptlyLogger.level)) {
+          _promptlyConsole.writeMessage(item.withTime());
+        }
       };
   }
 
@@ -68,7 +68,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   @override
   String get invocation =>
-      '${console.theme.colors.active(executableName)} ${console.theme.colors.active('[command]')} ${console.theme.colors.hint('[...flags]')}';
+      '${console.theme.colors.active('$executableName [command]')} ${console.theme.colors.hint('[...flags]')}';
 
   @override
   String get usage => appDescription + publicUsageWithoutDescription;
@@ -133,24 +133,25 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       exitCode = result;
     } on FormatException catch (e) {
       console
-        ..message(e.message, style: MessageStyle.error)
+        ..writeMessage(e.message, style: MessageStyle.error)
         ..writeln('')
         ..write(usage);
       logger.trace(e.toString());
-      exitCode = ExitCode.usage.code;
+      exitCode = ExitCode.software.code;
     } on UsageException catch (e) {
       console
-        ..message(e.message, style: MessageStyle.error)
+        ..writeMessage(e.message, style: MessageStyle.error)
         ..write(e.usage);
       logger.trace(e.toString());
-      exitCode = ExitCode.usage.code;
+      exitCode = ExitCode.software.code;
     } catch (e) {
-      console.message(e.toString(), style: MessageStyle.error);
+      console.writeMessage(e.toString(), style: MessageStyle.error);
       logger.trace(e.toString());
 
       exitCode = ExitCode.software.code;
     }
     logger.flush();
+    print('exitCode: $exitCode');
     return exitCode;
   }
 
@@ -160,9 +161,14 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       await super.runCommand(topLevelResults);
       return ExitCode.success.code;
     }
+
     logger.trace('~ run command ${topLevelResults.command?.name}', commandName: topLevelResults.command?.name);
     final exitCode = await super.runCommand(topLevelResults);
     return exitCode;
+  }
+
+  Future<void> safeRun(List<String> args) {
+    return flushThenExit(() => run(args));
   }
 
   @override
@@ -170,5 +176,12 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 }
 
 Future<dynamic> flushThenExit(Future<int> Function() status) {
-  return Future.wait<void>([stdout.close(), stderr.close()]).then<void>((_) async => exit(await status()));
+  return Future.wait<void>([
+    stdout.close(),
+    stderr.close(),
+  ]).then<void>((_) async {
+    final result = await status();
+    print('status: $result');
+    exit(result);
+  });
 }

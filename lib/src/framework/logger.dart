@@ -1,11 +1,23 @@
 part of 'framework.dart';
 
-enum LogLevel {
-  verbose,
-  info,
-  warning,
-  error,
-  fatal,
+enum LogLevel implements Comparable<LogLevel> {
+  verbose(0),
+  info(1),
+  warning(2),
+  error(3),
+  fatal(4);
+
+  final int severity;
+  const LogLevel(this.severity);
+
+  @override
+  int compareTo(LogLevel other) => severity.compareTo(other.severity);
+  bool operator <(LogLevel other) => severity < other.severity;
+  bool operator >(LogLevel other) => severity > other.severity;
+  bool operator <=(LogLevel other) => severity <= other.severity;
+  bool operator >=(LogLevel other) => severity >= other.severity;
+
+  bool allowed(LogLevel level) => level <= this;
 }
 
 /// A function that outputs a log message.
@@ -91,10 +103,12 @@ class Logger {
   LogLevel _level;
 
   /// The logging level for the logger.
-  // ignore: avoid_setters_without_getters
   set level(LogLevel level) {
     _level = level;
   }
+
+  // ignore: unnecessary_getters_setters
+  LogLevel get level => _level;
 
   /// A printer instance used to handle the log output.
   ///

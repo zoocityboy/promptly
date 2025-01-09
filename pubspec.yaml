@@ -21,14 +21,14 @@ environment:
 dependencies:
   args: ^2.6.0
   cli_completion: ^0.5.1
-  cli_table: ^1.0.2
   dart_console: ^4.1.0
-  get_it: ^8.0.3
+  intl: ^0.19.0
   io: ^1.0.5
   meta: ^1.15.0
   path: ^1.9.1
   tint: ^2.0.0
   version: ^3.0.2
+  wcwidth: ^0.0.4
 
 dev_dependencies:
   equatable: ^2.0.7

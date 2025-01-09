@@ -73,11 +73,13 @@ class CustomUsage {
       if (option.hide) continue;
       _writeRow(option, max);
     }
-    final x = AnsiTable(firstColumnWidth: titleColumnWidth);
+    final x = Table(
+      columns: [Column(alignment: ColumnAlignment.right, width: titleColumnWidth), const Column()],
+    );
     for (final row in rows) {
-      x.addRow(row.key, row.value);
+      x.addRow([row.key, row.value]);
     }
-    _buffer.write(x.toString());
+    _buffer.write(x.interact());
     return _buffer.toString();
   }
 

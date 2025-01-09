@@ -38,6 +38,7 @@ class Theme {
     required this.selectTheme,
     required this.linkTheme,
     required this.passwordTheme,
+    required this.selectTableTheme,
     required this.tableTheme,
     required this.loaderTheme,
     required this.headerTheme,
@@ -52,6 +53,7 @@ class Theme {
   final SelectTheme selectTheme;
   final LinkTheme linkTheme;
   final PasswordTheme passwordTheme;
+  final SelectTableTheme selectTableTheme;
   final TableTheme tableTheme;
   final LoaderTheme loaderTheme;
   final HeaderTheme headerTheme;
@@ -70,6 +72,7 @@ class Theme {
       selectTheme: SelectTheme.fromColors(colors),
       linkTheme: LinkTheme.fromColors(colors),
       passwordTheme: PasswordTheme.fromColors(colors),
+      selectTableTheme: SelectTableTheme.fromColors(colors),
       tableTheme: TableTheme.fromColors(colors),
       loaderTheme: LoaderTheme.fromColors(colors, useSymbols),
       headerTheme: HeaderTheme.fromColors(colors),
@@ -88,6 +91,7 @@ class Theme {
       selectTheme: SelectTheme.fromColors(colors),
       linkTheme: LinkTheme.fromColors(colors),
       passwordTheme: PasswordTheme.fromColors(colors),
+      selectTableTheme: SelectTableTheme.fromColors(colors),
       tableTheme: TableTheme.fromColors(colors),
       loaderTheme: LoaderTheme.fromColors(colors, useSymbols),
       headerTheme: HeaderTheme.fromColors(colors),
@@ -107,6 +111,7 @@ class Theme {
     SelectTheme? selectTheme,
     LinkTheme? linkTheme,
     PasswordTheme? passwordTheme,
+    SelectTableTheme? selectTableTheme,
     TableTheme? tableTheme,
     LoaderTheme? loaderTheme,
     HeaderTheme? headerTheme,
@@ -122,6 +127,7 @@ class Theme {
       selectTheme: selectTheme ?? this.selectTheme,
       linkTheme: linkTheme ?? this.linkTheme,
       passwordTheme: passwordTheme ?? this.passwordTheme,
+      selectTableTheme: selectTableTheme ?? this.selectTableTheme,
       tableTheme: tableTheme ?? this.tableTheme,
       loaderTheme: loaderTheme ?? this.loaderTheme,
       headerTheme: headerTheme ?? this.headerTheme,
@@ -141,9 +147,10 @@ class Theme {
     selectTheme: SelectTheme.fromDefault(),
     linkTheme: LinkTheme.fromDefault(),
     passwordTheme: PasswordTheme.fromDefault(),
-    tableTheme: TableTheme.fromDefault(),
+    selectTableTheme: SelectTableTheme.fromDefault(),
     loaderTheme: LoaderTheme.fromDefault(),
     headerTheme: HeaderTheme.fromDefault(),
+    tableTheme: TableTheme.fromDefault(),
   );
   static Theme astroTheme = _astro;
   static final _astro = Theme._(
@@ -162,9 +169,10 @@ class Theme {
     selectTheme: SelectTheme.fromDefault(),
     linkTheme: LinkTheme.fromDefault(),
     passwordTheme: PasswordTheme.fromDefault(),
-    tableTheme: TableTheme.fromDefault(),
+    selectTableTheme: SelectTableTheme.fromDefault(),
     loaderTheme: LoaderTheme.fromDefault(),
     headerTheme: HeaderTheme.fromDefault(),
+    tableTheme: TableTheme.fromDefault(),
   );
 }
 
@@ -178,9 +186,9 @@ extension ThemeStyledExtension on Theme {
     return buffer.toString();
   }
 
-  String prefixLine(String message) {
+  String prefixLine(String message, {StyleFunction? style}) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.vLine), message, spacing);
+    buffer.withPrefix((style ?? colors.prefix)(symbols.vLine), message, spacing);
     return buffer.toString();
   }
 

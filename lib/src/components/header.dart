@@ -1,13 +1,17 @@
+import 'package:promptly/promptly.dart';
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
+import 'package:wcwidth/wcwidth.dart';
 
-class Header extends StateComponent<String> {
+class Header extends TypeComponent<String> {
   Header({
     required this.title,
     String? prefix,
     this.message,
+    Context? context,
   })  : theme = Theme.defaultTheme,
+        _context = context ?? Context(),
         prefix = prefix ?? Theme.defaultTheme.symbols.header;
 
   Header.withTheme({
@@ -15,56 +19,49 @@ class Header extends StateComponent<String> {
     String? prefix,
     required this.title,
     this.message,
-  }) : prefix = prefix ?? theme.symbols.header;
+    Context? context,
+  })  : prefix = prefix ?? theme.symbols.header,
+        _context = context ?? Context();
+
   final Theme theme;
   final String title;
   final String prefix;
   final String? message;
+  final Context _context;
 
-  @override
-  _HeaderState createState() => _HeaderState();
-}
+  String get _formated {
+    final titleBuffer = StringBuffer(theme.prefixHeaderLine(''))
+      ..write(theme.colors.successBlock(' $title '))
+      ..write(' ');
+    final currentLng = titleBuffer.toString().wcwidth();
 
-class _HeaderState extends State<Header> {
-  String? value;
-  HeaderTheme get theme => component.theme.headerTheme;
-
-  String header(String title, {String? message}) {
-    final sb = StringBuffer();
-    if (component.theme.spacing > 0) {
-      // sb.write('${component.theme.spacing}');
-      sb.write(component.theme.colors.prefix(component.prefix.padRight(component.theme.spacing - 1)));
+    ///
+    final buffer = StringBuffer()..write(titleBuffer.toString());
+    final maxLength = _context.windowWidth - buffer.length;
+    final msg = (message ?? '').replaceAll('\n', '');
+    if (msg.length >= maxLength - currentLng) {
+      buffer.write('\n');
+      final lines = wrapText(msg, length: maxLength - currentLng, hangingIndent: 0).split('\n');
+      buffer.writeLine(console.theme.prefixLine(''));
+      for (final line in lines) {
+        buffer.writeln(console.theme.prefixLine(console.theme.colors.hint(line)));
+      }
+    } else {
+      buffer.write(console.theme.colors.hint(msg));
     }
 
-    sb.write(theme.title(' $title '));
-    if (message != null) {
-      sb.write(' ');
-      sb.write(theme.message(message));
-    }
-    sb.write('\n');
-    sb.verticalLine();
-    return sb.toString();
+    buffer
+      ..newLine()
+      ..write(console.theme.prefixLine(''))
+      ..newLine();
+    return buffer.toString();
   }
 
   @override
-  void dispose() {
-    value ??= header(
-      component.title,
-      message: component.message,
-    );
-    context.write(value!);
-    super.dispose();
+  void render({Context? context}) {
+    (context ?? _context).write(_formated);
   }
 
   @override
-  String interact() {
-    final val = header(
-      component.title,
-      message: component.message,
-    );
-    setState(() {
-      value = val;
-    });
-    return value!;
-  }
+  String interact() => _formated;
 }

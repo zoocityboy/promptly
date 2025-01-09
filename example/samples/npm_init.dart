@@ -2,11 +2,12 @@ import 'dart:convert' show JsonEncoder;
 import 'dart:io' show exit, stderr, stdout;
 
 import 'package:promptly/promptly.dart';
+import 'package:promptly/src/console.dart';
 
 void main() {
   header('npm', message: 'This utility will walk you through creating a package.json file.');
 
-  console.message('Press ^C at any time to quit.');
+  message('Press ^C at any time to quit.');
 
   final name = prompt(
     'package name',

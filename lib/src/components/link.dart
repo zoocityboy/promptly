@@ -5,20 +5,24 @@ class Link extends TypeComponent<String> {
   Link({
     required this.uri,
     this.message,
-  }) : theme = Theme.defaultTheme;
+    Context? context,
+  })  : theme = Theme.defaultTheme,
+        _context = context ?? Context();
 
   Link.withTheme({
     required this.theme,
     required this.uri,
     this.message,
-  });
+    Context? context,
+  }) : _context = context ?? Context();
 
   /// The theme for the component.
   final Theme theme;
   final Uri uri;
   final String? message;
+  final Context _context;
 
-  String link({required Uri uri, String? message}) {
+  String get _formatted {
     const leading = '\x1B]8;;';
     const trailing = '\x1B\\';
 
@@ -27,9 +31,9 @@ class Link extends TypeComponent<String> {
 
   @override
   void render({Context? context}) {
-    (context ?? Context()).writeln(link(uri: uri, message: message));
+    (context ?? _context).writeln(_formatted);
   }
 
   @override
-  String interact() => link(uri: uri, message: message);
+  String interact() => _formatted;
 }

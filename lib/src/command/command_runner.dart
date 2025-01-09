@@ -8,14 +8,13 @@ import 'dart:math' as math;
 import 'package:args/args.dart' as args;
 import 'package:args/command_runner.dart' as args_command_runner;
 import 'package:cli_completion/cli_completion.dart' as completion;
-import 'package:get_it/get_it.dart';
 import 'package:io/io.dart';
+import 'package:meta/meta.dart';
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/command/global.dart';
-import 'package:promptly/src/components/ansi_table.dart';
+import 'package:promptly/src/components/table.dart';
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
-import 'package:promptly/src/utils/prompt.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
 
 export 'package:args/src/usage_exception.dart';
@@ -80,15 +79,24 @@ String getStyledCommandUsage(
         ..write(console.theme.prefixSectionLine(console.theme.colors.sectionBlock(' $category ')))
         ..newLine();
     }
-    final ansiTable = AnsiTable(firstColumnWidth: length);
+    final ansiTable = Table(
+      columns: [
+        Column(
+          alignment: ColumnAlignment.right,
+          width: length,
+          style: (p0) => console.theme.colors.text(p0),
+        ),
+        const Column(),
+      ],
+    );
     for (final command in commandsByCategory[category]!) {
       final lines = wrapTextAsLines(command.summary, start: columnStart, length: 80);
-      ansiTable.addRow(command.name, lines.first);
+      ansiTable.addRow([command.name, lines.first]);
       for (final line in lines.skip(1)) {
-        ansiTable.addRow('', line);
+        ansiTable.addRow(['', line]);
       }
     }
-    for (final line in ansiTable.toString().split('\n')) {
+    for (final line in ansiTable.interact().split('\n')) {
       buffer
         ..write(console.theme.prefixLine(''))
         ..write(line)
