@@ -5,7 +5,13 @@ import 'package:promptly/promptly.dart';
 import 'package:promptly/src/theme/theme.dart';
 
 class MyRunner extends CommandRunner {
-  MyRunner(super.executableName, super.description, {super.version, super.theme, super.logLevel}) {
+  MyRunner(
+    super.executableName,
+    super.description, {
+    super.version,
+    super.theme,
+    super.logLevel,
+  }) {
     addCommand(TestCommand());
     addCommand(SecondCommand());
     addCommand(ThirdCommand());
@@ -66,7 +72,11 @@ class SecondCommand extends Command<int> {
               'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
           // category: 'Studio',
         ) {
-    argParser.addOption('customName', help: 'Name of the person', mandatory: true);
+    argParser.addOption(
+      'customName',
+      help: 'Name of the person',
+      mandatory: true,
+    );
     argParser.addOption('age', help: 'Age of the person');
   }
   @override

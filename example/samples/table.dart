@@ -34,7 +34,7 @@ const earlyPresidents = [
 ];
 
 void main() {
-  final x = table(
+  final x = selectTable(
     'Select a row:',
     headers: ['Number', 'Presidency', 'President', 'Party'],
     rows: earlyPresidents,

@@ -5,9 +5,54 @@ import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/utils.dart';
 
+/// Represents the state of a loader.
+/// 
+/// The loader can be in one of the following states:
+/// - `inProgress`: The loading process is currently ongoing.
+/// - `success`: The loading process has completed successfully.
+/// - `failed`: The loading process has failed.
 enum LoaderStateType { inProgress, success, failed }
 
-/// A spinner or a loading indicator component.
+/// A [Loader] component that displays a loading indicator with customizable
+/// icons for success and failure states.
+///
+/// The [Loader] can be constructed with either the default theme or a
+/// supplied theme. It also supports an optional clear state.
+///
+/// Example usage:
+/// ```dart
+/// Loader(
+///   prompt: 'Loading...',
+///   icon: 'success_icon',
+///   failedIcon: 'error_icon',
+///   clear: true,
+/// );
+/// ```
+///
+/// Example usage with a custom theme:
+/// ```dart
+/// Loader.withTheme(
+///   prompt: 'Loading...',
+///   icon: 'success_icon',
+///   failedIcon: 'error_icon',
+///   theme: customTheme,
+///   clear: true,
+/// );
+/// ```
+///
+/// Properties:
+/// - `prompt`: The prompt message to be displayed.
+/// - `icon`: The icon to be shown after the loading is successful.
+/// - `failedIcon`: The icon to be shown after the loading has failed.
+/// - `theme`: The theme of the component.
+/// - `clear`: A boolean indicating whether to clear the state.
+///
+/// Methods:
+/// - `createState`: Creates the state for the [Loader] component.
+/// - `disposeState`: Disposes the state of the [Loader] component.
+/// - `pipeState`: Pipes the state to a new context if available.
+/// - `setContext`: Sets the context to a new one, used internally by [MultiSpinner].
+
 class Loader extends StateComponent<LoaderState> {
   /// Construts a [Loader] component with the default theme.
   Loader({
@@ -68,7 +113,11 @@ class Loader extends StateComponent<LoaderState> {
 /// Handles a [Loader]'s state.
 class LoaderState {
   /// Constructs a state to manage a [Loader].
-  LoaderState({required this.success, required this.failed, required this.update});
+  LoaderState({
+    required this.success,
+    required this.failed,
+    required this.update,
+  });
 
   void Function() Function(String? message) update;
 
@@ -111,9 +160,13 @@ class _LoaderState extends State<Loader> {
   void render() {
     final line = StringBuffer();
     final icon = switch (stateType) {
-      LoaderStateType.inProgress => theme.processingStyle(theme.spinners[index].padRight(component.theme.spacing)),
-      LoaderStateType.success => theme.successStyle(component.icon.padRight(component.theme.spacing)),
-      LoaderStateType.failed => theme.errorStyle(component.failedIcon.padRight(component.theme.spacing)),
+      LoaderStateType.inProgress => theme.processingStyle(
+          theme.spinners[index].padRight(component.theme.spacing),
+        ),
+      LoaderStateType.success =>
+        theme.successStyle(component.icon.padRight(component.theme.spacing)),
+      LoaderStateType.failed => theme
+          .errorStyle(component.failedIcon.padRight(component.theme.spacing)),
     };
 
     final formatedMessage = switch (stateType) {

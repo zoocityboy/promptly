@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/console.dart';
 
 void main() {
-  header('Examples', message: 'This is a list of all the examples available in this package.');
+  header(
+    'Examples',
+    message: 'This is a list of all the examples available in this package.',
+  );
   line();
   verbose(
     [
@@ -19,7 +21,11 @@ void main() {
   line();
   info('Run in folder `example` ${Directory.current.path}');
   line();
-  final files = Directory.current.listSync().whereType<File>().where((e) => e.path.endsWith('.dart')).toList();
+  final files = Directory.current
+      .listSync()
+      .whereType<File>()
+      .where((e) => e.path.endsWith('.dart'))
+      .toList();
   for (final file in files) {
     final name = path.basename(file.path).replaceAll('.dart', '');
 

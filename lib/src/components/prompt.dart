@@ -92,7 +92,9 @@ class _PromptState extends State<Prompt> {
         ),
       );
       final input = context.readLine(initialText: component.initialText);
-      final line = input.isEmpty && component.defaultValue != null ? component.defaultValue! : input;
+      final line = input.isEmpty && component.defaultValue != null
+          ? component.defaultValue!
+          : input;
       final validator = component.validator;
 
       if (validator != null) {

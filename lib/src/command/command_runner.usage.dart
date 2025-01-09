@@ -17,8 +17,38 @@ part of 'command_runner.dart';
 /// `null` there will not be any wrapping.
 String generateUsage(List optionsAndSeparators, {int? lineLength}) =>
     _createUsage(optionsAndSeparators, lineLength: lineLength).generate();
+
+/// Calculates the usage based on the provided options and separators.
+///
+/// This function takes a list of options and separators, processes them,
+/// and returns the width of the title column in the usage output.
+///
+/// - Parameter optionsAndSeparators: A list containing options and separators.
+/// - Returns: An integer representing the width of the title column.
 int calculateUsage(List optionsAndSeparators) => _createUsage(optionsAndSeparators).titleColumnWidth;
+
+/// Creates a [CustomUsage] instance with the provided options and separators.
+///
+/// The [optionsAndSeparators] parameter is a list of options and separators
+/// that will be used to create the [CustomUsage] instance.
+///
+/// The optional [lineLength] parameter specifies the maximum length of a line
+/// in the usage output. If not provided, the default line length will be used.
+///
+/// Returns a [CustomUsage] instance configured with the provided options and
+/// separators.
+///
+/// Example:
+/// ```dart
+/// var usage = _createUsage([option1, option2], lineLength: 80);
+/// ```
 CustomUsage _createUsage(List optionsAndSeparators, {int? lineLength}) => CustomUsage(optionsAndSeparators, lineLength);
+
+/// A class that provides custom usage information for command-line applications.
+///
+/// This class can be used to define and display custom usage messages for
+/// command-line applications, helping users understand how to use the commands
+/// and options available in the application.
 
 class CustomUsage {
   /// A list of the [Option]s intermingled with [String] separators.
@@ -80,7 +110,9 @@ class CustomUsage {
 
   void _writeRow(args.Option option, int max) {
     // Write the abbreviation and long option.
-    final command = StringBuffer('${_abbreviation(option)}${_longOption(option)}${_mandatoryOption(option)}');
+    final command = StringBuffer(
+      '${_abbreviation(option)}${_longOption(option)}${_mandatoryOption(option)}',
+    );
     final help = StringBuffer();
 
     if (option.help != null) {

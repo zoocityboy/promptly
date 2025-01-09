@@ -55,26 +55,37 @@ String getStyledCommandUsage(
   for (final name in names) {
     final category = commands[name]!.category;
     final cmd = commands[name];
-    if (cmd != null) commandsByCategory.putIfAbsent(category, () => []).add(cmd);
+    if (cmd != null) {
+      commandsByCategory.putIfAbsent(category, () => []).add(cmd);
+    }
   }
   final categories = commandsByCategory.keys.toList();
   final hasCategories = categories.every((category) => category.isNotEmpty);
 
-  final length = math.max(names.map((name) => name.length).reduce(math.max), helpUsageLength);
+  final length = math.max(
+    names.map((name) => name.length).reduce(math.max),
+    helpUsageLength,
+  );
   final title = '${isSubcommand ? "Subc" : "C"}ommands';
   final buffer = StringBuffer();
   buffer.verticalLine();
 
   if (!hasCategories) {
     buffer
-      ..write(console.theme.prefixSectionLine(console.theme.colors.text(' $title ').inverse()))
+      ..write(
+        console.theme.prefixSectionLine(console.theme.colors.text(' $title ').inverse()),
+      )
       ..newLine();
   }
   final columnStart = length + 4;
   for (final category in categories) {
     if (category.isNotEmpty) {
       buffer
-        ..write(console.theme.prefixSectionLine(console.theme.colors.text(' $category ').inverse()))
+        ..write(
+          console.theme.prefixSectionLine(
+            console.theme.colors.text(' $category ').inverse(),
+          ),
+        )
         ..newLine();
     }
     final ansiTable = Table(
@@ -106,13 +117,24 @@ String getStyledCommandUsage(
   return buffer.toString();
 }
 
-extension ArgResultsExtension on args.ArgResults {}
-
+/// Extension on `args.ArgParser` to provide custom usage information.
+///
+/// This extension adds the following properties:
+///
+/// - `customUsage`: Returns a custom usage string generated from the parser's options.
+/// - `usg`: Returns a `CustomUsage` object created from the parser's options.
+/// - `getPrefixLength`: Returns the calculated usage prefix length from the parser's options.
 extension ArgParserExtension on args.ArgParser {
   String get customUsage {
-    return generateUsage(options.entries.map((e) => e.value).toList(), lineLength: usageLineLength);
+    return generateUsage(
+      options.entries.map((e) => e.value).toList(),
+      lineLength: usageLineLength,
+    );
   }
 
-  CustomUsage get usg => _createUsage(options.entries.map((e) => e.value).toList(), lineLength: usageLineLength);
+  CustomUsage get usg => _createUsage(
+        options.entries.map((e) => e.value).toList(),
+        lineLength: usageLineLength,
+      );
   int get getPrefixLength => calculateUsage(options.entries.map((e) => e.value).toList());
 }

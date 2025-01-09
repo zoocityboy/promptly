@@ -48,7 +48,11 @@ class SecondCommand extends argscr.Command<int> {
   @override
   String get description => 'Second command';
   SecondCommand() {
-    argParser.addOption('customName', help: 'Name of the person', mandatory: true);
+    argParser.addOption(
+      'customName',
+      help: 'Name of the person',
+      mandatory: true,
+    );
     argParser.addOption('age', help: 'Age of the person');
   }
   @override

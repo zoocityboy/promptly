@@ -1,5 +1,4 @@
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/console.dart';
 
 void main() {
   header('Select', message: 'Select your favorite programming language');

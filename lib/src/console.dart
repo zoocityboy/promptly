@@ -135,19 +135,28 @@ class Console {
       _ctx.write(line);
       _ctx.write('\n');
     } else {
-      final line = theme.spacing > 0 ? theme.prefixLine(_theme.symbols.vLine) : '';
+      final line =
+          theme.spacing > 0 ? theme.prefixLine(_theme.symbols.vLine) : '';
       _ctx.write(line);
       _ctx.write(_theme.promptTheme.messageStyle(message));
       _ctx.write('\n');
     }
   }
 
-  Link _link(LinkData data) => Link.withTheme(theme: theme, uri: data.uri, message: data.message, context: _ctx);
-  String linkLine(String url, {String? label}) => _link(LinkData(uri: Uri.parse(url), message: label)).interact();
-  void writeLink(String url, {String? label}) => _link(LinkData(uri: Uri.parse(url), message: label)).render();
+  Link _link(LinkData data) => Link.withTheme(
+        theme: theme,
+        uri: data.uri,
+        message: data.message,
+        context: _ctx,
+      );
+  String linkLine(String url, {String? label}) =>
+      _link(LinkData(uri: Uri.parse(url), message: label)).interact();
+  void writeLink(String url, {String? label}) =>
+      _link(LinkData(uri: Uri.parse(url), message: label)).render();
 
   /// Writes a message to the console with the specified style.
-  Message _message(String message, {String? prefix, MessageStyle? style}) => Message.withTheme(
+  Message _message(String message, {String? prefix, MessageStyle? style}) =>
+      Message.withTheme(
         text: message,
         prefix: prefix,
         theme: _theme,
@@ -168,7 +177,8 @@ class Console {
   /// ```dart
   /// start('Welcome', message: 'Hello, user!');
   /// ```
-  Header _header(String title, {String? message, String? prefix}) => Header.withTheme(
+  Header _header(String title, {String? message, String? prefix}) =>
+      Header.withTheme(
         theme: _theme,
         title: title,
         message: message,
@@ -222,8 +232,12 @@ class Console {
     bool? defaultValue,
     bool enterForConfirm = false,
   }) =>
-      Confirm.withTheme(theme: _theme, prompt: prompt, defaultValue: defaultValue, enterForConfirm: enterForConfirm)
-          .interact();
+      Confirm.withTheme(
+        theme: _theme,
+        prompt: prompt,
+        defaultValue: defaultValue,
+        enterForConfirm: enterForConfirm,
+      ).interact();
 
   /// Constructs a [SelectOne] component with the supplied_theme.
   T selectOne<T>(
@@ -252,7 +266,9 @@ class Console {
       theme: _theme,
       prompt: prompt,
       choices: choices.map((e) => display?.call(e) ?? e.toString()).toList(),
-      defaults: defaultValues != null ? choices.map((e) => defaultValues.contains(e)).toList() : null,
+      defaults: defaultValues != null
+          ? choices.map((e) => defaultValues.contains(e)).toList()
+          : null,
     ).interact();
     return result.map((index) => choices[index]).toList();
   }
@@ -309,7 +325,8 @@ class Console {
         prompt: prompt,
         theme: _theme,
         icon: _theme.loaderTheme.successStyle(_theme.loaderTheme.successPrefix),
-        failedIcon: _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
+        failedIcon:
+            _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
         clear: clear,
       ).interact();
 

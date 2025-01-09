@@ -69,7 +69,7 @@ class Theme {
       confirmTheme: ConfirmTheme.fromColors(colors, useSymbols),
       promptTheme: PromptTheme.fromColors(colors, useSymbols),
       progressTheme: ProgressTheme.fromColors(colors),
-      selectTheme: SelectTheme.fromColors(colors),
+      selectTheme: SelectTheme.fromColors(colors, useSymbols),
       linkTheme: LinkTheme.fromColors(colors),
       passwordTheme: PasswordTheme.fromColors(colors),
       selectTableTheme: SelectTableTheme.fromColors(colors),
@@ -88,7 +88,7 @@ class Theme {
       confirmTheme: ConfirmTheme.fromColors(colors, useSymbols),
       promptTheme: PromptTheme.fromColors(colors, useSymbols),
       progressTheme: ProgressTheme.fromColors(colors),
-      selectTheme: SelectTheme.fromColors(colors),
+      selectTheme: SelectTheme.fromColors(colors, useSymbols),
       linkTheme: LinkTheme.fromColors(colors),
       passwordTheme: PasswordTheme.fromColors(colors),
       selectTableTheme: SelectTableTheme.fromColors(colors),
@@ -198,25 +198,33 @@ extension ThemeStyledExtension on Theme {
 
   String prefixSectionLine(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.vLine), message, spacing: spacing - 1);
+    buffer.withPrefix(
+      colors.prefix(symbols.vLine),
+      message,
+      spacing: spacing - 1,
+    );
     return buffer.toString();
   }
 
   String prefixHeaderLine(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.header), message, spacing: spacing - 1);
+    buffer.withPrefix(
+      colors.prefix(symbols.header),
+      message,
+      spacing: spacing - 1,
+    );
     return buffer.toString();
   }
 
   String prefixError(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.errorStep), message);
+    buffer.withPrefix(colors.prefix(symbols.error), message);
     return buffer.toString();
   }
 
   String prefixWarning(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.warningStep), message);
+    buffer.withPrefix(colors.prefix(symbols.dotStep), message);
     return buffer.toString();
   }
 

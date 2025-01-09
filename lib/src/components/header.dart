@@ -4,6 +4,35 @@ import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
 import 'package:wcwidth/wcwidth.dart';
 
+/// A `Header` component that extends `TypeComponent<String>`.
+///
+/// This component is used to render a header with a title, optional prefix,
+/// and an optional message. It also supports theming and context management.
+///
+/// The `Header` class has two constructors:
+///
+/// - `Header`: Requires a `title` and optionally accepts a `prefix`, `message`,
+///   and `context`. It uses the default theme if no theme is provided.
+/// - `Header.withTheme`: Requires a `theme` and `title`, and optionally accepts
+///   a `prefix`, `message`, and `context`.
+///
+/// Properties:
+///
+/// - `theme`: The theme used for styling the header.
+/// - `title`: The title of the header.
+/// - `prefix`: The prefix symbol for the header.
+/// - `message`: An optional message to be displayed in the header.
+/// - `_context`: The context in which the header is rendered.
+///
+/// Methods:
+///
+/// - `render`: Renders the header using the provided or default context.
+/// - `interact`: Returns the formatted header as a string.
+///
+/// Private getters:
+///
+/// - `_formated`: Returns the formatted header string with the title, message,
+///   and appropriate styling based on the theme and context.
 class Header extends TypeComponent<String> {
   Header({
     required this.title,

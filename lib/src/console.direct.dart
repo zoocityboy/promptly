@@ -22,14 +22,27 @@ void message(String message, {String? prefix, MessageStyle? style}) => Console.i
       style: style,
     );
 
+/// Writes a verbose message to the console.
+///
+/// This function sends a message to the console with a verbose style.
+/// It can optionally include a prefix before the message.
+///
+/// - Parameters:
+///   - message: The message to be written to the console.
+///   - prefix: An optional string to be prefixed to the message.
+
 void verbose(String message, {String? prefix}) =>
     Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.verbose);
+
 void info(String message, {String? prefix}) =>
     Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.info);
+
 void warning(String message, {String? prefix}) =>
     Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.warning);
+
 void error(String message, {String? prefix}) =>
     Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.error);
+
 void success(String message, {String? prefix}) =>
     Console.instance.writeMessage(message, prefix: prefix, style: MessageStyle.success);
 
@@ -64,7 +77,12 @@ String prompt(
   String initialText = '',
   String? defaultValue,
 }) =>
-    Console.instance.prompt(prompt, validator: validator, initialText: initialText, defaultValue: defaultValue);
+    Console.instance.prompt(
+      prompt,
+      validator: validator,
+      initialText: initialText,
+      defaultValue: defaultValue,
+    );
 
 /// Prompts the user to enter a password securely.
 ///
@@ -81,8 +99,12 @@ String password(
   String? confirmPrompt,
   String? confirmError,
 }) =>
-    Console.instance
-        .password(prompt, confirmation: confirmation, confirmPrompt: confirmPrompt, confirmError: confirmError);
+    Console.instance.password(
+      prompt,
+      confirmation: confirmation,
+      confirmPrompt: confirmPrompt,
+      confirmError: confirmError,
+    );
 
 /// Prompts the user for a confirmation.
 ///
@@ -102,7 +124,11 @@ bool confirm(
   bool? defaultValue,
   bool enterForConfirm = false,
 }) =>
-    Console.instance.confirm(prompt, defaultValue: defaultValue, enterForConfirm: enterForConfirm);
+    Console.instance.confirm(
+      prompt,
+      defaultValue: defaultValue,
+      enterForConfirm: enterForConfirm,
+    );
 
 /// Prompts the user to select an option from a list of provided options.
 ///
@@ -128,7 +154,12 @@ T selectOne<T>(
   T? defaultValue,
   String Function(T)? display,
 }) =>
-    Console.instance.selectOne(prompt, choices: choices, defaultValue: defaultValue, display: display);
+    Console.instance.selectOne(
+      prompt,
+      choices: choices,
+      defaultValue: defaultValue,
+      display: display,
+    );
 
 /// Prompts the user with a multi-select question and returns the selected choices.
 ///
@@ -154,7 +185,12 @@ List<T> selectAny<T>(
   List<T>? defaultValues,
   String Function(T)? display,
 }) =>
-    Console.instance.selectAny(prompt, choices: choices, defaultValues: defaultValues, display: display);
+    Console.instance.selectAny(
+      prompt,
+      choices: choices,
+      defaultValues: defaultValues,
+      display: display,
+    );
 
 /// Creates a table row with the specified properties.
 ///
@@ -164,7 +200,7 @@ List<T> selectAny<T>(
 ///
 /// Returns:
 ///   A `TableRow` widget with the specified properties.
-TableRow table(
+TableRow selectTable(
   String prompt, {
   required List<String> headers,
   required List<TableRow> rows,
@@ -213,7 +249,12 @@ LoaderState processing(
   String? failedMessage,
   bool clear = false,
 }) =>
-    Console.instance.processing(prompt, successMessage: successMessage, failedMessage: failedMessage, clear: clear);
+    Console.instance.processing(
+      prompt,
+      successMessage: successMessage,
+      failedMessage: failedMessage,
+      clear: clear,
+    );
 
 void multiProcessing(String prompt, List<Loader> tasks) => Console.instance.multiProcessing(prompt, tasks);
 
@@ -238,8 +279,13 @@ Future<void> task(
   String? failedMessage,
   bool clear = false,
 }) =>
-    Console.instance
-        .task(prompt, task: task, successMessage: successMessage, failedMessage: failedMessage, clear: clear);
+    Console.instance.task(
+      prompt,
+      task: task,
+      successMessage: successMessage,
+      failedMessage: failedMessage,
+      clear: clear,
+    );
 
 /// Inserts a spacer line in the console output.
 ///
@@ -291,7 +337,36 @@ int finishFailed(String title, {String? message, int? exitCode}) => Console.inst
       exitCode: exitCode,
     );
 
-Link link(String url, {String? label}) => Console.instance._link(LinkData(uri: Uri.parse(url), message: label));
+/// Creates a hyperlink in the console output.
+///
+/// The [url] parameter specifies the URL of the hyperlink.
+/// The optional [label] parameter specifies the text to display for the hyperlink.
+/// If [label] is not provided, the URL itself will be used as the display text.
+///
+/// Example:
+/// ```dart
+/// link('https://example.com', label: 'Example');
+/// ```
+///
+/// Returns a [Link] object representing the hyperlink.
+String link(String url, {String? label}) => Console.instance.linkLine(url, label: label);
+void writeLink(String url, {String? label}) => Console.instance.writeLink(url, label: label);
 
 void write(String message) => Console.instance.write(message);
+
+/// Writes a message to the console followed by a newline.
+///
+/// This function is a shorthand for writing a message to the console
+/// with a newline character at the end. It uses the singleton instance
+/// of the `Console` class to perform the write operation.
+///
+/// Example:
+/// ```dart
+/// writeln('Hello, World!');
+/// ```
+///
+/// The above example will print 'Hello, World!' followed by a newline
+/// to the console.
+///
+/// - Parameter message: The message to be written to the console.
 void writeln(String message) => Console.instance.writeln(message);

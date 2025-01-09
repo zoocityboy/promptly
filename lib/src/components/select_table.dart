@@ -5,7 +5,43 @@ import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/prompt.dart';
 
+/// A type definition for a table row, which is represented as a list of objects.
+/// 
+/// Each element in the list corresponds to a cell in the table row.
 typedef TableRow = List<Object>;
+/// A widget that displays a table with selectable rows.
+///
+/// The [SelectTable] widget takes a prompt, headers, and rows to display
+/// a table. It also allows for an optional theme to be specified.
+///
+/// There are two constructors available:
+/// - [SelectTable]: Uses the default theme.
+/// - [SelectTable.withTheme]: Allows specifying a custom theme.
+///
+/// Example usage:
+/// ```dart
+/// SelectTable(
+///   'Select an option:',
+///   headers: ['Header1', 'Header2'],
+///   rows: [TableRow(children: [Text('Row1'), Text('Row2')])],
+/// );
+/// ```
+///
+/// Example usage with custom theme:
+/// ```dart
+/// SelectTable.withTheme(
+///   'Select an option:',
+///   headers: ['Header1', 'Header2'],
+///   rows: [TableRow(children: [Text('Row1'), Text('Row2')])],
+///   theme: customTheme,
+/// );
+/// ```
+///
+/// Properties:
+/// - [theme]: The theme to be used for the table. Defaults to [Theme.defaultTheme].
+/// - [headers]: A list of strings representing the headers of the table.
+/// - [rows]: A list of [TableRow] representing the rows of the table.
+/// - [prompt]: A string prompt to be displayed above the table.
 
 class SelectTable extends StateComponent<int> {
   SelectTable(
@@ -94,8 +130,12 @@ class _SelectTableState extends State<SelectTable> {
 
     for (var i = 0; i < component.rows.length; i++) {
       final data = i == index
-          ? component.rows[i].map((e) => theme.activeItemStyle(e.toString())).toList()
-          : component.rows[i].map((e) => theme.inactiveItemStyle(e.toString())).toList();
+          ? component.rows[i]
+              .map((e) => theme.activeItemStyle(e.toString()))
+              .toList()
+          : component.rows[i]
+              .map((e) => theme.inactiveItemStyle(e.toString()))
+              .toList();
       table.insertRow(data);
     }
     table.borderStyle = dc.BorderStyle.square;

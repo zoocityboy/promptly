@@ -1,5 +1,11 @@
 part of 'command_runner.dart';
 
+/// An abstract class that extends the `Command` class  from `args` package.
+///
+/// This class serves as a base for creating custom command classes that can
+/// be used with the `args_command_runner` package.
+///
+/// Type parameter [T] specifies the type of the result produced by the command.
 abstract class Command<T> extends args_command_runner.Command<T> {
   Command(
     this._name,
@@ -7,12 +13,9 @@ abstract class Command<T> extends args_command_runner.Command<T> {
     List<String> aliases = const [],
     bool? hidden,
     String? category,
-    bool showHeader = true,
   })  : _aliases = aliases,
         _hidden = hidden,
-        _category = category,
-        _showHeader = showHeader;
-  final bool _showHeader;
+        _category = category;
   final String _name;
   void trace(String message) => logger.trace(message, commandName: name);
   @override
@@ -102,7 +105,11 @@ abstract class Command<T> extends args_command_runner.Command<T> {
 
     if (usegeLines.isNotEmpty) {
       buffer
-        ..write(console.theme.prefixSectionLine(console.theme.colors.text(' Flags ').inverse()))
+        ..write(
+          console.theme.prefixSectionLine(
+            console.theme.colors.text(' Flags ').inverse(),
+          ),
+        )
         ..newLine();
     }
     for (final line in usegeLines) {
@@ -132,6 +139,19 @@ abstract class Command<T> extends args_command_runner.Command<T> {
     super.addSubcommand(command);
   }
 }
+
+/// Extension on the `Command` class to provide convenient methods for accessing
+/// argument results.
+///
+/// This extension includes methods to safely retrieve options, flags, and other
+/// argument results from the command-line arguments passed to a `Command`.
+///
+/// Methods:
+/// - `option(String name)`: Retrieves the value of the specified option.
+/// - `options(String name)`: Returns a list of options for the given name.
+/// - `flag(String name)`: Retrieves the boolean value of a flag.
+/// - `rest()`: Returns the remaining command-line arguments that were not parsed as options or flags.
+/// - `wasParsed(String name)`: Checks if the argument with the given name was parsed.
 
 extension CommandX on Command {
   args.ArgResults _safeArgResults() {

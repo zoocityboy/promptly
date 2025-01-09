@@ -32,6 +32,7 @@ class ExampleCommand extends Command<int> {
     line();
     line();
 
-    return finishSuccesfuly('Done', message: 'This is the end of the example command.');
+    return finishSuccesfuly('Done',
+        message: 'This is the end of the example command.');
   }
 }

@@ -4,6 +4,35 @@ import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/prompt.dart';
 
 /// A confirm component.
+///
+/// This component displays a prompt to the user and expects a boolean response.
+/// It can be customized with a theme, an initial value, and an option to wait
+/// for the Enter key after the user has responded.
+///
+/// Example usage:
+/// ```dart
+/// Confirm(
+///   prompt: 'Are you sure you want to proceed?',
+///   defaultValue: true,
+///   enterForConfirm: true,
+/// );
+/// ```
+///
+/// Example usage with a custom theme:
+/// ```dart
+/// Confirm.withTheme(
+///   theme: customTheme,
+///   prompt: 'Are you sure you want to proceed?',
+///   defaultValue: false,
+///   enterForConfirm: false,
+/// );
+/// ```
+///
+/// Properties:
+/// - [theme]: The theme of the component.
+/// - [prompt]: The prompt to be shown together with the user's input.
+/// - [defaultValue]: The value to be used as an initial value.
+/// - [enterForConfirm]: Determines whether to wait for the Enter key after the user has responded.
 class Confirm extends StateComponent<bool> {
   /// Constructs a [Confirm] component with the default theme.
   Confirm({

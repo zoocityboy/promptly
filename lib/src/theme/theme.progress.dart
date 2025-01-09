@@ -1,4 +1,32 @@
 part of 'theme.dart';
+/// A class that defines the theme for a progress indicator.
+///
+/// The [ProgressTheme] class allows customization of the appearance of a progress
+/// indicator by specifying various styles and characters for different parts of the
+/// indicator, such as the prefix, suffix, empty, filled, and leading segments.
+///
+/// The class provides two factory constructors:
+/// - [ProgressTheme.fromDefault]: Creates a [ProgressTheme] using the default colors.
+/// - [ProgressTheme.fromColors]: Creates a [ProgressTheme] using the specified [ThemeColors].
+///
+/// The class also provides a [copyWith] method to create a copy of the current theme
+/// with some properties replaced by new values.
+///
+/// Properties:
+/// - [prefix]: The prefix character(s) for the progress indicator.
+/// - [suffix]: The suffix character(s) for the progress indicator.
+/// - [empty]: The character(s) representing the empty part of the progress indicator.
+/// - [filled]: The character(s) representing the filled part of the progress indicator.
+/// - [leading]: The character(s) representing the leading part of the progress indicator.
+/// - [emptyStyle]: A function to style the empty part of the progress indicator.
+/// - [filledStyle]: A function to style the filled part of the progress indicator.
+/// - [leadingStyle]: A function to style the leading part of the progress indicator.
+///
+/// Example usage:
+/// ```dart
+/// final theme = ProgressTheme.fromDefault();
+/// final customTheme = theme.copyWith(prefix: '(', suffix: ')');
+/// ```
 
 class ProgressTheme {
   final String prefix;

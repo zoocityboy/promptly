@@ -11,7 +11,10 @@ topics:
   - components
   - dart
   - cli
-
+platforms:
+  linux:
+  macos:
+  windows:
 screenshots:
   - description: A prompt with a single option.
     path: assets/promptly.png

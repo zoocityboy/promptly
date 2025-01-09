@@ -62,7 +62,11 @@ class _SelectAnyState extends State<SelectAny> {
         );
       } else {
         selection.addAll(
-          component.defaults!.asMap().entries.where((entry) => entry.value).map((entry) => entry.key),
+          component.defaults!
+              .asMap()
+              .entries
+              .where((entry) => entry.value)
+              .map((entry) => entry.key),
         );
       }
     }
@@ -78,7 +82,10 @@ class _SelectAnyState extends State<SelectAny> {
 
   @override
   void dispose() {
-    final values = selection.map((x) => component.choices[x]).map(theme.inactiveStyle).join('☃︎ ');
+    final values = selection
+        .map((x) => component.choices[x])
+        .map(theme.inactiveStyle)
+        .join('☃︎ ');
 
     context.writeln(
       promptSuccess(

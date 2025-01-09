@@ -53,7 +53,8 @@ class _SortState extends State<Sort> {
       throw Exception("Options can't be empty");
     }
     index = 0;
-    options = component.options.asMap().entries.map((entry) => entry.key).toList();
+    options =
+        component.options.asMap().entries.map((entry) => entry.key).toList();
 
     context.writeln(
       promptInput(
@@ -70,7 +71,9 @@ class _SortState extends State<Sort> {
       promptSuccess(
         component.prompt,
         theme: component.theme,
-        value: component.showOutput ? options.map((i) => component.options[i]).join(', ') : '',
+        value: component.showOutput
+            ? options.map((i) => component.options[i]).join(', ')
+            : '',
       ),
     );
     context.showCursor();
