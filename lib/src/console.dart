@@ -190,6 +190,24 @@ class Console {
         prefix: prefix,
       ).render();
 
+  Section _section(String title, {String? message, String? prefix}) => Section.withTheme(
+        theme: _theme,
+        title: title,
+        message: message,
+        prefix: prefix,
+        context: _ctx,
+      );
+  String sectionLine(String title, {String? message, String? prefix}) => _section(
+        title,
+        message: message,
+        prefix: prefix,
+      ).interact();
+  void writeSection(String title, {String? message, String? prefix}) => _section(
+        title,
+        message: message,
+        prefix: prefix,
+      ).render();
+
   /// Constructs an [Prompt] component with the supplied_theme.
   String prompt(
     String prompt, {

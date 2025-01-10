@@ -62,6 +62,9 @@ void success(String message, {String? prefix}) =>
 void header(String title, {String? message, String? prefix}) =>
     Console.instance.writeHeader(title, message: message, prefix: prefix);
 
+void section(String title, {String? message, String? prefix}) =>
+    Console.instance.writeSection(title, message: message, prefix: prefix);
+
 /// Prompts the user for input with a given message.
 ///
 /// The [prompt] parameter specifies the message to display to the user.

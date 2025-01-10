@@ -23,6 +23,7 @@ export 'src/console.dart'
         processing,
         progress,
         prompt,
+        section,
         selectAny,
         selectOne,
         selectTable,
