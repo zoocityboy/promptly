@@ -11,6 +11,7 @@ class MyRunner extends CommandRunner {
     super.version,
     super.theme,
     super.logLevel,
+    super.printer,
   }) {
     addCommand(TestCommand());
     addCommand(SecondCommand());
@@ -24,6 +25,7 @@ Future<void> main(List<String> args) async {
     'Runner test',
     version: '0.0.1',
     theme: Theme.defaultTheme,
+    // printer: defaultPrinter,
   ).safeRun(args);
 }
 
@@ -54,7 +56,6 @@ class TestCommand extends Command<int> {
     line();
     finishSuccesfuly(name, message: 'Done');
 
-    logger.flush();
     return 0;
   }
 }

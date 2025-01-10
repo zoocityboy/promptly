@@ -8,6 +8,12 @@ extension StringBufferX on StringBuffer {
     this.write(console.theme.prefixLine(''));
   }
 
+  void section(String title) {
+    this
+      ..write(console.theme.prefixSectionLine(''))
+      ..write(title);
+  }
+
   /// Writes a vertical line using the console theme and adds a newline.
   void verticalLine() {
     this

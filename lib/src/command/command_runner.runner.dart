@@ -1,6 +1,6 @@
 part of 'command_runner.dart';
 
-/// A command runner that extends the `cr.CommandRunner` class with an integer
+/// A command runner that extends the `args_command_runner.CommandRunner` class with an integer
 /// return type. This class is used to manage and execute a set of commands
 /// within the application.
 ///
@@ -28,6 +28,13 @@ final _promptlyConsole = Console();
 /// - `level`: The log level of the message.
 /// - `message`: The log message to be written to the console.
 final _promptlyLogger = Logger();
+
+void defaultPrinter(LogItem item) {
+  if (!item.level.allowed(_promptlyLogger.level)) return;
+  [LogLevel.error, LogLevel.fatal].contains(item.level)
+      ? _promptlyConsole.writeMessage(item.withTime(), prefix: '', style: MessageStyle.error)
+      : _promptlyConsole.writeMessage(item.withTime());
+}
 
 /// A command runner that extends the `CompletionCommandRunner` to provide
 /// additional functionality for running commands with completion support.
@@ -76,18 +83,15 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
     this.version,
     Theme? theme,
     LogLevel? logLevel,
+    LogPrinter? printer,
   }) {
     logger.trace('Runner [$executableName] initialized');
     GlobalArgs(argParser).addLogLevel();
     _promptlyConsole.theme = theme ?? Theme.defaultTheme;
     _promptlyLogger
       ..level = logLevel ?? LogLevel.error
-      ..printer = (item) {
-        if (item.level.allowed(_promptlyLogger.level)) {
-          _promptlyConsole.writeMessage(item.withTime(), prefix: '');
-        }
-      };
-    _promptlyLogger.trace(LocaleInfo().env.toString());
+      ..printer = printer ?? defaultPrinter;
+    _promptlyLogger.trace(LocaleInfo.env.toString());
   }
 
   final String? version;
@@ -231,6 +235,48 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   @override
   Future<int?> runCommand(args.ArgResults topLevelResults) async {
+    var commands = this.commands;
+    var argResults = topLevelResults;
+    var commandString = executableName;
+    args_command_runner.Command<int>? command;
+    while (commands.isNotEmpty) {
+      if (argResults.command == null) {
+        if (argResults.rest.isEmpty) {
+          if (command == null) {
+            // No top-level command was chosen.
+            printUsage();
+            return null;
+          }
+
+          command.usageException('Missing subcommand for "$commandString".');
+        } else {
+          final requested = argResults.rest[0];
+
+          // Build up a help message containing similar commands, if found.
+          final similarCommands = _similarCommandsText<int>(requested, commands.values);
+
+          if (command == null) {
+            usageException(
+              'XXXCould not find a command named "$requested".$similarCommands',
+            );
+          }
+
+          command.usageException('Could not find a subcommand named '
+              '"$requested" for "$commandString".$similarCommands');
+        }
+      }
+      // Step into the command.
+      argResults = argResults.command!;
+      // ignore: unnecessary_null_checks
+      command = commands[argResults.name];
+      commands = command!.subcommands;
+      commandString += ' ${argResults.name}';
+
+      if (argResults.options.contains('help') && argResults.flag('help')) {
+        command.printUsage();
+        return null;
+      }
+    }
     if (topLevelResults.command?.name == 'completion') {
       await super.runCommand(topLevelResults);
       return ExitCode.success.code;
@@ -246,6 +292,40 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   @override
   Never usageException(String message) => throw UsageException(message, publicUsageWithoutDescription);
+
+  // Returns help text for commands similar to `name`, in sorted order.
+  String _similarCommandsText<T>(String name, Iterable<args_command_runner.Command<T>> commands) {
+    if (suggestionDistanceLimit <= 0) return '';
+    final distances = <args_command_runner.Command<T>, int>{};
+    final candidates = SplayTreeSet<args_command_runner.Command<T>>((a, b) => distances[a]! - distances[b]!);
+    for (final command in commands) {
+      if (command.hidden) continue;
+      for (final alias in [
+        command.name,
+        ...command.aliases,
+        ...command.suggestionAliases,
+      ]) {
+        final distance = _editDistance(name, alias);
+        if (distance <= suggestionDistanceLimit) {
+          distances[command] = math.min(distances[command] ?? distance, distance);
+          candidates.add(command);
+        }
+      }
+    }
+    if (candidates.isEmpty) return '';
+
+    final similar = StringBuffer();
+    similar
+      ..writeln()
+      ..withPrefix(console.theme.symbols.dotStep, 'Did you mean one of these?', style: console.theme.colors.warning)
+      ..newLine();
+
+    for (final command in candidates) {
+      similar.write(console.messageLine('  ${command.name}', style: MessageStyle.warning));
+    }
+
+    return similar.toString();
+  }
 }
 
 /// Flushes the stdout and stderr streams, then exits the program with the given

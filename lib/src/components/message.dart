@@ -47,7 +47,11 @@ class Message extends TypeComponent<String> {
 
   @override
   void render({Context? context}) {
-    (context ?? _context).write(_formatted);
+    if (style == MessageStyle.error) {
+      (context ?? _context).writeError(_formatted);
+    } else {
+      (context ?? _context).write(_formatted);
+    }
   }
 
   @override

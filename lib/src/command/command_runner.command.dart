@@ -80,9 +80,7 @@ abstract class Command<T> extends args_command_runner.Command<T> {
   Theme get theme => console.theme;
 
   String get descriptionStyled {
-    final sb = StringBuffer()
-      ..header(name, message: description)
-      ..newLine();
+    final sb = StringBuffer()..header(name, message: description);
     return sb.toString();
   }
 
