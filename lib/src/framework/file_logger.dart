@@ -7,6 +7,9 @@ class FileLogger {
 
   FileLogger({required this.filePath}) {
     final file = File(filePath);
+    if (!file.existsSync()) {
+      file.createSync(recursive: true);
+    }
     _sink = file.openWrite(mode: FileMode.append);
     _log('--- Nová relace logování ---');
   }

@@ -217,9 +217,12 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
     } on UsageException catch (e) {
       console
         ..write(errorAppDescription)
-        ..writeMessage(e.message, style: MessageStyle.error)
+        ..write(console.theme.prefixError(''))
+        ..write(console.theme.colors.error(e.message.trimRight()))
+        ..write('\n')
+        // ..writeMessage(e.message, style: MessageStyle.error)
         ..write(e.usage);
-      logger.trace(e.toString());
+      logger.trace(e.message);
       exitCode = ExitCode.software.code;
     } catch (e) {
       console
@@ -257,7 +260,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
           if (command == null) {
             usageException(
-              'XXXCould not find a command named "$requested".$similarCommands',
+              'Could not find a command named "$requested".$similarCommands',
             );
           }
 
@@ -316,13 +319,20 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
     final similar = StringBuffer();
     similar
-      ..writeln()
-      ..withPrefix(console.theme.symbols.dotStep, 'Did you mean one of these?', style: console.theme.colors.warning)
+      ..newLine()
+      ..verticalLine()
+      ..withPrefix(
+        '?',
+        console.theme.colors.hint('Did you mean one of these?'),
+        style: console.theme.colors.hint,
+      )
       ..newLine();
-
-    for (final command in candidates) {
-      similar.write(console.messageLine('  ${command.name}', style: MessageStyle.warning));
-    }
+    final line = candidates.map((e) => e.name).join(', ');
+    similar
+      ..write(console.theme.prefixLine(''))
+      ..write(' ')
+      ..write(console.theme.colors.text(line))
+      ..newLine();
 
     return similar.toString();
   }
@@ -335,5 +345,5 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 /// exited already. This is useful to prevent Future chains from proceeding
 /// after you've decided to exit.
 Future flushThenExit(int status) {
-  return Future.wait([stdout.close(), stderr.close()]).then((_) => exit(status));
+  return Future.wait([stdout.close(), stderr.close()]).then((_) {});
 }

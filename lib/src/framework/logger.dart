@@ -20,6 +20,41 @@ enum LogLevel implements Comparable<LogLevel> {
   bool allowed(LogLevel level) => level <= this;
 }
 
+class TempDirectory {
+  TempDirectory({this.folderName = 'promptly'}) {
+    _createUnique();
+  }
+
+  /// Get temp directory path
+  String get path => Directory.systemTemp.path;
+
+  /// Get temp directory name
+  final String folderName;
+
+  /// Get date file name
+  String get date {
+    final now = DateTime.now().toUtc();
+    return '${now.year}-${now.month}-${now.day}';
+  }
+
+  /// Get current log file in temp directory
+  File get logFile => File(p.join(path, folderName, '$date.log'));
+
+  /// Get unique temp directory
+  void _createUnique() {
+    if (!logFile.existsSync()) {
+      logFile.createSync(recursive: true);
+    }
+  }
+
+  /// Clean up temp directory
+  void cleanup(Directory dir) {
+    if (dir.existsSync()) {
+      dir.deleteSync(recursive: true);
+    }
+  }
+}
+
 /// A function that outputs a log message.
 typedef LogPrinter = void Function(LogItem item);
 
@@ -84,6 +119,7 @@ class LogItem {
 /// A simple logger that logs to stdout.
 class Logger {
   static final Logger _instance = Logger._internal();
+  static final FileLogger fileLogger = FileLogger(filePath: 'log.txt');
 
   /// Access to singleton instance
   static Logger get instance => _instance;
@@ -193,15 +229,19 @@ class Logger {
 
   /// Flushes the logger, ensuring that all buffered log messages are written out.
   void flush({bool withTime = true}) {
+    final logFile = TempDirectory().logFile;
+    final sink = logFile.openWrite(mode: FileMode.append);
     _printer(
       LogItem(
         level: LogLevel.info,
-        message: 'Trace items [${_queue.length}]...',
+        message: 'Trace items [${_queue.length}]... at ${logFile.path}',
       ),
     );
     for (final item in _queue) {
+      sink.writeln((withTime ? item.withTime() : item.withoutTime()).removeAnsi());
       _printer(item);
     }
+    sink.flush();
     _queue.clear();
   }
 }

@@ -8,6 +8,7 @@ import 'dart:math' as math;
 import 'package:args/args.dart' as args;
 import 'package:args/command_runner.dart' as args_command_runner;
 import 'package:cli_completion/cli_completion.dart' as completion;
+import 'package:path/path.dart' as p;
 import 'package:io/io.dart';
 import 'package:meta/meta.dart';
 import 'package:promptly/promptly.dart';

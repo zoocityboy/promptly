@@ -16,6 +16,8 @@ class MyRunner extends CommandRunner {
     addCommand(TestCommand());
     addCommand(SecondCommand());
     addCommand(ThirdCommand());
+    addCommand(ThirdoCommand());
+    addCommand(ThirmoCommand());
   }
 }
 
@@ -182,6 +184,14 @@ class ThirdCommand extends Command<int> {
     header(name, message: description);
     return ExitCode.success.code;
   }
+}
+
+class ThirdoCommand extends Command<int> {
+  ThirdoCommand() : super('thirdo', 'Thirdo command');
+}
+
+class ThirmoCommand extends Command<int> {
+  ThirmoCommand() : super('thirmo', 'Thirdo command');
 }
 
 class FourthCommand extends Command<int> {
