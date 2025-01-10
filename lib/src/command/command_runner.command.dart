@@ -8,14 +8,16 @@ part of 'command_runner.dart';
 /// Type parameter [T] specifies the type of the result produced by the command.
 abstract class Command<T> extends args_command_runner.Command<T> {
   Command(
-    this._name,
-    this._description, {
+    String name,
+    String description, {
     List<String> aliases = const [],
     bool? hidden,
     String? category,
   })  : _aliases = aliases,
         _hidden = hidden,
-        _category = category;
+        _category = category,
+        _name = name,
+        _description = description;
   final String _name;
   void trace(String message) => logger.trace(message, commandName: name);
   @override
