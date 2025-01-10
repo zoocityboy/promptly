@@ -33,11 +33,12 @@ extension StringBufferX on StringBuffer {
   /// [prefix] The prefix to write before the text.
   /// [text] The text to write.
   /// [spacing] Optional spacing between the prefix and the text.
-  void withPrefix(String prefix, String text, {int? spacing}) {
+  void withPrefix(String prefix, String text, {int? spacing, StyleFunction? style}) {
     final spc = spacing ?? console.theme.spacing;
+    // this.write((style ?? console.theme.colors.prefix)('$spc'));
     if (spc > 0) {
       this.write(
-        console.theme.colors.prefix(prefix.removeAnsi().padRight(spc)),
+        (style ?? console.theme.colors.prefix)(prefix.removeAnsi().padRight(spc)),
       );
     }
     this.write(text);

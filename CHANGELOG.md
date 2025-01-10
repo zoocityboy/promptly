@@ -1,4 +1,5 @@
 ## 1.0.0-alpha.3
+- fix: color scheme
 
 ## 1.0.0-alpha.2
 

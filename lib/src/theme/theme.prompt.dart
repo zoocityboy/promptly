@@ -55,9 +55,9 @@ class PromptTheme {
     return PromptTheme._(
       promptPrefix: '?'.padRight(3).brightGreen().dim(),
       promptSuffix: '›'.padLeft(2).darkGray(),
-      successPrefix: '✔'.padRight(3).brightGreen().dim(),
-      successSuffix: '✔'.padRight(3).brightGreen().dim(),
-      errorPrefix: '■'.padRight(3).brightRed().dim(),
+      successPrefix: symbols.success.padRight(3).brightGreen().dim(),
+      successSuffix: symbols.success.padRight(3).brightGreen().dim(),
+      errorPrefix: symbols.error.padRight(3).brightRed().dim(),
       messageStyle: (x) => colors.text(x),
       valueStyle: (x) => colors.value(x),
       hintStyle: (x) => colors.hint(x),

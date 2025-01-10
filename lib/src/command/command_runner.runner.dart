@@ -87,6 +87,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
           _promptlyConsole.writeMessage(item.withTime(), prefix: '');
         }
       };
+    _promptlyLogger.trace(LocaleInfo().env.toString());
   }
 
   final String? version;
@@ -151,7 +152,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
     }
     for (final line in usegeLines) {
       buffer
-        ..write(console.theme.prefixLine(''))
+        ..prefixLine()
         ..write(line)
         ..newLine();
     }
@@ -164,6 +165,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
         ..verticalLine();
     }
     buffer
+      ..verticalLine()
       ..writeln(console.theme.prefixRun(invocation))
       ..newLine();
 
@@ -177,10 +179,20 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   @override
   void addCommand(args_command_runner.Command<int> command) {
-    logger.trace('addCommand', commandName: command.name);
+    if (!['help', 'completion', 'install-completion-files', 'uninstall-completion-files'].contains(command.name)) {
+      logger.trace('addCommand', commandName: command.name);
+    }
+
     super.addCommand(command);
   }
 
+  Future<void> safeRun(List<String> args) async {
+    // ignore: deprecated_member_use_from_same_package
+    return flushThenExit(await run(args));
+  }
+
+  @Deprecated('Do not use this method directly. Use `safeRun` instead.')
+  @protected
   @override
   Future<int> run(Iterable<String> args) async {
     int exitCode;
@@ -230,10 +242,6 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
     );
     final exitCode = await super.runCommand(topLevelResults);
     return exitCode;
-  }
-
-  Future<void> safeRun(List<String> args) async {
-    return flushThenExit(await run(args));
   }
 
   @override

@@ -137,7 +137,7 @@ class Theme {
   /// An alias to [colorfulTheme].
   static Theme defaultTheme = _theme;
   static final _theme = Theme._(
-    spacing: 2,
+    spacing: 3,
     colors: ThemeColors.defaultColors,
     symbols: ThemeSymbols.defaultSymbols,
     showActiveCursor: false,
@@ -192,7 +192,7 @@ extension ThemeStyledExtension on Theme {
 
   String prefixLine(String message, {StyleFunction? style}) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix((style ?? colors.prefix)(symbols.vLine), message);
+    buffer.withPrefix(symbols.vLine, message, style: style);
     return buffer.toString();
   }
 
@@ -209,28 +209,29 @@ extension ThemeStyledExtension on Theme {
   String prefixHeaderLine(String message) {
     final StringBuffer buffer = StringBuffer();
     buffer.withPrefix(
-      colors.prefix(symbols.header),
+      symbols.header,
       message,
       spacing: spacing - 1,
+      style: colors.prefix,
     );
     return buffer.toString();
   }
 
   String prefixError(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.error), message);
+    buffer.withPrefix(symbols.error, message, style: colors.error);
     return buffer.toString();
   }
 
   String prefixWarning(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.dotStep), message);
+    buffer.withPrefix(symbols.dotStep, message, style: colors.warning);
     return buffer.toString();
   }
 
   String prefixInfo(String message) {
     final StringBuffer buffer = StringBuffer();
-    buffer.withPrefix(colors.prefix(symbols.infoStep), message);
+    buffer.withPrefix(symbols.infoStep, message, style: colors.info);
     return buffer.toString();
   }
 }

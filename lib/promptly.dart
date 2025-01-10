@@ -1,8 +1,7 @@
 export 'package:args/src/utils.dart';
 export 'package:tint/tint.dart' show Tint;
 
-export 'src/command/command_runner.dart'
-    show Command, CommandRunner, CommandX, UsageException, flushThenExit;
+export 'src/command/command_runner.dart' show Command, CommandRunner, CommandX, UsageException, flushThenExit;
 export 'src/components/components.dart';
 export 'src/console.dart'
     show
@@ -32,8 +31,6 @@ export 'src/console.dart'
         warning,
         write,
         writeln;
-export 'src/framework/framework.dart'
-    show Context, Logger, StringCaseExtensions, reset;
+export 'src/framework/framework.dart' show Context, LocaleInfo, Logger, StringCaseExtensions, reset;
 export 'src/utils/tint_colors.dart';
-export 'src/validators/validator.dart'
-    show EmailValidator, GenericValidator, ValidationError, Validator;
+export 'src/validators/validator.dart' show EmailValidator, GenericValidator, ValidationError, Validator;

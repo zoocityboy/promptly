@@ -7,23 +7,23 @@
 part of 'theme.dart';
 
 /// A class that defines a set of theme colors using `StyleFunction`.
-/// 
+///
 /// The `ThemeColors` class provides a way to define and manage a set of colors
 /// for different UI elements such as info, warning, success, error, hint, value,
 /// text, active, inactive, and prefix. Each color is represented by a `StyleFunction`.
-/// 
+///
 /// The class also provides a `copyWith` method to create a copy of the current
 /// `ThemeColors` instance with some properties replaced by new values.
-/// 
+///
 /// Additionally, it includes two static instances, `defaultColors` and `testColors`,
 /// which provide predefined sets of colors for default and test environments.
-/// 
+///
 /// Example usage:
-/// 
+///
 /// ```dart
 /// ThemeColors themeColors = ThemeColors.defaultColors;
 /// ```
-/// 
+///
 /// Properties:
 /// - `info`: Color for informational messages.
 /// - `warning`: Color for warning messages.
@@ -90,7 +90,7 @@ class ThemeColors {
     info: (x) => x.white(),
     warning: (x) => x.yellow(),
     success: (x) => x.green(),
-    error: (x) => x.red(),
+    error: (x) => x.brightRed(),
     hint: (x) => x.lightGrayDim(),
     value: (x) => x.green().bold(),
     text: (x) => x.lightGray(),

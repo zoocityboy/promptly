@@ -19,14 +19,12 @@ class MyRunner extends CommandRunner {
 }
 
 Future<void> main(List<String> args) async {
-  flushThenExit(
-    await MyRunner(
-      'promptly',
-      'Runner test',
-      version: '0.0.1',
-      theme: Theme.defaultTheme,
-    ).run(args),
-  );
+  await MyRunner(
+    'promptly',
+    'Runner test',
+    version: '0.0.1',
+    theme: Theme.defaultTheme,
+  ).safeRun(args);
 }
 
 class TestCommand extends Command<int> {

@@ -174,7 +174,7 @@ class ErrorMessageTheme extends MessageTheme {
   ErrorMessageTheme.withTheme(Theme theme)
       : super(
           prefix: theme.symbols.error,
-          prefixStyle: theme.colors.prefix,
+          prefixStyle: theme.colors.error,
           messageStyle: theme.colors.error,
         );
 }

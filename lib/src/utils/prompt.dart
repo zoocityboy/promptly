@@ -54,8 +54,7 @@ String promptError(
   String message, {
   required Theme theme,
 }) =>
-    Message.withTheme(text: message, style: MessageStyle.error, theme: theme)
-        .interact();
+    Message.withTheme(text: message, style: MessageStyle.error, theme: theme).interact();
 
 String promptMessage(
   String message, {

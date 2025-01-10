@@ -114,7 +114,7 @@ abstract class Command<T> extends args_command_runner.Command<T> {
     }
     for (final line in usegeLines) {
       buffer
-        ..write(console.theme.prefixLine(''))
+        ..prefixLine()
         ..write(line)
         ..newLine();
     }
@@ -135,7 +135,10 @@ abstract class Command<T> extends args_command_runner.Command<T> {
 
   @override
   void addSubcommand(args_command_runner.Command<T> command) {
-    logger.trace('[$name][${command.name}] addSubcommand');
+    if (!['help', 'completion', 'install-completion-files', 'uninstall-completion-files'].contains(command.name)) {
+      logger.trace('[$name][${command.name}] addSubcommand');
+    }
+
     super.addSubcommand(command);
   }
 }

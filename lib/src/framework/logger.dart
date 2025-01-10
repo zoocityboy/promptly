@@ -32,10 +32,9 @@ typedef LogPrinter = void Function(LogItem item);
 /// - Parameters:
 ///   - level: The log level of the message.
 ///   - message: The message to be logged.
-void defaultPrinter(LogItem item) =>
-    [LogLevel.error, LogLevel.fatal].contains(item.level)
-        ? stderr.writeln(item.withTime())
-        : stdout.writeln(item.withTime());
+void defaultPrinter(LogItem item) => [LogLevel.error, LogLevel.fatal].contains(item.level)
+    ? stderr.writeln(item.withTime())
+    : stdout.writeln(item.withTime());
 
 @immutable
 class LogItem {
@@ -59,9 +58,27 @@ class LogItem {
     return '[$command] ';
   }
 
-  String withTime() =>
-      '${dateTime.hour}:${dateTime.minute}:${dateTime.second} $commandName$message';
+  String get formatedTime => DateFormat.Hms().format(dateTime);
+  String withTime() => '$formatedTime $commandName$message';
   String withoutTime() => '$commandName$message';
+
+  @override
+  int get hashCode => Object.hash(
+        dateTime,
+        level,
+        message,
+        command,
+      );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LogItem &&
+          runtimeType == other.runtimeType &&
+          dateTime == other.dateTime &&
+          level == other.level &&
+          message == other.message &&
+          command == other.command;
 }
 
 /// A simple logger that logs to stdout.
@@ -127,53 +144,36 @@ class Logger {
   void log(
     String message, {
     LogLevel level = LogLevel.info,
-    bool delayed = false,
     String? commandName,
   }) {
-    // stdout.writeln('[${level.name}${level.index} >= ${_level.index}] $message');
-    // stdout.writeln('-> ${LogLevel.values.map((e) => '${e.index} ${e.name},').toList()}');
-
-    if (delayed) {
-      _delayed(message, level: level, commandName: commandName);
-    } else {
-      if (_level.index >= level.index) {
-        _printer(
-          LogItem(
-            dateTime: DateTime.now().toUtc(),
-            level: level,
-            message: message,
-            command: commandName,
-          ),
-        );
-      }
+    if (_level.index >= level.index) {
+      _printer(
+        LogItem(
+          dateTime: DateTime.now().toUtc(),
+          level: level,
+          message: message,
+          command: commandName,
+        ),
+      );
     }
   }
 
-  void verbose(String message, {bool delayed = false}) =>
-      log(message, level: LogLevel.verbose, delayed: delayed);
+  void verbose(String message) => log(message, level: LogLevel.verbose);
 
   /// Log an info message.
-  void info(String message, {bool delayed = false}) =>
-      log(message, delayed: delayed);
+  void info(String message) => log(message);
 
   /// Log a warning message.
-  void warning(String message, {bool delayed = false}) =>
-      log(message, level: LogLevel.warning, delayed: delayed);
+  void warning(String message) => log(message, level: LogLevel.warning);
 
   /// Log an error message.
-  void error(String message, {bool delayed = false}) =>
-      log(message, level: LogLevel.error, delayed: delayed);
+  void error(String message) => log(message, level: LogLevel.error);
 
   /// Log a fatal message.
-  void fatal(String message, {bool delayed = false}) =>
-      log(message, level: LogLevel.fatal, delayed: delayed);
+  void fatal(String message) => log(message, level: LogLevel.fatal);
 
-  void trace(String message, {String? commandName}) => log(
-        message,
-        level: LogLevel.verbose,
-        delayed: true,
-        commandName: commandName,
-      );
+  LogItem trace(String message, {String? commandName}) =>
+      _delayed(LogItem(level: LogLevel.verbose, message: message, command: commandName));
 
   /// Logs a message with a delay.
   ///
@@ -183,30 +183,20 @@ class Logger {
   /// [message] The message to be logged.
   /// [level] The level at which the message should be logged. Defaults to
   /// [LogLevel.info].
-  void _delayed(
-    String message, {
-    LogLevel level = LogLevel.info,
-    String? commandName,
-  }) {
+  LogItem _delayed(LogItem item) {
     if (_queue.length > _maxQueueSize) {
       _queue.removeFirst();
     }
-    _queue.add(
-      LogItem(
-        dateTime: DateTime.now().toUtc(),
-        level: level,
-        message: message,
-        command: commandName,
-      ),
-    );
+    _queue.add(item);
+    return item;
   }
 
   /// Flushes the logger, ensuring that all buffered log messages are written out.
   void flush({bool withTime = true}) {
     _printer(
       LogItem(
-        level: LogLevel.verbose,
-        message: 'Flushing log messages [${_queue.length}]...',
+        level: LogLevel.info,
+        message: 'Trace items [${_queue.length}]...',
       ),
     );
     for (final item in _queue) {
