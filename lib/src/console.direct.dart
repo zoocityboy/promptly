@@ -331,7 +331,7 @@ int finishSuccesfuly(String title, {String? message}) => Console.instance.succes
 ///
 /// - Returns: The exit code provided or a default exit code if none is provided.
 ///  The default exit code is `ExitCode.software.code` (70).
-int finishFailed(String title, {String? message, int? exitCode}) => Console.instance.failure(
+int finishWithError(String title, {String? message, int? exitCode, StackTrace? stackTrace}) => Console.instance.failure(
       title,
       message: message,
       exitCode: exitCode,

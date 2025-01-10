@@ -9,5 +9,5 @@ Future<void> main() async {
       throw Exception('Not found');
     },
   );
-  finishFailed('My task failed');
+  finishWithError('My task failed');
 }

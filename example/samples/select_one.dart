@@ -29,5 +29,5 @@ void main() {
   line();
 
   // success('Superhero', message: 'selected: ${selcted.bold()}');
-  finishFailed('Superhero', message: 'selected: ${selcted.bold()}');
+  finishWithError('Superhero', message: 'selected: ${selcted.bold()}');
 }

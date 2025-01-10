@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:io/io.dart';
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
@@ -106,7 +105,7 @@ class Console {
     return ExitCode.success.code;
   }
 
-  int failure(String title, {String? message, int? exitCode}) {
+  int failure(String title, {String? message, int? exitCode, StackTrace? stackTrace}) {
     final sb = StringBuffer();
     if (theme.spacing > 0) {
       sb.write(_theme.colors.prefix('└'));
@@ -135,8 +134,7 @@ class Console {
       _ctx.write(line);
       _ctx.write('\n');
     } else {
-      final line =
-          theme.spacing > 0 ? theme.prefixLine(_theme.symbols.vLine) : '';
+      final line = theme.spacing > 0 ? theme.prefixLine(_theme.symbols.vLine) : '';
       _ctx.write(line);
       _ctx.write(_theme.promptTheme.messageStyle(message));
       _ctx.write('\n');
@@ -149,14 +147,11 @@ class Console {
         message: data.message,
         context: _ctx,
       );
-  String linkLine(String url, {String? label}) =>
-      _link(LinkData(uri: Uri.parse(url), message: label)).interact();
-  void writeLink(String url, {String? label}) =>
-      _link(LinkData(uri: Uri.parse(url), message: label)).render();
+  String linkLine(String url, {String? label}) => _link(LinkData(uri: Uri.parse(url), message: label)).interact();
+  void writeLink(String url, {String? label}) => _link(LinkData(uri: Uri.parse(url), message: label)).render();
 
   /// Writes a message to the console with the specified style.
-  Message _message(String message, {String? prefix, MessageStyle? style}) =>
-      Message.withTheme(
+  Message _message(String message, {String? prefix, MessageStyle? style}) => Message.withTheme(
         text: message,
         prefix: prefix,
         theme: _theme,
@@ -177,8 +172,7 @@ class Console {
   /// ```dart
   /// start('Welcome', message: 'Hello, user!');
   /// ```
-  Header _header(String title, {String? message, String? prefix}) =>
-      Header.withTheme(
+  Header _header(String title, {String? message, String? prefix}) => Header.withTheme(
         theme: _theme,
         title: title,
         message: message,
@@ -266,9 +260,7 @@ class Console {
       theme: _theme,
       prompt: prompt,
       choices: choices.map((e) => display?.call(e) ?? e.toString()).toList(),
-      defaults: defaultValues != null
-          ? choices.map((e) => defaultValues.contains(e)).toList()
-          : null,
+      defaults: defaultValues != null ? choices.map((e) => defaultValues.contains(e)).toList() : null,
     ).interact();
     return result.map((index) => choices[index]).toList();
   }
@@ -325,8 +317,7 @@ class Console {
         prompt: prompt,
         theme: _theme,
         icon: _theme.loaderTheme.successStyle(_theme.loaderTheme.successPrefix),
-        failedIcon:
-            _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
+        failedIcon: _theme.loaderTheme.errorStyle(_theme.loaderTheme.errorPrefix),
         clear: clear,
       ).interact();
 
