@@ -1,4 +1,5 @@
 export 'package:args/src/utils.dart';
+export 'package:io/io.dart' show ExitCode;
 export 'package:tint/tint.dart' show Tint;
 
 export 'src/command/command_runner.dart'
@@ -32,6 +33,6 @@ export 'src/console.dart'
         warning,
         write,
         writeln;
-export 'src/framework/framework.dart' show Context, LocaleInfo, Logger, StringCaseExtensions, reset,resetColor;
+export 'src/framework/framework.dart' show Context, LocaleInfo, Logger, StringCaseExtensions, reset, resetColor;
 export 'src/utils/tint_colors.dart';
 export 'src/validators/validator.dart' show EmailValidator, GenericValidator, ValidationError, Validator;
