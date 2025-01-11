@@ -61,7 +61,7 @@ class LoaderTheme {
       successStyle: (x) => colors.success(x),
       spinners: symbols.spinners,
       interval: 80,
-      successPrefix: symbols.successStep,
+      successPrefix: symbols.success,
       errorPrefix: symbols.error,
     );
   }
