@@ -1,5 +1,6 @@
 import 'package:promptly/src/console.dart';
 import 'package:promptly/src/theme/theme.dart';
+import 'package:tint/tint.dart';
 
 /// Extension on [StringBuffer] to provide additional utility methods.
 extension StringBufferX on StringBuffer {
@@ -11,7 +12,7 @@ extension StringBufferX on StringBuffer {
   void section(String title) {
     this
       ..write(console.theme.prefixSectionLine(''))
-      ..write(title);
+      ..write(console.theme.colors.text(title).inverse());
   }
 
   /// Writes a vertical line using the console theme and adds a newline.

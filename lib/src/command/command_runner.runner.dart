@@ -105,6 +105,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
   Theme get theme => console.theme;
   String _appDescription(StyleFunction style) {
     final StringBuffer buffer = StringBuffer();
+
     buffer.write(
       theme.prefixHeaderLine(
         style(' $executableName ').inverse(),
@@ -147,11 +148,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       ..verticalLine();
     if (usegeLines.isNotEmpty) {
       buffer
-        ..write(
-          console.theme.prefixSectionLine(
-            console.theme.colors.text(' Flags ').inverse(),
-          ),
-        )
+        ..section(' Flags ')
         ..newLine();
     }
     for (final line in usegeLines) {

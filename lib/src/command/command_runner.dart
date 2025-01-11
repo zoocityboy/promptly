@@ -1,4 +1,4 @@
-// ignore_for_file: use_string_buffers
+// ignore_for_file: use_string_buffers, parameter_assignments
 
 import 'dart:async';
 import 'dart:collection';
@@ -8,11 +8,8 @@ import 'dart:math' as math;
 import 'package:args/args.dart' as args;
 import 'package:args/command_runner.dart' as args_command_runner;
 import 'package:cli_completion/cli_completion.dart' as completion;
-import 'package:path/path.dart' as p;
-import 'package:io/io.dart';
 import 'package:meta/meta.dart';
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/command/global.dart';
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
@@ -75,14 +72,16 @@ String getStyledCommandUsage(
   if (!hasCategories) {
     buffer
       ..section(console.theme.colors.text(' $title ').inverse())
-      ..newLine();
+      ..newLine()
+      ..verticalLine();
   }
   final columnStart = length + 4;
   for (final category in categories) {
     if (category.isNotEmpty) {
       buffer
         ..section(console.theme.colors.text(' $category ').inverse())
-        ..newLine();
+        ..newLine()
+        ..verticalLine();
     }
     final ansiTable = Table(
       columns: [

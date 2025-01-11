@@ -105,11 +105,7 @@ abstract class Command<T> extends args_command_runner.Command<T> {
 
     if (usegeLines.isNotEmpty) {
       buffer
-        ..write(
-          console.theme.prefixSectionLine(
-            console.theme.colors.text(' Flags ').inverse(),
-          ),
-        )
+        ..section(' Flags ')
         ..newLine();
     }
     for (final line in usegeLines) {
