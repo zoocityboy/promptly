@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:io/io.dart';
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/theme/theme.dart';
 
@@ -42,9 +41,9 @@ class TestCommand extends Command<int> {
   @override
   Future<int> run() async {
     trace('Running test command');
-    // header(name, message: description);
-
+    header(name, message: description);
     line();
+    section('now', message: 'This is a section');
     info('Hello world');
     line();
     trace('Downloading started');

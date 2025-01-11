@@ -111,7 +111,7 @@ class Section extends TypeComponent<String> {
     required this.title,
     this.message,
     Context? context,
-  })  : prefix = prefix ?? theme.symbols.header,
+  })  : prefix = prefix ?? theme.symbols.section,
         _context = context ?? Context();
 
   final Theme theme;
@@ -121,7 +121,8 @@ class Section extends TypeComponent<String> {
   final Context _context;
 
   String get _formated {
-    final titleBuffer = StringBuffer(theme.prefixHeaderLine(''))
+    final titleBuffer = StringBuffer()
+      ..write(theme.colors.prefix(prefix.padRight(theme.spacing - 1)))
       ..write(theme.colors.text(' $title ').inverse())
       ..write(' ');
     final currentLng = titleBuffer.toString().wcwidth();
