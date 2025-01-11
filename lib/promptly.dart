@@ -37,4 +37,13 @@ export 'src/console.dart'
         writeln;
 export 'src/framework/framework.dart' show Context, LocaleInfo, Logger, StringCaseExtensions, reset, resetColor;
 export 'src/utils/tint_colors.dart';
-export 'src/validators/validator.dart' show EmailValidator, GenericValidator, ValidationError, Validator;
+export 'src/validators/validator.dart'
+    show
+        AllowedValidator,
+        CustomStringValidator,
+        EmailValidator,
+        GenericValidator,
+        IsNotEmptyValidator,
+        ValidationError,
+        Validator,
+        VersionValidator;
