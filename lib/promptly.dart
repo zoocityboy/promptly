@@ -5,6 +5,7 @@ export 'package:tint/tint.dart' show Tint;
 
 export 'src/command/command_runner.dart'
     show Command, CommandRunner, CommandX, UsageException, defaultPrinter, flushThenExit;
+export 'src/command/global.dart' show GlobalArgs, GlobalResults;
 export 'src/components/components.dart';
 export 'src/console.dart'
     show
