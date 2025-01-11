@@ -1,3 +1,4 @@
+export 'package:args/args.dart' show ArgParser, ArgParserException, ArgResults;
 export 'package:args/src/utils.dart';
 export 'package:io/io.dart' show ExitCode;
 export 'package:tint/tint.dart' show Tint;
