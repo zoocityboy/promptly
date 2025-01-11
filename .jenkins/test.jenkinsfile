@@ -5,6 +5,9 @@ pipeline {
             args  '-v /tmp:/tmp'
         } 
     }
+    triggers {
+        githubPush()
+    }
 
     stages {
        
