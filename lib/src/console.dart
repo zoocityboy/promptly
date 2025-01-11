@@ -327,8 +327,6 @@ class Console {
   /// Constructs a [Loader] component with the supplied_theme.
   LoaderState processing(
     String prompt, {
-    String? successMessage,
-    String? failedMessage,
     bool clear = false,
   }) =>
       Loader.withTheme(

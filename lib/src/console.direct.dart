@@ -248,14 +248,10 @@ ProgressState progress(
 /// - Returns: A `LoaderState` representing the state of the loader.
 LoaderState processing(
   String prompt, {
-  String? successMessage,
-  String? failedMessage,
   bool clear = false,
 }) =>
     Console.instance.processing(
       prompt,
-      successMessage: successMessage,
-      failedMessage: failedMessage,
       clear: clear,
     );
 
