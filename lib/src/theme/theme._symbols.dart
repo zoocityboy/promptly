@@ -133,7 +133,6 @@ class ThemeSymbols {
     checked: '◉',
     unchecked: '◯',
     spinners: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
-    
 
     //
     error: '■',

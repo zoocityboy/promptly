@@ -3,10 +3,11 @@ import 'dart:io' show ProcessSignal;
 
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/string_buffer.dart';
 import 'package:promptly/src/utils/utils.dart';
 
 /// Represents the state of a loader.
-/// 
+///
 /// The loader can be in one of the following states:
 /// - `inProgress`: The loading process is currently ongoing.
 /// - `success`: The loading process has completed successfully.
@@ -158,15 +159,11 @@ class _LoaderState extends State<Loader> {
 
   @override
   void render() {
-    final line = StringBuffer();
     final icon = switch (stateType) {
-      LoaderStateType.inProgress => theme.processingStyle(
-          theme.spinners[index].padRight(component.theme.spacing),
-        ),
-      LoaderStateType.success =>
-        theme.successStyle(component.icon.padRight(component.theme.spacing)),
-      LoaderStateType.failed => theme
-          .errorStyle(component.failedIcon.padRight(component.theme.spacing)),
+      LoaderStateType.inProgress =>
+        theme.processingStyle(theme.spinners[index].removeAnsi().padRight(component.theme.spacing)),
+      LoaderStateType.success => theme.successStyle(component.icon.removeAnsi().padRight(component.theme.spacing)),
+      LoaderStateType.failed => theme.errorStyle(component.failedIcon.removeAnsi().padRight(component.theme.spacing)),
     };
 
     final formatedMessage = switch (stateType) {
@@ -174,9 +171,9 @@ class _LoaderState extends State<Loader> {
       LoaderStateType.success => theme.successStyle(message),
       LoaderStateType.failed => theme.errorStyle(message),
     };
-    // ignore: unnecessary_string_interpolations
-    line.write(icon);
-    line.write(formatedMessage);
+    final line = StringBuffer()
+      ..write(icon)
+      ..write(formatedMessage);
     context.writeln(line.toString());
   }
 
