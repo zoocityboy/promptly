@@ -1,4 +1,5 @@
 part of 'theme.dart';
+
 /// A class that defines the theme for links, including styles for different link states.
 ///
 /// The `LinkTheme` class provides a way to customize the appearance of links in different states
@@ -36,8 +37,7 @@ class LinkTheme {
     required this.hoverStyle,
     required this.activeStyle,
   });
-  factory LinkTheme.fromDefault() =>
-      LinkTheme.fromColors(ThemeColors.defaultColors);
+  factory LinkTheme.fromDefault() => LinkTheme.fromColors(ThemeColors.defaultColors);
   factory LinkTheme.fromColors(ThemeColors colors) {
     return LinkTheme(
       linkStyle: (x) => colors.active(x).underline(),

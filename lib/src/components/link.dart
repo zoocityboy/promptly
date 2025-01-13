@@ -48,8 +48,8 @@ class Link extends TypeComponent<String> {
   String get _formatted {
     const leading = '\x1B]8;;';
     const trailing = '\x1B\\';
-
-    return '$leading${theme.linkTheme.linkStyle(uri.toString())}$trailing${message ?? uri}$leading$trailing';
+    return theme.linkTheme.linkStyle('$leading$uri$trailing${message ?? uri}$leading$trailing');
+    // return '$leading${theme.linkTheme.linkStyle(uri.toString())}$trailing${message ?? uri}$leading$trailing';
   }
 
   @override
