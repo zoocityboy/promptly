@@ -92,12 +92,15 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       ..level = logLevel ?? LogLevel.error
       ..printer = printer ?? defaultPrinter;
     _promptlyLogger.trace(LocaleInfo.env.toString());
+    topLevelOptions = argParser.options;
   }
 
   final String? version;
 
   @override
   bool get enableAutoInstall => true;
+
+  Map<String, args.Option>? topLevelOptions;
 
   // @override
   // String? get usageFooter => '... Run `$executableName help` for more information.';
@@ -136,6 +139,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   String get publicUsageWithoutDescription {
     final usegeLines = argParser.customUsage.split('\n');
+    // final usegeLines = argParser.usage.split('\n');
     final buffer = StringBuffer();
     buffer
       ..write(
@@ -180,11 +184,13 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   @override
   void addCommand(args_command_runner.Command<int> command) {
-    if (!['help', 'completion', 'install-completion-files', 'uninstall-completion-files'].contains(command.name)) {
-      logger.trace('addCommand', commandName: command.name);
-    }
+    final stopwatch = Stopwatch()..start();
 
     super.addCommand(command);
+    stopwatch.stop();
+    if (!['help', 'completion', 'install-completion-files', 'uninstall-completion-files'].contains(command.name)) {
+      logger.trace('command added', commandName: command.name, durationInMilliseconds: stopwatch.elapsedMilliseconds);
+    }
   }
 
   Future<void> safeRun(List<String> args) async {
@@ -230,12 +236,15 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       exitCode = ExitCode.software.code;
     }
     logger.flush();
+    stdout.write('\x1b[m');
+
     return exitCode;
   }
 
   @override
   Future<int?> runCommand(args.ArgResults topLevelResults) async {
     var commands = this.commands;
+    print(topLevelResults);
     var argResults = topLevelResults;
     var commandString = executableName;
     args_command_runner.Command<int>? command;
@@ -286,8 +295,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
       '~ run command ${topLevelResults.command?.name}',
       commandName: topLevelResults.command?.name,
     );
-    final exitCode = await super.runCommand(topLevelResults);
-    return exitCode;
+    return await super.runCommand(topLevelResults);
   }
 
   @override

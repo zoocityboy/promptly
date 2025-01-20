@@ -56,6 +56,8 @@ abstract class Command<T> extends args_command_runner.Command<T> {
   /// The footer to be displayed at the end of the usage.
   int get getUsagePrefixLength => argParser.getPrefixLength;
 
+  Map<String, args.Option> get topLevelOptions => argParser.options;
+
   /// A single-line template for how to invoke this command (e.g. `"pub get
   /// `package`"`).
   @override
@@ -131,11 +133,24 @@ abstract class Command<T> extends args_command_runner.Command<T> {
 
   @override
   void addSubcommand(args_command_runner.Command<T> command) {
-    if (!['help', 'completion', 'install-completion-files', 'uninstall-completion-files'].contains(command.name)) {
-      logger.trace('[$name][${command.name}] addSubcommand');
-    }
+    final stopwatch = Stopwatch()..start();
 
     super.addSubcommand(command);
+    stopwatch.stop();
+    if (!['help', 'completion', 'install-completion-files', 'uninstall-completion-files'].contains(command.name)) {
+      var parent = command.parent;
+      final List<String> parents = [];
+      while (parent != null) {
+        parents.add(parent.name);
+        parent = parent.parent;
+      }
+      logger.trace(
+        'subcommand added',
+        commandName: parents.isNotEmpty ? parents.join('/') : null,
+        subcommand: command.name,
+        durationInMilliseconds: stopwatch.elapsedMilliseconds,
+      );
+    }
   }
 }
 

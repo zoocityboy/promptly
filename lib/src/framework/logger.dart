@@ -78,6 +78,8 @@ class LogItem {
     required this.level,
     required this.message,
     this.command,
+    this.subcommand,
+    this.durationInMilliseconds,
   }) {
     this.dateTime = dateTime ?? DateTime.now().toUtc();
   }
@@ -85,17 +87,31 @@ class LogItem {
   final LogLevel level;
   final String message;
   final String? command;
+  final String? subcommand;
+  final int? durationInMilliseconds;
+  String get duration {
+    if (durationInMilliseconds == null) return '';
+    if (durationInMilliseconds == 0) return '';
+    return '[${durationInMilliseconds}ms] ';
+  }
 
   String get commandName {
     if (command == null) {
-      return ' ';
+      return '';
     }
     return '[$command] ';
   }
 
-  String get formatedTime => DateFormat.Hms().format(dateTime);
-  String withTime() => '$formatedTime $commandName$message';
-  String withoutTime() => '$commandName$message';
+  String get subcommandName {
+    if (subcommand == null) {
+      return '';
+    }
+    return '[$subcommand] ';
+  }
+
+  String get formatedTime => '${DateFormat.Hms().format(dateTime)} ';
+  String withTime() => '$formatedTime$duration$commandName$subcommandName$message';
+  String withoutTime() => '$duration$commandName$subcommandName$message';
 
   @override
   int get hashCode => Object.hash(
@@ -103,6 +119,8 @@ class LogItem {
         level,
         message,
         command,
+        subcommand,
+        durationInMilliseconds,
       );
 
   @override
@@ -113,7 +131,9 @@ class LogItem {
           dateTime == other.dateTime &&
           level == other.level &&
           message == other.message &&
-          command == other.command;
+          command == other.command &&
+          subcommand == other.subcommand &&
+          durationInMilliseconds == other.durationInMilliseconds;
 }
 
 /// A simple logger that logs to stdout.
@@ -208,8 +228,15 @@ class Logger {
   /// Log a fatal message.
   void fatal(String message) => log(message, level: LogLevel.fatal);
 
-  LogItem trace(String message, {String? commandName}) =>
-      _delayed(LogItem(level: LogLevel.verbose, message: message, command: commandName));
+  LogItem trace(String message, {String? commandName, String? subcommand, int? durationInMilliseconds}) => _delayed(
+        LogItem(
+          level: LogLevel.verbose,
+          message: message,
+          command: commandName,
+          subcommand: subcommand,
+          durationInMilliseconds: durationInMilliseconds,
+        ),
+      );
 
   /// Logs a message with a delay.
   ///

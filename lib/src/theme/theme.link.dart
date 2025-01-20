@@ -40,7 +40,7 @@ class LinkTheme {
   factory LinkTheme.fromDefault() => LinkTheme.fromColors(ThemeColors.defaultColors);
   factory LinkTheme.fromColors(ThemeColors colors) {
     return LinkTheme(
-      linkStyle: (x) => colors.active(x).underline(),
+      linkStyle: (x) => colors.active(x),
       visitedStyle: (x) => colors.active(x),
       hoverStyle: (x) => colors.active(x).underline(),
       activeStyle: (x) => colors.active(x).underline(),

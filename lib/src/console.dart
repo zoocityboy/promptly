@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
@@ -95,7 +93,7 @@ class Console {
     sb.write(_theme.colors.success('❯').dim());
     sb.write(_theme.colors.success('❯'));
     sb.write(' ');
-    sb.write(_theme.colors.success(' $title ').inverse());
+    sb.write(_theme.colors.success(' ✓ $title ').inverse());
     if (message != null) {
       sb.write(' ');
       sb.write(_theme.colors.success(message));
@@ -115,7 +113,7 @@ class Console {
     sb.write(_theme.colors.error('❯'));
     sb.write(' ');
     sb.write(
-      ' $title '.onRed().white(),
+      ' ■ $title '.onRed().white(),
     );
     if (message != null) {
       sb.write(' ');
@@ -370,6 +368,8 @@ class Console {
     String? successMessage,
     String? failedMessage,
     bool clear = false,
+    bool throwOnError = false,
+    Function(Object error)? onError,
   }) async {
     final spinner = Loader.withTheme(
       prompt: prompt,
@@ -385,7 +385,11 @@ class Console {
     } catch (e) {
       spinner.failed(failedMessage ?? e.toString());
       reset();
-      exit(ExitCode.ioError.code);
+      onError?.call(e);
+      if (throwOnError) {
+        rethrow;
+      }
+      return Future.value();
     }
   }
 

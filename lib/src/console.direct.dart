@@ -277,6 +277,8 @@ Future<void> task(
   String? successMessage,
   String? failedMessage,
   bool clear = false,
+  bool throwOnError = false,
+  Function(Object)? onError,
 }) =>
     Console.instance.task(
       prompt,
@@ -284,6 +286,8 @@ Future<void> task(
       successMessage: successMessage,
       failedMessage: failedMessage,
       clear: clear,
+      throwOnError: throwOnError,
+      onError: onError,
     );
 
 /// Inserts a spacer line in the console output.
