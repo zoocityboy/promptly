@@ -237,7 +237,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
     }
     logger.flush();
     stdout.write('\x1b[m');
-
+    print('finish: $exitCode');
     return exitCode;
   }
 
@@ -350,5 +350,9 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 /// exited already. This is useful to prevent Future chains from proceeding
 /// after you've decided to exit.
 Future flushThenExit(int status) {
-  return Future.wait([stdout.close(), stderr.close()]).then((_) {});
+  return Future.wait([stdout.close(), stderr.close()]).then((_) {
+    exit(status);
+  }).catchError((e) {
+    exit(status);
+  });
 }

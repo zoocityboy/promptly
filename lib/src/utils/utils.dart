@@ -1,6 +1,6 @@
 import 'dart:async' show StreamSubscription;
 import 'dart:io' show ProcessSignal, exit;
-import 'dart:math' show max, min;
+import 'dart:math' show max;
 
 import 'package:promptly/src/framework/framework.dart' show Context;
 

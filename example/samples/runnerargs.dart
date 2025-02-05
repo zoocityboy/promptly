@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart' as argscr;
-import 'package:io/io.dart';
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/command/global.dart';
 
 class MyRunner extends argscr.CommandRunner<int> {
   MyRunner(super.executableName, super.description) {

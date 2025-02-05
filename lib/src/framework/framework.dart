@@ -1,4 +1,4 @@
-library promptly.framework;
+library;
 
 import 'dart:collection';
 import 'dart:io';
