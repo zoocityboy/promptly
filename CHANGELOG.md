@@ -1,3 +1,10 @@
+## 1.0.0-alpha.4
+***refactor:*** 
+- change the color scheme to a more readable one
+- refactored components
+- added more components
+
+
 ## 1.0.0-alpha.3
 - fix: color scheme
 
