@@ -64,9 +64,14 @@ class Context {
   /// Increases the number of lines written for the current render,
   /// and writes a line to the the console.
   void writeln([String? text]) {
+    // for (final line in text?.split('\n') ?? []) {
+
+    // }
     increaseLinesCount();
     _console.writeLine(text);
   }
+
+  void writeLine([String? text]) => writeLine(text);
 
   /// Erase one line above the current cursor by default.
   ///
@@ -161,8 +166,7 @@ class Context {
             buffer += key.char;
             index++;
           } else {
-            buffer =
-                buffer.substring(0, index) + key.char + buffer.substring(index);
+            buffer = buffer.substring(0, index) + key.char + buffer.substring(index);
             index++;
           }
         }
@@ -173,8 +177,7 @@ class Context {
         _console.cursorPosition = dc.Coordinate(screenRow, screenColOffset);
         _console.eraseCursorToEnd();
         write(buffer);
-        _console.cursorPosition =
-            dc.Coordinate(screenRow, screenColOffset + index);
+        _console.cursorPosition = dc.Coordinate(screenRow, screenColOffset + index);
         _console.showCursor();
       }
     }
@@ -222,10 +225,8 @@ class BufferContext extends Context {
 void Function() reset = Context.reset;
 
 String setColor(int value) => ansi.ansiSetColor(value);
-String setExtendedColor(int color) =>
-    ansi.ansiSetExtendedForegroundColor(color);
-String setExtendedBackgroundColor(int color) =>
-    ansi.ansiSetExtendedBackgroundColor(color);
+String setExtendedColor(int color) => ansi.ansiSetExtendedForegroundColor(color);
+String setExtendedBackgroundColor(int color) => ansi.ansiSetExtendedBackgroundColor(color);
 String resetColor() => ansi.ansiResetColor;
 String setTextStyles({
   bool bold = false,

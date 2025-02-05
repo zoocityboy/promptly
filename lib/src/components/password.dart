@@ -59,6 +59,7 @@ class Password extends StateComponent<String> {
 
 class _PasswordState extends State<Password> {
   late bool hasError;
+  int renderCount = 0;
 
   @override
   void init() {
@@ -68,6 +69,7 @@ class _PasswordState extends State<Password> {
 
   @override
   void dispose() {
+    context.erasePreviousLine(renderCount);
     context.writeln(
       promptSuccess(
         component.prompt,
@@ -88,6 +90,7 @@ class _PasswordState extends State<Password> {
           theme: component.theme,
         ),
       );
+      renderCount++;
     }
   }
 

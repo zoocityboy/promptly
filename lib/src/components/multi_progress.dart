@@ -50,8 +50,9 @@ class MultiProgress {
       current: _bars[index].current,
       increase: (n) => _bars[index].increase(n),
       clear: () => _bars[index].clear(),
-      finish: () {
-        final disposer = _bars[index].finish();
+      finish: (String? text, String? value) {
+        final disposer = _bars[index].finish(text, value);
+
         _dispose(() {
           _disposers.add(disposer);
         });

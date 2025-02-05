@@ -312,6 +312,7 @@ class Console {
     double size = 1.0,
     ProgressFn? startLabel,
     ProgressFn? endLabel,
+    bool hideProgressOnFinish = true,
   }) =>
       Progress.withTheme(
         prompt,
@@ -320,6 +321,7 @@ class Console {
         size: size,
         startLabel: startLabel,
         endLabel: endLabel,
+        hideProgressOnFinish: hideProgressOnFinish,
       ).interact();
 
   /// Constructs a [Loader] component with the supplied_theme.

@@ -1,4 +1,5 @@
 part of 'theme.dart';
+
 /// A class that defines the theme for a progress indicator.
 ///
 /// The [ProgressTheme] class allows customization of the appearance of a progress
@@ -29,6 +30,7 @@ part of 'theme.dart';
 /// ```
 
 class ProgressTheme {
+  final String linePrefix;
   final String prefix;
   final String suffix;
   final String empty;
@@ -37,8 +39,10 @@ class ProgressTheme {
   final StyleFunction emptyStyle;
   final StyleFunction filledStyle;
   final StyleFunction leadingStyle;
+  final StyleFunction linePrefixStyle;
 
   const ProgressTheme._({
+    required this.linePrefix,
     required this.prefix,
     required this.suffix,
     required this.empty,
@@ -47,24 +51,28 @@ class ProgressTheme {
     required this.emptyStyle,
     required this.filledStyle,
     required this.leadingStyle,
+    required this.linePrefixStyle,
   });
   factory ProgressTheme.fromDefault() {
-    return ProgressTheme.fromColors(ThemeColors.defaultColors);
+    return ProgressTheme.fromColors(ThemeColors.defaultColors, ThemeSymbols.defaultSymbols);
   }
-  factory ProgressTheme.fromColors(ThemeColors colors) {
+  factory ProgressTheme.fromColors(ThemeColors colors, ThemeSymbols symbols) {
     return ProgressTheme._(
-      prefix: colors.prefix('['),
-      suffix: colors.prefix(']'),
-      empty: '─',
-      filled: '─'.bold(),
-      leading: '─'.bold(),
+      linePrefix: symbols.dotStep,
+      prefix: colors.prefix(' '),
+      suffix: colors.prefix(' '),
+      empty: '⣿',
+      filled: '⣿'.bold(),
+      leading: '⣦'.bold(),
       emptyStyle: (x) => colors.prefix(x),
       filledStyle: (x) => colors.active(x),
-      leadingStyle: (x) => colors.success(x),
+      leadingStyle: (x) => colors.success(x).dim(),
+      linePrefixStyle: (x) => colors.prefix(x),
     );
   }
 
   ProgressTheme copyWith({
+    String? linePrefix,
     String? prefix,
     String? suffix,
     String? empty,
@@ -73,8 +81,10 @@ class ProgressTheme {
     StyleFunction? emptyStyle,
     StyleFunction? filledStyle,
     StyleFunction? leadingStyle,
+    StyleFunction? linePrefixStyle,
   }) {
     return ProgressTheme._(
+      linePrefix: linePrefix ?? this.linePrefix,
       prefix: prefix ?? this.prefix,
       suffix: suffix ?? this.suffix,
       empty: empty ?? this.empty,
@@ -83,17 +93,20 @@ class ProgressTheme {
       emptyStyle: emptyStyle ?? this.emptyStyle,
       filledStyle: filledStyle ?? this.filledStyle,
       leadingStyle: leadingStyle ?? this.leadingStyle,
+      linePrefixStyle: linePrefixStyle ?? this.linePrefixStyle,
     );
   }
 
   static final ProgressTheme defaultTheme = ProgressTheme._(
-    prefix: '['.darkGray(),
-    suffix: ']'.darkGray(),
-    empty: '─',
-    filled: '─'.bold(),
-    leading: '─'.bold(),
+    linePrefix: ThemeSymbols.defaultSymbols.dotStep,
+    prefix: ' '.darkGray(),
+    suffix: ' '.darkGray(),
+    empty: '⣿',
+    filled: '⣿'.bold(),
+    leading: '⣦'.bold(),
     emptyStyle: (x) => x.darkGray(),
     filledStyle: (x) => x.brightGreen(),
     leadingStyle: (x) => x.green(),
+    linePrefixStyle: (x) => x.darkGray(),
   );
 }

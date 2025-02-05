@@ -224,6 +224,7 @@ ProgressState progress(
   double size = 1.0,
   ProgressFn? startLabel,
   ProgressFn? endLabel,
+  bool hideProgressOnFinish = true,
 }) =>
     Console.instance.progress(
       prompt,
@@ -231,6 +232,7 @@ ProgressState progress(
       size: size,
       startLabel: startLabel,
       endLabel: endLabel,
+      hideProgressOnFinish: hideProgressOnFinish,
     );
 
 /// Displays a processing loader with a given prompt message.

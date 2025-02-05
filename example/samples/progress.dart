@@ -14,5 +14,5 @@ Future<void> main() async {
     result.increase(2);
   }
 
-  result.finish();
+  result.finish('Downloaded', 'File is downloaded.');
 }

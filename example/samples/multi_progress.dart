@@ -66,7 +66,7 @@ Future<void> main() async {
     p1.increase(2);
   }
 
-  p1.finish();
-  p2.finish();
-  p3.finish();
+  p1.finish('Downloaded', 'File is downloaded');
+  p2.finish('Uploaded', 'File is uploaded');
+  p3.finish('Shared', 'File is shared');
 }

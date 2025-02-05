@@ -237,14 +237,13 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
     }
     logger.flush();
     stdout.write('\x1b[m');
-    print('finish: $exitCode');
     return exitCode;
   }
 
   @override
   Future<int?> runCommand(args.ArgResults topLevelResults) async {
     var commands = this.commands;
-    print(topLevelResults);
+    // print(topLevelResults);
     var argResults = topLevelResults;
     var commandString = executableName;
     args_command_runner.Command<int>? command;

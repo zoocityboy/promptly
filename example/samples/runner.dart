@@ -52,7 +52,7 @@ class TestCommand extends Command<int> {
       await Future.delayed(const Duration(milliseconds: 1));
       pg.increase(2);
     }
-    pg.finish();
+    pg.finish('Downloaded', 'File is downloaded.');
 
     line();
     finishSuccesfuly(name, message: 'Done');

@@ -48,7 +48,7 @@ class Prompt extends StateComponent<String> {
 class _PromptState extends State<Prompt> {
   String? value;
   String? error;
-
+  int renderCount = 0;
   @override
   void init() {
     super.init();
@@ -57,6 +57,7 @@ class _PromptState extends State<Prompt> {
 
   @override
   void dispose() {
+    context.erasePreviousLine(renderCount);
     if (value != null) {
       context.write(
         promptSuccess(
@@ -78,6 +79,7 @@ class _PromptState extends State<Prompt> {
           theme: component.theme,
         ),
       );
+      renderCount++;
     }
   }
 
@@ -92,9 +94,7 @@ class _PromptState extends State<Prompt> {
         ),
       );
       final input = context.readLine(initialText: component.initialText);
-      final line = input.isEmpty && component.defaultValue != null
-          ? component.defaultValue!
-          : input;
+      final line = input.isEmpty && component.defaultValue != null ? component.defaultValue! : input;
       final validator = component.validator;
 
       if (validator != null) {

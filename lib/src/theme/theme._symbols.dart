@@ -135,7 +135,7 @@ class ThemeSymbols {
     spinners: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
 
     //
-    error: '■',
+    error: '✖',
     success: '✔',
   );
 }

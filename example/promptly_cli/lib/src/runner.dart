@@ -1,7 +1,5 @@
 import 'package:promptly/promptly.dart';
-
-import 'commands/example.dart';
-import 'commands/sample.dart';
+import 'package:promptly_cli/src/commands/account.dart';
 
 class PromptlyCliRunner extends CommandRunner {
   PromptlyCliRunner()
@@ -10,7 +8,8 @@ class PromptlyCliRunner extends CommandRunner {
           'A command-line interface for Promptly.',
           version: '0.0.1',
         ) {
-    addCommand(ExampleCommand());
-    addCommand(SampleCommand());
+    // addCommand(ExampleCommand());
+    // addCommand(SampleCommand());
+    addCommand(AccountCommand());
   }
 }

@@ -3,15 +3,16 @@ import 'dart:io' show ProcessSignal;
 
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
+import 'package:promptly/src/utils/prompt.dart';
 import 'package:promptly/src/utils/utils.dart';
 import 'package:tint/tint.dart';
 
-String _startLabel(ProgressData x) {
+String _endLabel(ProgressData x) {
   int numDigits(int n) => n.toString().length;
   return '${x.filled.toString().padLeft(numDigits(x.length), '')}/${x.length}';
 }
 
-String _endLabel(ProgressData x) {
+String _startLabel(ProgressData x) {
   int numDigits(int n) => n.toString().length;
   return '${x.percentage.toString().padLeft(numDigits(x.length), '')}%';
 }
@@ -52,7 +53,7 @@ extension ProgressDataPercentage on ProgressData {
 /// String myProgressFormatter(ProgressData progress) {
 ///   return 'Progress: ${progress.percentage}%';
 /// }
-/// 
+///
 /// ProgressFn progressFn = myProgressFormatter;
 /// ```
 typedef ProgressFn = String Function(ProgressData progress);
@@ -117,6 +118,7 @@ class Progress extends StateComponent<ProgressState> {
     this.size = 1.0,
     ProgressFn? startLabel,
     ProgressFn? endLabel,
+    this.hideProgressOnFinish = true,
   })  : theme = Theme.defaultTheme,
         startLabel = startLabel ?? _startLabel,
         endLabel = endLabel ?? _endLabel;
@@ -129,10 +131,13 @@ class Progress extends StateComponent<ProgressState> {
     this.size = 1.0,
     ProgressFn? startLabel,
     ProgressFn? endLabel,
+    this.hideProgressOnFinish = true,
   })  : startLabel = startLabel ?? _startLabel,
         endLabel = endLabel ?? _endLabel;
 
   Context? _context;
+
+  final bool hideProgressOnFinish;
 
   final String prompt;
 
@@ -197,13 +202,15 @@ class ProgressState {
 
   /// To be run to indicate that the progress is done,
   /// and the rendering can be wiped from the terminal.
-  void Function() Function() finish;
+  void Function() Function(String? text, String? value) finish;
 }
 
 class _ProgressState extends State<Progress> {
   late int current;
   late bool done;
   late StreamSubscription<ProcessSignal> sigint;
+  String? finishMessage;
+  String? finishValue;
 
   ProgressTheme get theme => component.theme.progressTheme;
 
@@ -218,37 +225,49 @@ class _ProgressState extends State<Progress> {
 
   @override
   void dispose() {
-    context.wipe();
+    if (component.hideProgressOnFinish) context.wipe();
     context.showCursor();
+    if (finishMessage != null || finishValue != null) {
+      context.write(promptSuccess(finishMessage ?? '', theme: component.theme, value: finishValue ?? ''));
+    }
     super.dispose();
   }
 
   @override
   void render() {
     final line = StringBuffer();
-    final startLabel =
-        component.startLabel((filled: current, length: component.length));
-    final endLabel =
-        component.endLabel((filled: current, length: component.length));
+
+    /// If the progress is done, clear the line and return.
+    final startLabel = component.startLabel((filled: current, length: component.length));
+    final endLabel = component.endLabel((filled: current, length: component.length));
     final occupied = theme.prefix.strip().length +
         theme.suffix.strip().length +
         startLabel.strip().length +
-        endLabel.strip().length;
+        endLabel.strip().length +
+        component.theme.spacing * 2;
     final available = (context.windowWidth * component.size).round() - occupied;
 
+    /// If the available space is less than the length of the progress bar,
+    line.write(theme.linePrefixStyle(' '.padRight(component.theme.spacing)));
     line.write(startLabel);
     line.write(theme.prefix);
     line.write(
       _progress(
         theme,
         available,
-        (available / component.length * current).round(),
+        (available / component.length * current).ceil(),
       ),
     );
     line.write(theme.suffix);
     line.write(endLabel);
 
-    context.writeln(line.toString());
+    final msgStringBuffer = StringBuffer();
+    msgStringBuffer.write(theme.linePrefixStyle(theme.linePrefix.padRight(component.theme.spacing)));
+    msgStringBuffer.write(theme.linePrefixStyle(component.prompt));
+
+    context
+      ..writeln(msgStringBuffer.toString())
+      ..writeln(line.toString());
   }
 
   @override
@@ -267,7 +286,9 @@ class _ProgressState extends State<Progress> {
           current = 0;
         });
       },
-      finish: () {
+      finish: (String? text, String? value) {
+        finishMessage = text;
+        finishValue = value;
         setState(() {
           done = true;
           sigint.cancel();

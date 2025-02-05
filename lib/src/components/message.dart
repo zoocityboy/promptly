@@ -35,13 +35,25 @@ class Message extends TypeComponent<String> {
       MessageStyle.success => SuccessMessageTheme.withTheme(theme),
     };
     final buffer = StringBuffer();
-    buffer.write(
-      messageTheme.prefixStyle(
-        (prefix ?? messageTheme.prefix).removeAnsi().padRight(theme.spacing),
-      ),
-    );
-    buffer.write(messageTheme.messageStyle(text));
-    buffer.write('\n');
+    final lines = text.split('\n');
+    for (final line in lines) {
+      final hidePrefix = (lines.indexOf(line) > 0 && lines.length > 1);
+      final p = hidePrefix ? ' ' : (prefix ?? messageTheme.prefix);
+      buffer.write(
+        messageTheme.prefixStyle(
+          p.removeAnsi().padRight(theme.spacing),
+        ),
+      );
+      buffer.write(messageTheme.messageStyle(line));
+      buffer.write('\n');
+    }
+    // buffer.write(
+    //   messageTheme.prefixStyle(
+    //     (prefix ?? messageTheme.prefix).removeAnsi().padRight(theme.spacing),
+    //   ),
+    // );
+    // buffer.write(messageTheme.messageStyle(text));
+    // buffer.write('\n');
     return buffer.toString();
   }
 
