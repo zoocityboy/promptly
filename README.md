@@ -36,6 +36,8 @@ Future<void> main(List<String> args) async {
 }
 ```
 
+![Demo](https://raw.githubusercontent.com/zoocityboy/promptly/refs/heads/main/assets/demo.gif)
+
 ### Components
 
 A collection of customizable interactive command-line components.
