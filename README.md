@@ -36,7 +36,7 @@ Future<void> main(List<String> args) async {
 }
 ```
 
-![Demo](https://raw.githubusercontent.com/zoocityboy/promptly/refs/heads/main/assets/demo.gif)
+
 
 ### Components
 
@@ -48,7 +48,7 @@ As an overview, you can make a `Select` component like this.
 
 ```dart
 final languages = ['Rust', 'Dart', 'TypeScript'];
-final selection = select<String>(
+final selection = selectOne<String>(
   'Your favorite programming language',
   options: languages,
 
@@ -59,13 +59,13 @@ print('${languages[selection]}');
 
 It will result in something like this,
 
-<!-- <img src="https://i.imgur.com/boGsIn4.png" /> -->
+![Demo](https://raw.githubusercontent.com/zoocityboy/promptly/refs/heads/main/assets/demo.gif)
 
 <br>
 
 ## Installation
 
-Install the latest version of interact as a dependency as shown in [pub.dev](https://pub.dev/packages/promptly).
+Install the latest version of Promptly as a dependency as shown in [pub.dev](https://pub.dev/packages/promptly).
 
 <br>
 
