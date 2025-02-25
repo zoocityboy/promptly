@@ -1,14 +1,11 @@
+import 'package:args/src/utils.dart' show wrapText;
 import 'package:promptly/src/framework/framework.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
 
 class Message extends TypeComponent<String> {
-  Message({
-    required this.text,
-    this.prefix,
-    this.style = MessageStyle.text,
-    Context? context,
-  })  : theme = Theme.defaultTheme,
+  Message({required this.text, this.prefix, this.style = MessageStyle.text, Context? context})
+      : theme = Theme.defaultTheme,
         _context = context ?? Context();
 
   Message.withTheme({
@@ -35,25 +32,15 @@ class Message extends TypeComponent<String> {
       MessageStyle.success => SuccessMessageTheme.withTheme(theme),
     };
     final buffer = StringBuffer();
-    final lines = text.split('\n');
+    final lines = wrapText(text, length: 80 - theme.spacing).split('\n');
     for (final line in lines) {
       final hidePrefix = (lines.indexOf(line) > 0 && lines.length > 1);
       final p = hidePrefix ? ' ' : (prefix ?? messageTheme.prefix);
-      buffer.write(
-        messageTheme.prefixStyle(
-          p.removeAnsi().padRight(theme.spacing),
-        ),
-      );
+
+      buffer.write(messageTheme.prefixStyle(p.removeAnsi().padRight(theme.spacing)));
       buffer.write(messageTheme.messageStyle(line));
       buffer.write('\n');
     }
-    // buffer.write(
-    //   messageTheme.prefixStyle(
-    //     (prefix ?? messageTheme.prefix).removeAnsi().padRight(theme.spacing),
-    //   ),
-    // );
-    // buffer.write(messageTheme.messageStyle(text));
-    // buffer.write('\n');
     return buffer.toString();
   }
 
@@ -79,14 +66,7 @@ class Message extends TypeComponent<String> {
 /// - `warning`: A warning message indicating a potential issue.
 /// - `success`: A message indicating a successful operation.
 /// - `error`: A message indicating an error or failure.
-enum MessageStyle {
-  text,
-  verbose,
-  info,
-  warning,
-  success,
-  error,
-}
+enum MessageStyle { text, verbose, info, warning, success, error }
 
 /// A sealed class representing the theme for a message.
 ///
@@ -94,11 +74,7 @@ enum MessageStyle {
 /// the prefix, prefix style, and message style.
 sealed class MessageTheme {
   /// Creates a [MessageTheme] with the given prefix, prefix style, and message style.
-  const MessageTheme({
-    required this.prefix,
-    required this.prefixStyle,
-    required this.messageStyle,
-  });
+  const MessageTheme({required this.prefix, required this.prefixStyle, required this.messageStyle});
 
   /// The prefix string to be displayed before the message.
   final String prefix;
@@ -120,11 +96,7 @@ class VerboseMessageTheme extends MessageTheme {
 
   /// Creates a [VerboseMessageTheme] with the given theme.
   VerboseMessageTheme.withTheme(Theme theme)
-      : super(
-          prefix: theme.symbols.vLine,
-          prefixStyle: theme.colors.prefix,
-          messageStyle: theme.colors.hint,
-        );
+      : super(prefix: theme.symbols.vLine, prefixStyle: theme.colors.prefix, messageStyle: theme.colors.hint);
 }
 
 /// A class representing the text message theme.
@@ -137,11 +109,7 @@ class TextMessageTheme extends MessageTheme {
 
   /// Creates a [TextMessageTheme] with the given theme.
   TextMessageTheme.withTheme(Theme theme)
-      : super(
-          prefix: theme.symbols.vLine,
-          prefixStyle: theme.colors.prefix,
-          messageStyle: theme.colors.text,
-        );
+      : super(prefix: theme.symbols.vLine, prefixStyle: theme.colors.prefix, messageStyle: theme.colors.text);
 }
 
 /// A class representing the info message theme.
@@ -154,11 +122,7 @@ class InfoMessageTheme extends MessageTheme {
 
   /// Creates an [InfoMessageTheme] with the given theme.
   InfoMessageTheme.withTheme(Theme theme)
-      : super(
-          prefix: theme.symbols.dotStep,
-          prefixStyle: theme.colors.prefix,
-          messageStyle: theme.colors.info,
-        );
+      : super(prefix: theme.symbols.dotStep, prefixStyle: theme.colors.prefix, messageStyle: theme.colors.info);
 }
 
 /// A class representing the warning message theme.
@@ -171,11 +135,7 @@ class WarningMessageTheme extends MessageTheme {
 
   /// Creates a [WarningMessageTheme] with the given theme.
   WarningMessageTheme.withTheme(Theme theme)
-      : super(
-          prefix: theme.symbols.dotStep,
-          prefixStyle: theme.colors.prefix,
-          messageStyle: theme.colors.warning,
-        );
+      : super(prefix: theme.symbols.dotStep, prefixStyle: theme.colors.prefix, messageStyle: theme.colors.warning);
 }
 
 /// A class representing the error message theme.
@@ -188,11 +148,7 @@ class ErrorMessageTheme extends MessageTheme {
 
   /// Creates an [ErrorMessageTheme] with the given theme.
   ErrorMessageTheme.withTheme(Theme theme)
-      : super(
-          prefix: theme.symbols.error,
-          prefixStyle: theme.colors.error,
-          messageStyle: theme.colors.error,
-        );
+      : super(prefix: theme.symbols.error, prefixStyle: theme.colors.error, messageStyle: theme.colors.error);
 }
 
 /// A class representing the success message theme.
@@ -205,9 +161,5 @@ class SuccessMessageTheme extends MessageTheme {
 
   /// Creates a [SuccessMessageTheme] with the given theme.
   SuccessMessageTheme.withTheme(Theme theme)
-      : super(
-          prefix: '✔',
-          prefixStyle: theme.colors.success,
-          messageStyle: theme.colors.success,
-        );
+      : super(prefix: '✔', prefixStyle: theme.colors.success, messageStyle: theme.colors.success);
 }
