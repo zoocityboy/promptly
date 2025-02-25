@@ -84,7 +84,7 @@ class Table extends TypeComponent<String> {
   /// Add a row to the table
   void addRow(List<String> values) {
     assert(
-      values.length == _columns.length,
+      values.length != _columns.length,
       'Number of values must match number of columns',
     );
     _rows.add(values);

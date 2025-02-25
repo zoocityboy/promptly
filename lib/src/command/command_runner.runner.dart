@@ -184,12 +184,10 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   @override
   void addCommand(args_command_runner.Command<int> command) {
-    final stopwatch = Stopwatch()..start();
-
     super.addCommand(command);
-    stopwatch.stop();
+
     if (!['help', 'completion', 'install-completion-files', 'uninstall-completion-files'].contains(command.name)) {
-      logger.trace('command added', commandName: command.name, durationInMilliseconds: stopwatch.elapsedMilliseconds);
+      logger.trace('command added', commandName: command.name);
     }
   }
 
@@ -203,10 +201,12 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
   @override
   Future<int> run(Iterable<String> args) async {
     int exitCode;
+
     try {
       final p = parse(args);
       final logLevel = p.option('log-level') ?? LogLevel.error.name;
       logger.level = LogLevel.values.byName(logLevel);
+      logger.trace('log level set to $logLevel');
       final result = await runCommand(p) ?? ExitCode.success.code;
       exitCode = result;
     } on FormatException catch (e) {
