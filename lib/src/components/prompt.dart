@@ -11,6 +11,7 @@ class Prompt extends StateComponent<String> {
     this.validator,
     this.initialText = '',
     this.defaultValue,
+    this.value,
   }) : theme = Theme.defaultTheme;
 
   /// Constructs an [Prompt] component with the supplied theme.
@@ -20,6 +21,7 @@ class Prompt extends StateComponent<String> {
     this.validator,
     this.initialText = '',
     this.defaultValue,
+    this.value,
   });
 
   /// The theme for the component.
@@ -40,6 +42,8 @@ class Prompt extends StateComponent<String> {
   /// instead of returning `true`, the error will be shown and
   /// a new input will be asked.
   final Validator<String>? validator;
+
+  final String? value;
 
   @override
   _PromptState createState() => _PromptState();
@@ -85,6 +89,12 @@ class _PromptState extends State<Prompt> {
 
   @override
   String interact() {
+    if (component.value != null) {
+      setState(() {
+        value = component.value;
+      });
+      return value!;
+    }
     while (true) {
       context.write(
         promptInput(

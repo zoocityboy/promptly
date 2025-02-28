@@ -39,6 +39,7 @@ class Confirm extends StateComponent<bool> {
     required this.prompt,
     this.defaultValue,
     this.enterForConfirm = false,
+    this.value,
   }) : theme = Theme.defaultTheme;
 
   /// Constructs a [Confirm] component with the supplied theme.
@@ -47,6 +48,7 @@ class Confirm extends StateComponent<bool> {
     required this.prompt,
     this.defaultValue,
     this.enterForConfirm = false,
+    this.value,
   });
 
   /// The theme of the component.
@@ -62,6 +64,8 @@ class Confirm extends StateComponent<bool> {
   /// the user has responded.
   final bool enterForConfirm;
 
+  final bool? value;
+
   @override
   _ConfirmState createState() => _ConfirmState();
 }
@@ -76,6 +80,7 @@ class _ConfirmState extends State<Confirm> {
     if (component.defaultValue != null) {
       answer = component.defaultValue;
     }
+
     context.hideCursor();
   }
 
@@ -111,6 +116,12 @@ class _ConfirmState extends State<Confirm> {
 
   @override
   bool interact() {
+    if (component.value != null) {
+      setState(() {
+        answer = component.value;
+      });
+      return answer!;
+    }
     while (true) {
       final key = context.readKey();
 

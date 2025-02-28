@@ -84,7 +84,7 @@ class Console {
   /// ```dart
   /// end('Session Title', message: 'Session ended successfully.');
   /// ```
-  int success(String title, {String? message}) {
+  int success(String title, {String? message, String? suggestion}) {
     final sb = StringBuffer();
     if (theme.spacing > 0) {
       sb.write(_theme.colors.prefix('└'));
@@ -100,6 +100,25 @@ class Console {
     }
     line();
     _ctx.writeln(sb.toString());
+    if (suggestion != null) {
+      line();
+      final sb = StringBuffer();
+      sb.withPrefix(
+        _theme.symbols.dotStep,
+        _theme.colors.hint('Next steps'),
+        spacing: theme.spacing,
+        style: _theme.colors.warning,
+      );
+      sb.writeln('');
+      sb.withPrefix(
+        '',
+        _theme.colors.warning(suggestion),
+        spacing: theme.spacing,
+        style: _theme.colors.warning,
+      );
+      // sb.writeln(_theme.colors.hint(suggestion));
+      _ctx.writeln(sb.toString());
+    }
     return ExitCode.success.code;
   }
 
@@ -212,6 +231,7 @@ class Console {
     Validator<String>? validator,
     String initialText = '',
     String? defaultValue,
+    String? value,
   }) =>
       Prompt.withTheme(
         theme: _theme,
@@ -219,6 +239,7 @@ class Console {
         validator: validator,
         initialText: initialText,
         defaultValue: defaultValue,
+        value: value,
       ).interact();
 
   /// Constructs a [Password] component with the supplied_theme.
@@ -227,6 +248,7 @@ class Console {
     bool confirmation = false,
     String? confirmPrompt,
     String? confirmError,
+    String? value,
   }) =>
       Password.withTheme(
         theme: _theme,
@@ -234,6 +256,7 @@ class Console {
         confirmation: confirmation,
         confirmPrompt: confirmPrompt,
         confirmError: confirmError,
+        value: value,
       ).interact();
 
   /// Constructs a [Confirm] component with the supplied_theme.
@@ -241,12 +264,14 @@ class Console {
     String prompt, {
     bool? defaultValue,
     bool enterForConfirm = false,
+    bool? value,
   }) =>
       Confirm.withTheme(
         theme: _theme,
         prompt: prompt,
         defaultValue: defaultValue,
         enterForConfirm: enterForConfirm,
+        value: value,
       ).interact();
 
   /// Constructs a [SelectOne] component with the supplied_theme.
@@ -254,13 +279,15 @@ class Console {
     String prompt, {
     required List<T> choices,
     T? defaultValue,
-    required String Function(T)? display,
+    String Function(T)? display,
+    int? value,
   }) {
     final result = SelectOne.withTheme(
       theme: _theme,
       prompt: prompt,
       choices: choices.map((e) => display?.call(e) ?? e.toString()).toList(),
       initialIndex: defaultValue != null ? choices.indexOf(defaultValue) : 0,
+      value: value,
     ).interact();
     return choices[result];
   }
@@ -271,12 +298,14 @@ class Console {
     required List<T> choices,
     List<T>? defaultValues,
     String Function(T)? display,
+    List<int>? value,
   }) {
     final result = SelectAny.withTheme(
       theme: _theme,
       prompt: prompt,
       choices: choices.map((e) => display?.call(e) ?? e.toString()).toList(),
       defaults: defaultValues != null ? choices.map((e) => defaultValues.contains(e)).toList() : null,
+      value: value,
     ).interact();
     return result.map((index) => choices[index]).toList();
   }

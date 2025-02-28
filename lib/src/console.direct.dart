@@ -79,12 +79,14 @@ String prompt(
   Validator<String>? validator,
   String initialText = '',
   String? defaultValue,
+  String? value,
 }) =>
     Console.instance.prompt(
       prompt,
       validator: validator,
       initialText: initialText,
       defaultValue: defaultValue,
+      value: value,
     );
 
 /// Prompts the user to enter a password securely.
@@ -101,12 +103,14 @@ String password(
   bool confirmation = false,
   String? confirmPrompt,
   String? confirmError,
+  String? value,
 }) =>
     Console.instance.password(
       prompt,
       confirmation: confirmation,
       confirmPrompt: confirmPrompt,
       confirmError: confirmError,
+      value: value,
     );
 
 /// Prompts the user for a confirmation.
@@ -126,11 +130,13 @@ bool confirm(
   String prompt, {
   bool? defaultValue,
   bool enterForConfirm = false,
+  bool? value,
 }) =>
     Console.instance.confirm(
       prompt,
       defaultValue: defaultValue,
       enterForConfirm: enterForConfirm,
+      value: value,
     );
 
 /// Prompts the user to select an option from a list of provided options.
@@ -156,12 +162,14 @@ T selectOne<T>(
   required List<T> choices,
   T? defaultValue,
   String Function(T)? display,
+  int? value,
 }) =>
     Console.instance.selectOne(
       prompt,
       choices: choices,
       defaultValue: defaultValue,
       display: display,
+      value: value,
     );
 
 /// Prompts the user with a multi-select question and returns the selected choices.
@@ -187,12 +195,14 @@ List<T> selectAny<T>(
   required List<T> choices,
   List<T>? defaultValues,
   String Function(T)? display,
+  List<int>? value,
 }) =>
     Console.instance.selectAny(
       prompt,
       choices: choices,
       defaultValues: defaultValues,
       display: display,
+      value: value,
     );
 
 /// Creates a table row with the specified properties.
@@ -322,7 +332,8 @@ void clear() => Console.instance.clear();
 /// - Parameters:
 ///   - title: The title to display when ending the console session.
 ///   - message: An optional message to display when ending the console session.
-int finishSuccesfuly(String title, {String? message}) => Console.instance.success(title, message: message);
+int finishSuccesfuly(String title, {String? message, String? suggestion}) =>
+    Console.instance.success(title, message: message, suggestion: suggestion);
 
 /// Displays a failure message in the console and returns an exit code.
 ///

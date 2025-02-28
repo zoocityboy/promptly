@@ -10,6 +10,7 @@ class SelectAny extends StateComponent<List<int>> {
     required this.prompt,
     required this.choices,
     this.defaults,
+    this.value,
   }) : theme = Theme.defaultTheme;
 
   /// Constructs a [SelectAny] component with the supplied theme.
@@ -18,6 +19,7 @@ class SelectAny extends StateComponent<List<int>> {
     required this.choices,
     required this.theme,
     this.defaults,
+    this.value,
   });
 
   /// The theme of the component.
@@ -32,6 +34,8 @@ class SelectAny extends StateComponent<List<int>> {
 
   /// The default values to indicate which options are checked.
   final List<bool>? defaults;
+
+  final List<int>? value;
 
   @override
   _SelectAnyState createState() => _SelectAnyState();
@@ -62,11 +66,7 @@ class _SelectAnyState extends State<SelectAny> {
         );
       } else {
         selection.addAll(
-          component.defaults!
-              .asMap()
-              .entries
-              .where((entry) => entry.value)
-              .map((entry) => entry.key),
+          component.defaults!.asMap().entries.where((entry) => entry.value).map((entry) => entry.key),
         );
       }
     }
@@ -82,10 +82,7 @@ class _SelectAnyState extends State<SelectAny> {
 
   @override
   void dispose() {
-    final values = selection
-        .map((x) => component.choices[x])
-        .map(theme.inactiveStyle)
-        .join('☃︎ ');
+    final values = selection.map((x) => component.choices[x]).map(theme.inactiveStyle).join('☃︎ ');
 
     context.writeln(
       promptSuccess(
@@ -133,6 +130,12 @@ class _SelectAnyState extends State<SelectAny> {
 
   @override
   List<int> interact() {
+    if (component.value != null) {
+      setState(() {
+        selection = component.value!;
+      });
+      return selection;
+    }
     while (true) {
       final key = context.readKey();
 

@@ -10,6 +10,7 @@ class SelectOne extends StateComponent<int> {
     required this.prompt,
     required this.choices,
     this.initialIndex = 0,
+    this.value,
   }) : theme = Theme.defaultTheme;
 
   /// Constructs a [SelectOne] component with the supplied theme.
@@ -18,6 +19,7 @@ class SelectOne extends StateComponent<int> {
     required this.choices,
     required this.theme,
     this.initialIndex = 0,
+    this.value,
   });
 
   /// The theme of the component.
@@ -34,6 +36,8 @@ class SelectOne extends StateComponent<int> {
   /// The [List] of available [String] options to show
   /// to the user.
   final List<String> choices;
+
+  final int? value;
 
   @override
   _SelectOneState createState() => _SelectOneState();
@@ -100,6 +104,12 @@ class _SelectOneState extends State<SelectOne> {
 
   @override
   int interact() {
+    if (component.value != null) {
+      setState(() {
+        index = component.value!;
+      });
+      return index;
+    }
     while (true) {
       final key = context.readKey();
 

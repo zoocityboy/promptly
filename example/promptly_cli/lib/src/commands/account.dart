@@ -36,7 +36,7 @@ class AccountCommand extends Command<int> {
       confirmation: true,
     );
     line();
-    selectOne('Rolde', choices: ['Admin', 'User', 'Guest']);
+    selectOne('Rolde', choices: ['Admin', 'User', 'Guest'], value: 2);
 
     line();
     selectAny('Choose authorization type', choices: ['Token', 'Basic', 'OAuth']);

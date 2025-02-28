@@ -25,6 +25,7 @@ class Password extends StateComponent<String> {
     this.confirmation = false,
     this.confirmPrompt,
     this.confirmError,
+    this.value,
   }) : theme = Theme.defaultTheme;
 
   /// Constructs a [Password] component with the supplied theme.
@@ -34,6 +35,7 @@ class Password extends StateComponent<String> {
     this.confirmation = false,
     this.confirmPrompt,
     this.confirmError,
+    this.value,
   });
 
   /// The theme for the component.
@@ -52,6 +54,8 @@ class Password extends StateComponent<String> {
   /// The error message to be shown if the repeated password
   /// did not match the initial password.
   final String? confirmError;
+
+  final String? value;
 
   @override
   _PasswordState createState() => _PasswordState();
@@ -96,6 +100,12 @@ class _PasswordState extends State<Password> {
 
   @override
   String interact() {
+    if (component.value != null) {
+      setState(() {
+        hasError = false;
+      });
+      return component.value!;
+    }
     while (true) {
       hasError = false;
       context.write(
