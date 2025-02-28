@@ -1,3 +1,6 @@
+## 1.0.0-alpha.6
+***feat:***
+    - added a new attribute for preselected value (all components)
 ## 1.0.0-alpha.5
 ***fix:***
 - assert
