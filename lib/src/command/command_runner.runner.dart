@@ -140,34 +140,15 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
   String get publicUsageWithoutDescription {
     final usegeLines = argParser.customUsage.split('\n');
     final buffer = StringBuffer();
-    buffer.write(
-      getStyledCommandUsage(
-        commands,
-        lineLength: argParser.usageLineLength,
-        helpUsageLength: getUsagePrefixLength,
-      ),
-    );
-    if (usegeLines.isNotEmpty) {
-      buffer.section(' Flags ');
-    }
-    for (final line in usegeLines) {
-      buffer
-        ..prefixLine()
-        ..write(line)
-        ..newLine();
-    }
-    if (usageFooter != null) {
-      buffer
-        ..verticalLine()
-        ..prefixLine()
-        ..write(console.theme.colors.hint(usageFooter!))
-        ..newLine()
-        ..verticalLine();
-    }
     buffer
-      ..verticalLine()
-      ..writeln(console.theme.prefixRun(invocation))
-      ..newLine();
+      ..write(
+        getStyledCommandUsage(
+          commands,
+          lineLength: argParser.usageLineLength,
+          helpUsageLength: getUsagePrefixLength,
+        ),
+      )
+      ..write(getStyleCommandUsegeBottom(usegeLines, usageFooter, invocation));
 
     return buffer.toString();
   }

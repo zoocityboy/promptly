@@ -101,12 +101,34 @@ String getStyledCommandUsage(
         ..write(line)
         ..newLine();
     }
-    if (category.isNotEmpty) {
+    buffer
+      ..prefixLine()
+      ..newLine();
+  }
+  return buffer.toString();
+}
+
+String getStyleCommandUsegeBottom(List<String> usegeLines, String? usageFooter, String invocation) {
+  final buffer = StringBuffer();
+  if (usegeLines.isNotEmpty) {
+    buffer.section(' Flags ');
+
+    for (final line in usegeLines) {
       buffer
-        ..write(console.theme.prefixLine(''))
+        ..prefixLine()
+        ..write(line)
         ..newLine();
     }
   }
+
+  if (usageFooter != null) {
+    buffer
+      ..prefixLine()
+      ..writeln(console.theme.colors.hint(usageFooter));
+  }
+  buffer
+    ..verticalLine()
+    ..writeln(console.theme.prefixRun(invocation));
   return buffer.toString();
 }
 

@@ -102,31 +102,8 @@ abstract class Command<T> extends args_command_runner.Command<T> {
             helpUsageLength: getUsagePrefixLength,
           ),
         )
-        ..newLine();
+        ..write(getStyleCommandUsegeBottom(usegeLines, usageFooter, invocation));
     }
-
-    if (usegeLines.isNotEmpty) {
-      buffer.section(' Flags ');
-      for (final line in usegeLines) {
-        buffer
-          ..prefixLine()
-          ..write(line)
-          ..newLine();
-      }
-      buffer.prefixLine();
-    }
-
-    if (usageFooter != null) {
-      buffer
-        ..write(usageFooter)
-        ..newLine();
-    }
-
-    buffer
-      ..newLine()
-      ..verticalLine()
-      ..writeln(console.theme.prefixRun(invocation))
-      ..newLine();
 
     return buffer.toString();
   }
