@@ -62,22 +62,11 @@ class Header extends TypeComponent<String> {
     final titleBuffer = StringBuffer(theme.prefixHeaderLine(''))
       ..write(theme.colors.success(' $title ').inverse())
       ..write(' ');
-    final currentLng = titleBuffer.toString().wcwidth();
 
     ///
     final buffer = StringBuffer()..write(titleBuffer.toString());
-    final maxLength = _context.windowWidth - buffer.length;
     final msg = (message ?? '').replaceAll('\n', '');
-    if (msg.length >= maxLength - currentLng) {
-      buffer.newLine();
-      final lines = wrapText(msg, length: maxLength - currentLng, hangingIndent: 0).split('\n');
-      buffer.prefixLine();
-      for (final line in lines) {
-        buffer.writeln(console.theme.prefixLine(console.theme.colors.hint(line)));
-      }
-    } else {
-      buffer.write(console.theme.colors.hint(msg));
-    }
+    buffer.write(console.theme.colors.hint(msg));
 
     buffer
       ..newLine()

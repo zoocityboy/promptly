@@ -63,7 +63,7 @@ class Table extends TypeComponent<String> {
   final Theme _theme;
 
   /// List of rows, each row is a list of strings
-  final List<List<String>> _rows = [];
+  final List<List<dynamic>> _rows = List.of([]);
   final List<Column> _columns;
 
   /// Padding between columns
@@ -82,15 +82,16 @@ class Table extends TypeComponent<String> {
         _theme = theme;
 
   /// Add a row to the table
-  void addRow(List<String> values) {
+  void addRow(List<dynamic> values) {
     assert(
       values.length != _columns.length,
       'Number of values must match number of columns',
     );
+
     _rows.add(values);
   }
 
-  void addAll(List<List<String>> rows) {
+  void addAll(List<List<dynamic>> rows) {
     for (final row in rows) {
       addRow(row);
     }
@@ -102,10 +103,9 @@ class Table extends TypeComponent<String> {
   }
 
   String get _formated {
-    final buffer = StringBuffer();
     final table = cli_table.Table(
       truncateChar: _theme.promptTheme.hintStyle(' ').dim(),
-      columnWidths: _columns.map((column) => column.width ?? 0).toList(),
+      // columnWidths: _columns.map((column) => column.width ?? 10).toList(),
       columnAlignment: [
         ..._columns.map(
           (column) => switch (column.alignment) {
@@ -118,7 +118,7 @@ class Table extends TypeComponent<String> {
       style: const cli_table.TableStyle(
         compact: true,
         border: [],
-        header: [],
+        header: ['white'],
         paddingLeft: 0,
         paddingRight: 2,
       ),
@@ -139,19 +139,20 @@ class Table extends TypeComponent<String> {
         rightMid: '',
         middle: '',
       ),
+      header: _columns.map((column) => column.text ?? '').toList(growable: false),
+      wordWrap: true,
     );
-    final List<List<String>> styledRows = [];
+    final items = [];
     for (final row in _rows) {
-      final styledRow = row.indexed.map((data) {
-        final column = _columns.elementAtOrNull(data.$1) ?? const Column();
-        final style = column.style ?? _theme.tableTheme.rowTextStyle;
-        return style(data.$2);
-      }).toList();
-      styledRows.add(styledRow);
+      items.add(row.map((e) {
+        if (e is RowCell) {
+          return (e.style ?? _theme.colors.hint)(e.text);
+        }
+        return _theme.colors.hint(e.toString());
+      }).toList(growable: false));
     }
-    table.addAll(styledRows);
-    buffer.write(table.toString());
-    return buffer.toString();
+    table.addAll(items);
+    return table.toString();
   }
 
   @override
@@ -170,4 +171,11 @@ class Column {
   final String? text;
   final int? width;
   final StyleFunction? style;
+}
+
+@immutable
+class RowCell {
+  final String text;
+  final StyleFunction? style;
+  const RowCell(this.text, {this.style});
 }

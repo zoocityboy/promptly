@@ -12,14 +12,15 @@ extension StringBufferX on StringBuffer {
   void section(String title) {
     this
       ..write(console.theme.prefixSectionLine(''))
-      ..write(console.theme.colors.text(title).inverse());
+      ..write(console.theme.colors.text(title).inverse())
+      ..newLine();
   }
 
   /// Writes a vertical line using the console theme and adds a newline.
   void verticalLine() {
     this
-      ..write(console.theme.prefixLine(''))
-      ..write('\n');
+      ..prefixLine()
+      ..newLine();
   }
 
   /// Writes a line followed by a newline.
@@ -27,7 +28,7 @@ extension StringBufferX on StringBuffer {
   /// [line] The line to write.
   void writeLine(String line) {
     this.write(line);
-    this.write('\n');
+    newLine();
   }
 
   /// Writes a newline.

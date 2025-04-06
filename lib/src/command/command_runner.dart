@@ -67,21 +67,14 @@ String getStyledCommandUsage(
   );
   final title = '${isSubcommand ? "Subc" : "C"}ommands';
   final buffer = StringBuffer();
-  buffer.verticalLine();
 
   if (!hasCategories) {
-    buffer
-      ..section(console.theme.colors.text(' $title ').inverse())
-      ..newLine()
-      ..verticalLine();
+    buffer.section(console.theme.colors.text(' $title ').inverse());
   }
   final columnStart = length + 4;
   for (final category in categories) {
     if (category.isNotEmpty) {
-      buffer
-        ..section(console.theme.colors.text(' $category ').inverse())
-        ..newLine()
-        ..verticalLine();
+      buffer.section(console.theme.colors.text(' $category ').inverse());
     }
     final ansiTable = Table(
       columns: [
@@ -106,6 +99,11 @@ String getStyledCommandUsage(
       buffer
         ..write(console.theme.prefixLine(''))
         ..write(line)
+        ..newLine();
+    }
+    if (category.isNotEmpty) {
+      buffer
+        ..write(console.theme.prefixLine(''))
         ..newLine();
     }
   }

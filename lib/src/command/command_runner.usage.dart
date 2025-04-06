@@ -96,7 +96,7 @@ class CustomUsage {
       theme: console.theme,
     );
     tbl.addAll(rows.map((e) => [e.key, e.value]).toList());
-    _buffer.write(tbl.interact());
+    _buffer.writeln(tbl.interact());
     return _buffer.toString();
   }
 

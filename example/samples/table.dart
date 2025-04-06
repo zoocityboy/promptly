@@ -1,4 +1,5 @@
 import 'package:promptly/promptly.dart';
+import 'package:promptly/src/console.dart';
 
 const earlyPresidents = [
   [
@@ -34,6 +35,12 @@ const earlyPresidents = [
 ];
 
 void main() {
+  final y = table(
+    columns: [Column(text: 'Number'), Column(text: 'President'), Column(text: 'Party'), Column(text: 'Number')],
+    rows: earlyPresidents,
+  );
+  write(y);
+
   final x = selectTable(
     'Select a row:',
     headers: ['Number', 'Presidency', 'President', 'Party'],

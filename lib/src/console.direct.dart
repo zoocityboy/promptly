@@ -220,6 +220,12 @@ TableRow selectTable(
 }) =>
     Console.instance.selectTable(prompt, rows: rows, headers: headers);
 
+String table({
+  required List<Column> columns,
+  required List<List<dynamic>> rows,
+}) =>
+    Console.instance.table(columns: columns, rows: rows).interact();
+
 /// Creates a progress state with the specified parameters.
 ///
 /// The [length] parameter is required and specifies the total length of the progress.
@@ -332,7 +338,11 @@ void clear() => Console.instance.clear();
 /// - Parameters:
 ///   - title: The title to display when ending the console session.
 ///   - message: An optional message to display when ending the console session.
-int finishSuccesfuly(String title, {String? message, String? suggestion}) =>
+int finishSuccesfuly(
+  String title, {
+  String? message,
+  String? suggestion,
+}) =>
     Console.instance.success(title, message: message, suggestion: suggestion);
 
 /// Displays a failure message in the console and returns an exit code.

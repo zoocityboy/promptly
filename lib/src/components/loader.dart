@@ -192,6 +192,9 @@ class _LoaderState extends State<Loader> {
 
     final state = LoaderState(
       update: (message) {
+        if (component._context == null) {
+          return () {};
+        }
         setState(() {
           stateType = LoaderStateType.inProgress;
           if (message != null) this.message = message;

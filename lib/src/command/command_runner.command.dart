@@ -102,28 +102,28 @@ abstract class Command<T> extends args_command_runner.Command<T> {
             helpUsageLength: getUsagePrefixLength,
           ),
         )
-        ..verticalLine();
+        ..newLine();
     }
 
     if (usegeLines.isNotEmpty) {
-      buffer
-        ..section(' Flags ')
-        ..newLine();
-    }
-    for (final line in usegeLines) {
-      buffer
-        ..prefixLine()
-        ..write(line)
-        ..newLine();
+      buffer.section(' Flags ');
+      for (final line in usegeLines) {
+        buffer
+          ..prefixLine()
+          ..write(line)
+          ..newLine();
+      }
+      buffer.prefixLine();
     }
 
     if (usageFooter != null) {
       buffer
-        ..writeln()
-        ..write(usageFooter);
+        ..write(usageFooter)
+        ..newLine();
     }
 
     buffer
+      ..newLine()
       ..verticalLine()
       ..writeln(console.theme.prefixRun(invocation))
       ..newLine();

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
@@ -93,9 +95,10 @@ class Console {
     sb.write(_theme.colors.success('❯').dim());
     sb.write(_theme.colors.success('❯'));
     sb.write(' ');
-    sb.write(_theme.colors.success(' ✓ $title ').inverse());
+    // sb.write(_theme.colors.success(' ✓ $title ').inverse());
+    // sb.write(_theme.colors.success('✓'));
     if (message != null) {
-      sb.write(' ');
+      // sb.write(' ');
       sb.write(_theme.colors.success(message));
     }
     line();
@@ -116,8 +119,12 @@ class Console {
         spacing: theme.spacing,
         style: _theme.colors.warning,
       );
-      // sb.writeln(_theme.colors.hint(suggestion));
+      // for (final sline in sb.toString().split('\n')) {
+      //   sb.writeln('');
+      //   sb.withPrefix('', _theme.colors.warning(sline), spacing: theme.spacing, style: _theme.colors.active);
+      // }
       _ctx.writeln(sb.toString());
+      // sb.writeln(_theme.colors.hint(suggestion));
     }
     return ExitCode.success.code;
   }
@@ -326,14 +333,14 @@ class Console {
 
   Table table({
     required List<Column> columns,
-    required List<TableRow> rows,
+    required List<List<dynamic>> rows,
     int columnSpacing = 2,
   }) =>
       Table.withTheme(
         columns: columns,
         theme: _theme,
         columnPadding: columnSpacing,
-      );
+      )..addAll(rows);
 
   ProgressState progress(
     String prompt, {
@@ -409,18 +416,19 @@ class Console {
       failedIcon: _theme.loaderTheme.errorPrefix,
       clear: clear,
     ).interact();
+
     try {
       final result = await task(spinner);
       spinner.success(successMessage);
       return result;
     } catch (e) {
       spinner.failed(failedMessage ?? e.toString());
-      reset();
       onError?.call(e);
       if (throwOnError) {
         rethrow;
       }
-      return Future.value();
+      // Return a default value or rethrow based on type
+      return Future.error(e);
     }
   }
 
