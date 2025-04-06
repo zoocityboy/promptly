@@ -66,7 +66,9 @@ String getStyledCommandUsage(
     helpUsageLength,
   );
   final title = '${isSubcommand ? "Subc" : "C"}ommands';
-  final buffer = StringBuffer();
+  final buffer = StringBuffer()
+    ..prefixLine()
+    ..newLine();
 
   if (!hasCategories) {
     buffer.section(console.theme.colors.text(' $title ').inverse());
