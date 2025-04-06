@@ -1,3 +1,13 @@
+## 1.0.0-alpha.7
+***feat***:
+  - table command with direct access `table`
+  - table cell styling
+***fix***:
+  - table layout 
+  - usage view spacing
+
+
+
 ## 1.0.0-alpha.6
 ***feat:***
     - added a new attribute for preselected value (all components)

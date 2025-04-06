@@ -1,6 +1,6 @@
 name: promptly
 description: A collection of customizable interactive command-line components.
-version: 1.0.0-alpha.6
+version: 1.0.0-alpha.7
 homepage: https://zoocityboy.github.io/promptly
 documentation: https://pub.dev/documentation/promptly/latest/
 repository: https://github.com/zoocityboy/promptly
@@ -22,7 +22,7 @@ environment:
   sdk: ">=3.6.0 <4.0.0"
 
 dependencies:
-  args: ^2.6.0
+  args: ^2.7.0
   cli_completion: ^0.5.1
   cli_table: ^1.0.2
   dart_console: ^4.1.1
@@ -30,7 +30,7 @@ dependencies:
   io: ^1.0.5
   meta: ^1.15.0
   path: ^1.9.1
-  tint: ^2.0.0
+  tint: ^2.0.1
   version: ^3.0.2
   wcwidth: ^0.0.4
 
