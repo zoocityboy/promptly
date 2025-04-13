@@ -51,7 +51,9 @@ abstract class Command<T> extends args_command_runner.Command<T> {
   Never usageException(String message) => throw UsageException(message, publicUsageWithoutDescription);
 
   @override
-  String get usage => descriptionStyled + publicUsageWithoutDescription;
+  String get usage => usageStyled;
+
+  String get usageStyled => descriptionStyled + publicUsageWithoutDescription;
 
   /// The footer to be displayed at the end of the usage.
   int get getUsagePrefixLength => argParser.getPrefixLength;
@@ -79,7 +81,9 @@ abstract class Command<T> extends args_command_runner.Command<T> {
       '${theme.colors.active(invocation)} ${theme.colors.active('[subcommand]').dim()} ${theme.colors.hint('[...flags]')}';
 
   @override
-  void printUsage() => console.write(usage);
+  void printUsage() {
+    console.writeln(usageStyled);
+  }
 
   Theme get theme => console.theme;
 
@@ -93,19 +97,28 @@ abstract class Command<T> extends args_command_runner.Command<T> {
     final usegeLines = argParser.customUsage.split('\n');
     final buffer = StringBuffer();
     if (subcommands.isNotEmpty) {
+      buffer.write(
+        getStyledCommandUsage(
+          subcommands,
+          isSubcommand: true,
+          lineLength: length,
+          helpUsageLength: getUsagePrefixLength,
+        ),
+      );
+    } else {
       buffer
-        ..write(
-          getStyledCommandUsage(
-            subcommands,
-            isSubcommand: true,
-            lineLength: length,
-            helpUsageLength: getUsagePrefixLength,
-          ),
-        )
-        ..write(getStyleCommandUsegeBottom(usegeLines, usageFooter, invocation));
+        ..withPrefix(theme.symbols.dotStep, theme.promptTheme.hintStyle('No subcommands available'))
+        ..newLine()
+        ..prefixLine()
+        ..newLine();
     }
+    buffer.write(getStyleCommandUsegeBottom(usegeLines, usageFooter, invocation));
 
     return buffer.toString();
+  }
+
+  String _wrap(String text, {int? hangingIndent}) {
+    return wrapText(text, length: argParser.usageLineLength, hangingIndent: hangingIndent);
   }
 
   @override

@@ -1,7 +1,13 @@
 import 'package:promptly/promptly.dart';
 
 class AccountCommand extends Command<int> {
-  AccountCommand() : super('account', 'Create a new user');
+  AccountCommand() : super('account', 'Create a new user') {
+    argParser.addOption(
+      'name',
+      abbr: 'n',
+      help: 'What is your name?',
+    );
+  }
 
   @override
   Future<int> run() async {
