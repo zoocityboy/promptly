@@ -130,7 +130,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   @override
   String get invocation =>
-      '${console.theme.colors.active('$executableName [command]')} ${console.theme.colors.hint('[...flags]')}';
+      '${console.theme.colors.active('$executableName <command>')} ${console.theme.colors.hint('[...flags]')}';
 
   @override
   String get usage => appDescription + publicUsageWithoutDescription;
@@ -169,7 +169,9 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
   Future<void> safeRun(List<String> args) async {
     // ignore: deprecated_member_use_from_same_package
-    return flushThenExit(await run(args));
+    final exitCode = await run(args);
+    print('exit code: $exitCode');
+    return flushThenExit(exitCode);
   }
 
   @Deprecated('Do not use this method directly. Use `safeRun` instead.')
@@ -202,7 +204,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
         // ..writeMessage(e.message, style: MessageStyle.error)
         ..write(e.usage);
       logger.trace(e.message);
-      exitCode = ExitCode.software.code;
+      exitCode = ExitCode.usage.code;
     } catch (e) {
       console
         ..write(errorAppDescription)
@@ -258,7 +260,7 @@ class CommandRunner extends completion.CompletionCommandRunner<int> {
 
       if (argResults.options.contains('help') && argResults.flag('help')) {
         command.printUsage();
-        return null;
+        return ExitCode.success.code;
       }
     }
     if (topLevelResults.command?.name == 'completion') {

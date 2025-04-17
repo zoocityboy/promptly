@@ -78,7 +78,7 @@ abstract class Command<T> extends args_command_runner.Command<T> {
       '${theme.colors.active(invocation)} ${theme.colors.hint('[...flags]')}';
 
   String invocationSubcommandLabel(String invocation) =>
-      '${theme.colors.active(invocation)} ${theme.colors.active('[subcommand]').dim()} ${theme.colors.hint('[...flags]')}';
+      '${theme.colors.active(invocation)} ${theme.colors.active('<subcommand>')} ${theme.colors.hint('[...flags]')}';
 
   @override
   void printUsage() {

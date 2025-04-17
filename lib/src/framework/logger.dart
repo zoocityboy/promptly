@@ -109,7 +109,7 @@ class LogItem {
     return '[$subcommand] ';
   }
 
-  String get formatedTime => '${DateFormat.Hms().format(dateTime)} ';
+  String get formatedTime => '${DateFormat('Hms.SSS').format(dateTime)} ';
   String withTime() => '$formatedTime$duration$commandName$subcommandName$message';
   String withoutTime() => '$duration$commandName$subcommandName$message';
 
