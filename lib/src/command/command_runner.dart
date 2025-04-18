@@ -11,7 +11,6 @@ import 'package:cli_completion/cli_completion.dart' as completion;
 import 'package:meta/meta.dart';
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/framework/framework.dart';
-import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
 
 export 'package:args/src/usage_exception.dart';

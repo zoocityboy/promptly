@@ -1,4 +1,5 @@
 part of 'theme.dart';
+
 /// A theme class for confirmation prompts.
 ///
 /// The [ConfirmTheme] class defines the styling and theming for confirmation

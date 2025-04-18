@@ -21,11 +21,7 @@ void main() {
   line();
   info('Run in folder `example` ${Directory.current.path}');
   line();
-  final files = Directory.current
-      .listSync()
-      .whereType<File>()
-      .where((e) => e.path.endsWith('.dart'))
-      .toList();
+  final files = Directory.current.listSync().whereType<File>().where((e) => e.path.endsWith('.dart')).toList();
   for (final file in files) {
     final name = path.basename(file.path).replaceAll('.dart', '');
 

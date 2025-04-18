@@ -1,4 +1,5 @@
 part of 'theme.dart';
+
 /// A class that defines the theme for password-related UI elements.
 ///
 /// The [PasswordTheme] class contains properties and methods to customize
@@ -31,8 +32,7 @@ class PasswordTheme {
     required this.passwordStyle,
     required this.passwordStrengthStyle,
   });
-  factory PasswordTheme.fromDefault() =>
-      PasswordTheme.fromColors(ThemeColors.defaultColors);
+  factory PasswordTheme.fromDefault() => PasswordTheme.fromColors(ThemeColors.defaultColors);
   factory PasswordTheme.fromColors(ThemeColors colors) {
     return PasswordTheme(
       passwordPlaceholder: '•',
@@ -49,8 +49,7 @@ class PasswordTheme {
     return PasswordTheme(
       passwordPlaceholder: passwordPlaceholder ?? this.passwordPlaceholder,
       passwordStyle: passwordStyle ?? this.passwordStyle,
-      passwordStrengthStyle:
-          passwordStrengthStyle ?? this.passwordStrengthStyle,
+      passwordStrengthStyle: passwordStrengthStyle ?? this.passwordStrengthStyle,
     );
   }
 

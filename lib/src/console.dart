@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
 
 part 'console.direct.dart';

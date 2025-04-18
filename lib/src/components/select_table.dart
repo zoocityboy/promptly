@@ -6,9 +6,10 @@ import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/prompt.dart';
 
 /// A type definition for a table row, which is represented as a list of objects.
-/// 
+///
 /// Each element in the list corresponds to a cell in the table row.
 typedef TableRow = List<Object>;
+
 /// A widget that displays a table with selectable rows.
 ///
 /// The [SelectTable] widget takes a prompt, headers, and rows to display
@@ -130,12 +131,8 @@ class _SelectTableState extends State<SelectTable> {
 
     for (var i = 0; i < component.rows.length; i++) {
       final data = i == index
-          ? component.rows[i]
-              .map((e) => theme.activeItemStyle(e.toString()))
-              .toList()
-          : component.rows[i]
-              .map((e) => theme.inactiveItemStyle(e.toString()))
-              .toList();
+          ? component.rows[i].map((e) => theme.activeItemStyle(e.toString())).toList()
+          : component.rows[i].map((e) => theme.inactiveItemStyle(e.toString())).toList();
       table.insertRow(data);
     }
     table.borderStyle = dc.BorderStyle.square;

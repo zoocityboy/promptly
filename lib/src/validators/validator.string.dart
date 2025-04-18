@@ -1,4 +1,5 @@
 part of 'validator.dart';
+
 /// A validator class for validating email addresses.
 ///
 /// This class extends the `Validator<String>` class and provides
@@ -30,13 +31,13 @@ class EmailValidator extends Validator<String> {
 }
 
 /// A validator that checks if a given string is not empty.
-/// 
-/// This validator extends the [Validator] class and overrides the 
-/// `call` method to throw a [ValidationError] if the provided string 
+///
+/// This validator extends the [Validator] class and overrides the
+/// `call` method to throw a [ValidationError] if the provided string
 /// is empty.
-/// 
+///
 /// Example usage:
-/// 
+///
 /// ```dart
 /// final validator = IsNotEmptyValidator();
 /// try {
@@ -45,8 +46,8 @@ class EmailValidator extends Validator<String> {
 ///   print(e); // Output: ValidationError: Value cannot be empty
 /// }
 /// ```
-/// 
-/// Throws a [ValidationError] with the message 'Value cannot be empty' 
+///
+/// Throws a [ValidationError] with the message 'Value cannot be empty'
 /// if the provided string is empty.
 class IsNotEmptyValidator extends Validator<String> {
   IsNotEmptyValidator() : super('Value cannot be empty');
@@ -76,8 +77,7 @@ class IsNotEmptyValidator extends Validator<String> {
 ///
 /// Throws a [ValidationError] if the value is not in the list of allowed values.
 class AllowedValidator extends Validator<String> {
-  AllowedValidator(this.allowed, {this.caseSensitive = true})
-      : super('Value is not allowed');
+  AllowedValidator(this.allowed, {this.caseSensitive = true}) : super('Value is not allowed');
   final List<String> allowed;
   bool caseSensitive;
   @override
@@ -89,18 +89,18 @@ class AllowedValidator extends Validator<String> {
 }
 
 /// A custom string validator that extends the [Validator] class.
-/// 
+///
 /// This validator takes a validation function and a message. The validation
 /// function is used to determine if the given string value is valid. If the
 /// value is not valid, a [ValidationError] is thrown with the provided message.
-/// 
+///
 /// Example usage:
-/// 
+///
 /// ```dart
 /// final validator = CustomStringValidator('Invalid input', (value) => value.isNotEmpty);
 /// validator.call(''); // Throws ValidationError with message 'Invalid input'
 /// ```
-/// 
+///
 /// - `message`: The error message to be used when validation fails.
 /// - `validator`: A function that takes a string value and returns a boolean indicating whether the value is valid.
 class CustomStringValidator extends Validator<String> {

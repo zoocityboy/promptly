@@ -1,3 +1,7 @@
+## 1.0.0-alpha.8
+***FIX***
+- expose Theme for usage in app
+
 ## 1.0.0-alpha.7
 ***feat***:
   - table command with direct access `table`

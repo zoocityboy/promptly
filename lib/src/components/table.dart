@@ -2,7 +2,6 @@ import 'package:cli_table/cli_table.dart' as cli_table;
 import 'package:meta/meta.dart';
 import 'package:promptly/promptly.dart';
 import 'package:promptly/src/framework/framework.dart';
-import 'package:promptly/src/theme/theme.dart';
 
 /// Enum representing the alignment options for columns in a table.
 ///
