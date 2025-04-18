@@ -37,6 +37,7 @@ export 'src/console.dart'
         write,
         writeln;
 export 'src/framework/framework.dart' show Context, LocaleInfo, Logger, StringCaseExtensions, reset, resetColor;
+export 'src/theme/theme.dart';
 export 'src/utils/tint_colors.dart';
 export 'src/validators/validator.dart'
     show
