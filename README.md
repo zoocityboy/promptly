@@ -11,6 +11,9 @@ Developed by 🦏 [zoocityboy](https://zoocityboy.github.io/)
 
 ![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=flat-square&logo=dart&logoColor=white)
 
+> [!IMPORTANT]
+> This project is currently in pre-production. Breaking changes may occur. Use with caution.
+
 [Documentation](https://zoocityboy.github.io/promptly/)
 
 ## Features
@@ -27,13 +30,22 @@ Developed by 🦏 [zoocityboy](https://zoocityboy.github.io/)
 A simple way to write command-line applications in Dart with styling and command loading capabilities.
 
 ```dart
-Future<void> main(List<String> args) async {
-  (await Promptly.init('app','MyAppDescription', theme: Theme.make(Theme.defaultColors)))
-    ..addCommand(TestCommand())
-    ..addCommand(SecondCommand())
-    ..addCommand(ThirdCommand());
-  .run(args);
+class MyRunner extends CommandRunner {
+  MyRunner(super.executableName, super.description, {super.version, super.theme, super.logLevel, super.printer}) {
+    addCommand(TestCommand());
+    addCommand(SecondCommand());
+    addCommand(ThirdCommand());
+    addCommand(ThirdoCommand());
+    addCommand(ThirmoCommand());
+  }
 }
+Future<void> main(List<String> args) => MyRunner(
+    'promptly',
+    'Runner test',
+    version: '0.0.1',
+    theme: Theme.defaultTheme,
+    // printer: defaultPrinter,
+  ).safeRun(args);
 ```
 
 

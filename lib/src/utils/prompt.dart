@@ -1,5 +1,4 @@
 import 'package:promptly/promptly.dart';
-import 'package:promptly/src/theme/theme.dart';
 import 'package:promptly/src/utils/string_buffer.dart';
 
 /// Generates a formatted input message to prompt.

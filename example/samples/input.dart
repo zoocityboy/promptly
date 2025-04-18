@@ -1,5 +1,4 @@
-import 'package:promptly/promptly.dart'
-    show EmailValidator, finishSuccesfuly, header, line, prompt;
+import 'package:promptly/promptly.dart' show EmailValidator, finishSuccesfuly, header, line, prompt;
 import 'package:promptly/src/validators/validator.dart';
 
 void main() {
