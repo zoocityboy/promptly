@@ -49,3 +49,4 @@ export 'src/validators/validator.dart'
         ValidationError,
         Validator,
         VersionValidator;
+export 'src/theme/theme.dart';
