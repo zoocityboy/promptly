@@ -50,7 +50,7 @@ class Link extends TypeComponent<String> {
     const trailing = '\x1B\\';
     // return theme.linkTheme.linkStyle('$leading$uri$trailing${message ?? uri}$leading$trailing');
     // return '$leading$leading${message ?? uri}$trailing;${theme.linkTheme.linkStyle(uri.toString())}$leading$trailing';
-    final label = uri.toString();
+    final label = message ?? uri.toString();
     return '$leading$uri$trailing$label$leading$trailing';
   }
 
