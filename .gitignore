@@ -13,3 +13,9 @@ build/
 doc/api/
 **/node_modules/
 coverage/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
