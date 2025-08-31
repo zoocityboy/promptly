@@ -8,7 +8,6 @@ Developed by 🦏 [zoocityboy](https://zoocityboy.github.io/)
 [![Coverage](https://raw.githubusercontent.com/zoocityboy/promptly/main/coverage_badge.svg)](https://github.com/zoocityboy/promptly/actions/workflows/pull-request.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-
 ![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=flat-square&logo=dart&logoColor=white)
 
 > [!IMPORTANT]
@@ -21,9 +20,9 @@ Developed by 🦏 [zoocityboy](https://zoocityboy.github.io/)
 - [x] Argument parser
 - [x] CommandRunner, Command definition
 - [x] Command flow [components](#components)
-- [x] Process helpers (executors) 
+- [x] Process helpers (executors)
 - [x] Tracing, Logging
-- [x] Themable 
+- [x] Themable
 
 ### Command Runner
 
@@ -47,8 +46,6 @@ Future<void> main(List<String> args) => MyRunner(
     // printer: defaultPrinter,
   ).safeRun(args);
 ```
-
-
 
 ### Components
 
